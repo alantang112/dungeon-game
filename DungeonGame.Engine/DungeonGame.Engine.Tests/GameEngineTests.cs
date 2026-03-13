@@ -1,8 +1,8 @@
-﻿using DungeonGameEngine;
-using DungeonGameEngine.Models;
-using DungeonGameEngine.Models.InputEventModels;
+﻿using DungeonGame.Engine;
+using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.InputEventModels;
 
-namespace DungeonGameEngineTests;
+namespace DungeonGame.Engine.Tests;
 
 public class Tests
 {

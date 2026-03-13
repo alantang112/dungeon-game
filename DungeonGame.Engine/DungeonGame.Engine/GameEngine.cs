@@ -1,10 +1,10 @@
 using System;
-using DungeonGameEngine.GameInputHandlers;
-using DungeonGameEngine.GameInputHandlers.Handlers;
-using DungeonGameEngine.Models;
-using DungeonGameEngine.Models.InputEventModels;
+using DungeonGame.Engine.GameInputHandlers;
+using DungeonGame.Engine.GameInputHandlers.Handlers;
+using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.InputEventModels;
 
-namespace DungeonGameEngine
+namespace DungeonGame.Engine
 {
     public class GameEngine : IGameEngine
     {

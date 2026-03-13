@@ -1,4 +1,4 @@
-namespace DungeonGameEngine.Models
+namespace DungeonGame.Engine.Models
 {
     public class GameState
     {

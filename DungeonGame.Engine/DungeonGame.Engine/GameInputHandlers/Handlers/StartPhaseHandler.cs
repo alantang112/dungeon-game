@@ -1,8 +1,8 @@
 using System;
-using DungeonGameEngine.Models;
-using DungeonGameEngine.Models.InputEventModels;
+using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.InputEventModels;
 
-namespace DungeonGameEngine.GameInputHandlers.Handlers
+namespace DungeonGame.Engine.GameInputHandlers.Handlers
 {
     internal class StartPhaseHandler : AbstactGameInputHandler
     {

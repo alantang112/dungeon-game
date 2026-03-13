@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using DungeonGameEngine.Models;
-using DungeonGameEngine.Models.InputEventModels;
+using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.InputEventModels;
 
-namespace DungeonGameEngine.GameInputHandlers
+namespace DungeonGame.Engine.GameInputHandlers
 {
     internal abstract class AbstactGameInputHandler : IGameInputHandler
     {

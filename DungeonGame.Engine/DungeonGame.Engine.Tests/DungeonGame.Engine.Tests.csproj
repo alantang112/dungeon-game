@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DungeonGameEngine\DungeonGameEngine.csproj" />
+    <ProjectReference Include="..\DungeonGame.Engine\DungeonGame.Engine.csproj" />
   </ItemGroup>
 
   <ItemGroup>
