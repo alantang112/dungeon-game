@@ -6,7 +6,7 @@ namespace DungeonGameEngine.Models
         Start,
 
         // Game
-        GameEnergyDicePreRoll,
+        EnergyDicePreRoll,
         EnergyDiceAssignment,
         HeroActions,
         MonstersMove,

@@ -33,14 +33,14 @@ public class Tests
     }
 
     [Test]
-    public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToGameEnergyDicePreRoll()
+    public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
         _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
-        Assert.That(_sut.CurrentState.GamePhase, Is.EqualTo(GamePhase.GameEnergyDicePreRoll));
+        Assert.That(_sut.CurrentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 
     [Test]
-    public void GivenGameInStartPhase_WhenNotNewGameInput_ThenThrowArgumentException()
+    public void GivenGameInStartPhase_WhenNotNewGameInput_ThenThrowNotSupportedException()
     {
         var invalidInputEventTypes = Enum.GetValues<InputEventType>()
                                          .Where(x => x != InputEventType.NewGame)
@@ -48,7 +48,7 @@ public class Tests
 
         foreach(var invalidInputEventType in invalidInputEventTypes)
         {
-            Assert.Throws<ArgumentException>(() => _sut.ProcessInput(new InputEvent() { EventType = invalidInputEventType }));
+            Assert.Throws<NotSupportedException>(() => _sut.ProcessInput(new InputEvent() { EventType = invalidInputEventType }));
         }
     }
 }

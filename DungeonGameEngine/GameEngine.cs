@@ -1,4 +1,6 @@
 using System;
+using DungeonGameEngine.GameInputHandlers;
+using DungeonGameEngine.GameInputHandlers.Handlers;
 using DungeonGameEngine.Models;
 
 namespace DungeonGameEngine
@@ -9,22 +11,25 @@ namespace DungeonGameEngine
 
         public event Action OnStateChanged = delegate { };
 
+        internal IGameInputHandler _gameInputHandler;
+
         public GameEngine()
         {
             CurrentState = new GameState();
+            _gameInputHandler = GetGameInputHandlers();
         }
 
         public void ProcessInput(InputEvent inputEvent)
         {
-            if (inputEvent.EventType == InputEventType.NewGame)
-            {
-                CurrentState.GamePhase = GamePhase.GameEnergyDicePreRoll;
-                OnStateChanged?.Invoke();
-                return;
-            }
+            CurrentState = _gameInputHandler.Handle(CurrentState, inputEvent);
 
-            throw new ArgumentException("Invalid input event type for state");
-            // TODO: implement handler
+            // for now, assume that game state will always be modified after any input
+            OnStateChanged?.Invoke();
+        }
+
+        internal IGameInputHandler GetGameInputHandlers()
+        {
+            return new StartPhaseHandler();
         }
     }
 }
