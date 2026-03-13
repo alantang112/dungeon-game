@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DungeonGameEngine/DungeonGameEngine.csproj" />
+  <Project Path="DungeonGameEngineTests/DungeonGameEngineTests.csproj" />
+</Solution>
