@@ -1,4 +1,4 @@
-namespace DungeonGameEngine.Models
+namespace DungeonGameEngine.Models.InputEventModels
 {
     public enum InputEventType
     {

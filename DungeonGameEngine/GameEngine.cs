@@ -2,6 +2,7 @@ using System;
 using DungeonGameEngine.GameInputHandlers;
 using DungeonGameEngine.GameInputHandlers.Handlers;
 using DungeonGameEngine.Models;
+using DungeonGameEngine.Models.InputEventModels;
 
 namespace DungeonGameEngine
 {

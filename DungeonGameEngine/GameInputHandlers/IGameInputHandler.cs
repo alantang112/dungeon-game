@@ -1,4 +1,5 @@
 using DungeonGameEngine.Models;
+using DungeonGameEngine.Models.InputEventModels;
 
 namespace DungeonGameEngine.GameInputHandlers
 {
