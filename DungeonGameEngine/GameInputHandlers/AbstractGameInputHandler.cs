@@ -20,19 +20,22 @@ namespace DungeonGameEngine.GameInputHandlers
 
         public GameState Handle(GameState gameState, InputEvent inputEvent)
         {
-            if (HandledGamePhases.Contains(gameState.GamePhase) && HandledInputEventTypes.Contains(inputEvent.EventType))
+            if (HandledGamePhases.Contains(gameState.GamePhase))
             {
-                return TransformGameState(gameState, inputEvent);
+                if (HandledInputEventTypes.Contains(inputEvent.EventType))
+                {
+                    return TransformGameState(gameState, inputEvent);
+                }
+                
+                throw new NotSupportedException($"Input event {inputEvent.EventType} not supported for current game phase {gameState.GamePhase}");
             }
 
             if (_nextHandler != null)
             {
                 return _nextHandler.Handle(gameState, inputEvent);
             }
-            else
-            {
-                throw new NotSupportedException("Input event not supported for current game state");
-            }
+            
+            throw new NotImplementedException($"Game phase handler {gameState.GamePhase} not implemented yet");
         }
 
         public abstract GameState TransformGameState(GameState gameState, InputEvent inputEvent);

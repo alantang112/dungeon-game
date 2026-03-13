@@ -28,7 +28,7 @@ public class Tests
         var gameChangedListener = () => { gameChangedCount++; };
 
         _sut.OnStateChanged += gameChangedListener;
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
+        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
 
         Assert.That(gameChangedCount, Is.EqualTo(1));
     }
@@ -36,7 +36,7 @@ public class Tests
     [Test]
     public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
+        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
         Assert.That(_sut.CurrentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 
