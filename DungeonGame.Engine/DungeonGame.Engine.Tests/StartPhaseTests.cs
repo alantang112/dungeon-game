@@ -1,10 +1,9 @@
-﻿using DungeonGame.Engine;
-using DungeonGame.Engine.Models;
+﻿using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.InputEventModels;
 
 namespace DungeonGame.Engine.Tests;
 
-public class Tests
+public class StartPhaseTests
 {
     private IGameEngine _sut;
 
