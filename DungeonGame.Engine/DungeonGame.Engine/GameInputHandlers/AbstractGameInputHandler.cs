@@ -9,7 +9,7 @@ namespace DungeonGame.Engine.GameInputHandlers
     {
         private IGameInputHandler? _nextHandler;
 
-        protected abstract GamePhase[] HandledGamePhases { get; }
+        protected abstract GamePhase HandledGamePhase { get; }
         protected abstract InputEventType[] HandledInputEventTypes { get; }
 
         public IGameInputHandler SetNext(IGameInputHandler handler)
@@ -20,7 +20,7 @@ namespace DungeonGame.Engine.GameInputHandlers
 
         public GameState Handle(GameState gameState, InputEvent inputEvent)
         {
-            if (HandledGamePhases.Contains(gameState.GamePhase))
+            if (HandledGamePhase == gameState.GamePhase)
             {
                 if (HandledInputEventTypes.Contains(inputEvent.EventType))
                 {

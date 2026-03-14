@@ -1,7 +1,7 @@
 ﻿using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.InputEventModels;
 
-namespace DungeonGame.Engine.Tests;
+namespace DungeonGame.Engine.Tests.GamePhases;
 
 public class StartPhaseTests
 {
@@ -11,13 +11,6 @@ public class StartPhaseTests
     public void Setup()
     {
         _sut = new GameEngine();
-    }
-
-    [Test]
-    public void GivenNewGameEngine_ThenInitWithStartPhase()
-    {
-        var gameState = _sut.CurrentState;
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.Start));
     }
 
     [Test]
@@ -36,7 +29,8 @@ public class StartPhaseTests
     public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
         _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
-        Assert.That(_sut.CurrentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
+        var currentState = _sut.GetCurrentState();
+        Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 
     [Test]

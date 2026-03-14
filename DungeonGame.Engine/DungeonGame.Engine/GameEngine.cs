@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using DungeonGame.Engine.GameInputHandlers;
 using DungeonGame.Engine.GameInputHandlers.Handlers;
 using DungeonGame.Engine.Models;
@@ -8,7 +9,7 @@ namespace DungeonGame.Engine
 {
     public class GameEngine : IGameEngine
     {
-        public GameState CurrentState { get; private set; }
+        private GameState CurrentState;
 
         public event Action OnStateChanged = delegate { };
 
@@ -20,17 +21,37 @@ namespace DungeonGame.Engine
             _gameInputHandler = GetGameInputHandlers();
         }
 
-        public void ProcessInput(InputEvent inputEvent)
-        {
-            CurrentState = _gameInputHandler.Handle(CurrentState, inputEvent);
-
-            // for now, assume that game state will always be modified after any input
-            OnStateChanged?.Invoke();
-        }
-
         internal IGameInputHandler GetGameInputHandlers()
         {
             return new StartPhaseHandler();
+        }
+
+        public GameState GetCurrentState()
+        {
+            // return deep copy so client cannot modify
+            return JsonSerializer.Deserialize<GameState>(JsonSerializer.Serialize(CurrentState))!;
+        }
+
+        public void ProcessInput(InputEvent inputEvent)
+        {
+            CurrentState = _gameInputHandler.Handle(CurrentState, inputEvent);
+            OnStateChanged?.Invoke();
+        }
+
+        public string GetGameStateSnapshot()
+        {
+            return JsonSerializer.Serialize(CurrentState);
+        }
+
+        public void LoadGameStateSnapshot(string snapshot)
+        {
+            var gameState = JsonSerializer.Deserialize<GameState>(snapshot);
+
+            if (gameState == null)
+                throw new ArgumentException("Invalid game state snapshot");
+
+            CurrentState = gameState;
+            OnStateChanged?.Invoke();
         }
     }
 }

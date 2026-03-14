@@ -7,7 +7,9 @@ namespace DungeonGame.Engine
     public interface IGameEngine
     {
         event Action OnStateChanged;
-        GameState CurrentState { get; }
+        GameState GetCurrentState();
         void ProcessInput(InputEvent inputEvent);
+        string GetGameStateSnapshot();
+        void LoadGameStateSnapshot(string snapshot);
     }
 }
