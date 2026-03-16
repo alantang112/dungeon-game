@@ -27,6 +27,29 @@ public class StartPhaseTests
     }
 
     [Test]
+    public void WhenStartGame_SetHeroName()
+    {
+        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
+
+        var gameState = _sut.GetCurrentState();
+
+        Assert.That(gameState.Hero.Name, Is.EqualTo("Conan"));
+    }
+
+    [Test]
+    public void WhenStartGame_InitializeLevelOne()
+    {
+        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
+
+        var gameState = _sut.GetCurrentState();
+
+        Assert.That(gameState.LevelNumber, Is.EqualTo(1));
+        Assert.That(gameState.World.HeroPosition, Is.EqualTo(new Position(1, 1)));
+        Assert.That(gameState.World.Walls.Count(), Is.EqualTo(27));
+        Assert.That(gameState.World.Monsters.Count(), Is.EqualTo(2));
+    }
+
+    [Test]
     public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
         _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });

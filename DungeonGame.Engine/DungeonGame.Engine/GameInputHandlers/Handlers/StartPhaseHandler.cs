@@ -16,8 +16,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             if (newGameParameters == null)
                 throw new ArgumentException("NewGameEventParameters required for NewGame input");
 
-            var heroName = newGameParameters.HeroName; // TODO: use this for something
-
+            gameState.Hero.Name = newGameParameters.HeroName;
+            gameState.LevelNumber = 1;
+            gameState.World = new World();
+            gameState.World.InitializeLevel(1);
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
             return gameState;
         }
