@@ -8,5 +8,7 @@ namespace DungeonGame.Engine.Models.InputEventModels
         // Game actions
         EnergyDiceRoll,
         EnergyDiceAssign,
+        EnergyDiceResetAssignment,
+        EnergyDiceConfirmAssignment,
     }
 }

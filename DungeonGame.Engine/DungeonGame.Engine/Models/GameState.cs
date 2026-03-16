@@ -1,3 +1,5 @@
+using DungeonGame.Engine.Models.Enums;
+
 namespace DungeonGame.Engine.Models
 {
     public class GameState

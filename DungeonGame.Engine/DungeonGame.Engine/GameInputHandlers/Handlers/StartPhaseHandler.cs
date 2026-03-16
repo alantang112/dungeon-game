@@ -1,5 +1,6 @@
 using System;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
 
 namespace DungeonGame.Engine.GameInputHandlers.Handlers

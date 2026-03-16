@@ -1,4 +1,4 @@
-namespace DungeonGame.Engine.Models
+namespace DungeonGame.Engine.Models.Enums
 {
     public enum GamePhase
     {

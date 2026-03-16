@@ -1,5 +1,6 @@
 using System.Text.Json;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests;
 
