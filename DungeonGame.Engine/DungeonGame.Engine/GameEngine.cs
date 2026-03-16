@@ -23,7 +23,11 @@ namespace DungeonGame.Engine
 
         internal IGameInputHandler GetGameInputHandlers()
         {
-            return new StartPhaseHandler();
+            var firstHandler = new StartPhaseHandler();
+
+            firstHandler.SetNext(new EnergyDicePreRollHandler());
+
+            return firstHandler;
         }
 
         public GameState GetCurrentState()

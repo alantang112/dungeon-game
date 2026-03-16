@@ -11,8 +11,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
-            // TODO roll dice
-
+            gameState.EnergyDice.Roll();
             gameState.GamePhase = GamePhase.EnergyDiceAssignment;
             return gameState;
         }

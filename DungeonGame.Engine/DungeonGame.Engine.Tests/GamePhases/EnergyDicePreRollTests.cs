@@ -1,3 +1,6 @@
+using System.Text.Json;
+using DungeonGame.Engine.Models;
+
 namespace DungeonGame.Engine.Tests.GamePhases;
 
 public class EnergyDicePreRollTests
@@ -8,18 +11,38 @@ public class EnergyDicePreRollTests
     public void Setup()
     {
         _sut = new GameEngine();
-        // load game state
+        
+        var initialGameState = JsonSerializer.Serialize(new GameState()
+        {
+            GamePhase = GamePhase.EnergyDicePreRoll,
+        });
+
+        _sut.LoadGameStateSnapshot(initialGameState);
     }
 
     [Test]
     public void WhenRoll_ThenInitializeEnergyDice()
     {
-        
+        _sut.ProcessInput(new Models.InputEventModels.InputEvent()
+        {
+            EventType = Models.InputEventModels.InputEventType.EnergyDiceRoll
+        });
+
+        var gameState = _sut.GetCurrentState();
+
+        Assert.That(gameState.EnergyDice.Dice.All(x => x >= 1 && x <= 6), Is.True);
     }
 
     [Test]
     public void WhenRoll_ThenUpdateGamePhaseToEnergyDiceAssignment()
     {
-        
+        _sut.ProcessInput(new Models.InputEventModels.InputEvent()
+        {
+            EventType = Models.InputEventModels.InputEventType.EnergyDiceRoll
+        });
+
+        var gameState = _sut.GetCurrentState();
+
+        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.EnergyDiceAssignment));
     }
 }
