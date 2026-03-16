@@ -25,7 +25,9 @@ namespace DungeonGame.Engine
         {
             var firstHandler = new StartPhaseHandler();
 
-            firstHandler.SetNext(new EnergyDicePreRollHandler());
+            firstHandler
+                .SetNext(new EnergyDicePreRollHandler())
+                .SetNext(new EnergyDiceAssignmentHandler());
 
             return firstHandler;
         }
@@ -38,6 +40,7 @@ namespace DungeonGame.Engine
 
         public void ProcessInput(InputEvent inputEvent)
         {
+            CurrentState.GameMessage = null; // clear the game message
             CurrentState = _gameInputHandler.Handle(CurrentState, inputEvent);
             OnStateChanged?.Invoke();
         }

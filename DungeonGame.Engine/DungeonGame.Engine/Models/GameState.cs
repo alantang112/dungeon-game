@@ -6,5 +6,6 @@ namespace DungeonGame.Engine.Models
     {
         public GamePhase GamePhase { get; set; } = GamePhase.Start;
         public EnergyDice EnergyDice { get; set; } = new EnergyDice();
+        public string? GameMessage { get; set;}
     }
 }
