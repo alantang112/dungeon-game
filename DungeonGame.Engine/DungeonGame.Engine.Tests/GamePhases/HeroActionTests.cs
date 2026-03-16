@@ -41,7 +41,7 @@ public class HeroActionTests
     [TestCase(-1, -1)]
     [TestCase(0, -1)]
     [TestCase(1, -1)]
-    public void WhenMoveHero_ThenHeroMove(int xDelta, int yDelta)
+    public void Movement_WhenMoveHero_ThenHeroMove(int xDelta, int yDelta)
     {
         throw new NotImplementedException();    
     }
@@ -53,7 +53,7 @@ public class HeroActionTests
     [TestCase(2, 1, 1)]
     [TestCase(1, 1, 1)]
     [TestCase(0, 1, 1)]
-    public void GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove(int movementsRemaining, int xDelta, int yDelta)
+    public void Movement_GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove(int movementsRemaining, int xDelta, int yDelta)
     {
         throw new NotImplementedException();  
     }
@@ -63,19 +63,19 @@ public class HeroActionTests
     [TestCase(2, 0)]
     [TestCase(0, 2)]
     [TestCase(0, -2)]
-    public void WhenMoveHeroNotAdjacent_ThenDoNotMove(int xDelta, int yDelta)
+    public void Movement_WhenMoveHeroNotAdjacent_ThenDoNotMove(int xDelta, int yDelta)
     {
         throw new NotImplementedException();  
     }
 
     [Test]
-    public void WhenMoveHeroIntoWall_ThenDoNotMove()
+    public void Movement_WhenMoveHeroIntoWall_ThenDoNotMove()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void WhenMoveHeroIntoMonster_ThenDoNotMove_AndReturnGameError()
+    public void Movement_WhenMoveHeroIntoMonster_ThenDoNotMove_AndReturnGameError()
     {
         throw new NotImplementedException();
     }
@@ -83,35 +83,35 @@ public class HeroActionTests
 
     #region Attacking
     [Test]
-    public void GivenMonsterInRangeInLineOfSight_AndHeroHasEnoughAttackPoints_WhenAttack_ThenMonsterLosesHealth()
+    public void Attacking_GivenMonsterInRangeInLineOfSight_AndHeroHasEnoughAttackPoints_WhenAttack_ThenMonsterLosesHealth()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void GivenMonsterNotInRange_WhenAttack_ThenReturnGameMessage()
+    public void Attacking_GivenMonsterNotInRange_WhenAttack_ThenReturnGameMessage()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void GivenMonsterNotPresent_WhenAttack_ThenReturnGameMessage()
+    public void Attacking_GivenMonsterNotPresent_WhenAttack_ThenReturnGameMessage()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void GivenMonsterNotInLineOfSight_WhenAttack_ThenReturnGameMessage()
+    public void Attacking_GivenMonsterNotInLineOfSight_WhenAttack_ThenReturnGameMessage()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void GivenMonsterHasMoreDefenceThanYourAttack_WhenAttack_ThenReturnGameMessage()
+    public void Attacking_GivenMonsterHasMoreDefenceThanYourAttack_WhenAttack_ThenReturnGameMessage()
     {
         throw new NotImplementedException();
     }
-    
+
     /*
     * TODO: need another unit test class to test InRange, InLineOfSight
     */
@@ -120,7 +120,7 @@ public class HeroActionTests
 
     #region Continue
     [Test]
-    public void WhenContinue_ThenGoToNextPhase()
+    public void Continue_WhenContinue_ThenGoToNextPhase()
     {
         throw new NotImplementedException();
     }
