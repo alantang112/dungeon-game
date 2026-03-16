@@ -1,3 +1,6 @@
+using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Utilities;
+
 namespace DungeonGame.Engine.Tests.Utilities;
 
 public class GeometryUtilityTests
@@ -37,8 +40,12 @@ public class GeometryUtilityTests
     [TestCase(-2, 5, 12)]
     public void CalculateDistanceBetween_Calculate(int xDelta, int yDelta, int expected)
     {
-        // TODO randomise the starting position
-        throw new NotImplementedException();
+        var position = new Position(RandomUtility.RandomInt(1, 10), RandomUtility.RandomInt(1, 10));
+        var OtherPosition = new Position(position.X + xDelta, position.Y + yDelta);
+
+        var actual = GeometryUtility.CalculateDistanceBetween(position, OtherPosition);
+        
+        Assert.That(actual, Is.EqualTo(expected));
     }
     #endregion
 
