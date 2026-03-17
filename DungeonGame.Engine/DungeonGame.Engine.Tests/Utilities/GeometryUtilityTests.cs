@@ -5,6 +5,11 @@ namespace DungeonGame.Engine.Tests.Utilities;
 
 public class GeometryUtilityTests
 {
+    private Position RandomPosition()
+    {
+        return new Position(RandomUtility.RandomInt(1, 10), RandomUtility.RandomInt(1, 10));
+    }
+
     #region CalculateDistanceBetween
     
     // same position
@@ -40,8 +45,8 @@ public class GeometryUtilityTests
     [TestCase(-2, 5, 12)]
     public void CalculateDistanceBetween_Calculate(int xDelta, int yDelta, int expected)
     {
-        var position = new Position(RandomUtility.RandomInt(1, 10), RandomUtility.RandomInt(1, 10));
-        var OtherPosition = new Position(position.X + xDelta, position.Y + yDelta);
+        var position = RandomPosition();
+        var OtherPosition = position.Translate(xDelta, yDelta);
 
         var actual = GeometryUtility.CalculateDistanceBetween(position, OtherPosition);
         
@@ -64,7 +69,14 @@ public class GeometryUtilityTests
     [TestCase(-3, 0, -2, 0, false)]
     public void HasLineOfSightOf_GivenTargetInStraightLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, int wallXDelta, int wallYDelta, bool expected)
     {
-        throw new NotImplementedException();
+        var observer = RandomPosition();
+        var target = observer.Translate(targetXDelta, targetYDelta);
+        var wall = observer.Translate(wallXDelta, wallYDelta);
+        var blockers = new Position[] { wall };
+
+        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers);
+
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     // TODO:
