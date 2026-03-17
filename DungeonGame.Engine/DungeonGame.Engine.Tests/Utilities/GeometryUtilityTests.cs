@@ -79,11 +79,40 @@ public class GeometryUtilityTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    // TODO:
-    [TestCase()]
-    public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight()
+    // immediate neighbour
+    [TestCase(1, 1, "", true)]
+    [TestCase(1, -1, "", true)]
+    [TestCase(-1, 1, "", true)]
+    [TestCase(-1, -1, "", true)]
+    // 1 gap
+    [TestCase(2, 2, "0,2",true)]
+    [TestCase(2, 2, "1,2",true)]
+    [TestCase(2, 2, "0,1",true)]
+    [TestCase(2, 2, "1,1",false)]
+    [TestCase(2, 2, "2,1",true)]
+    [TestCase(2, 2, "1,0",true)]
+    [TestCase(2, 2, "2,0",true)]
+    // 2 gap
+    public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
-        throw new NotImplementedException();
+        var observer = RandomPosition();
+
+        var mirrorX = 1; //RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorY = 1; //RandomUtility.RandomBool() ? 1 : -1;
+
+        var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
+
+        var blockers = new List<Position>();
+        foreach(var wallDelta in wallDeltas.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var wallDeltaSplit = wallDelta.Split(",");
+            var wall = observer.Translate(int.Parse(wallDeltaSplit[0]) * mirrorX, int.Parse(wallDeltaSplit[1]) * mirrorY);
+            blockers.Add(wall);
+        }
+
+        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers.ToArray());
+
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     // TODO:

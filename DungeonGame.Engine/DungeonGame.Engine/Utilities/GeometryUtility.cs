@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DungeonGame.Engine.Models;
 
@@ -41,37 +42,33 @@ namespace DungeonGame.Engine.Utilities
                 throw new ArgumentException($"observer and target are in the same position");
             }
 
-            // straight line case
-            if (observerPosition.X == targetPosition.X)
+            // straight line case (horizontal, vertical)
+            if (observerPosition.X == targetPosition.X || observerPosition.Y == targetPosition.Y)
             {
-                var minYToCheck = Math.Min(observerPosition.Y, targetPosition.Y) + 1;
-                var maxYToCheck = Math.Max(observerPosition.Y, targetPosition.Y) - 1;
-
-                for (var y = minYToCheck; y <= maxYToCheck; y++)
+                var checkPosition = observerPosition;
+                // check all squares in between observer and target
+                while (checkPosition != targetPosition)
                 {
-                    if (blockers.Any(blocker => blocker.X == observerPosition.X && blocker.Y == y))
-                    {
+                    if (checkPosition.X != targetPosition.X)
+                        checkPosition.X += (targetPosition.X > checkPosition.X) ? 1 : -1;
+
+                    if (checkPosition.Y != targetPosition.Y)
+                        checkPosition.Y += (targetPosition.Y > checkPosition.Y) ? 1 : -1;
+
+                    if (blockers.Any(blocker => blocker == checkPosition))
                         return false;
-                    }
                 }
 
                 return true;
             }
-            else if (observerPosition.Y == targetPosition.Y)
+
+            // diagonal line case
+            if (Math.Abs(observerPosition.X - targetPosition.X) == Math.Abs(observerPosition.Y - targetPosition.Y))
             {
-                var minXToCheck = Math.Min(observerPosition.X, targetPosition.X) + 1;
-                var maxXToCheck = Math.Max(observerPosition.X, targetPosition.X) - 1;
-
-                for (var x = minXToCheck; x <= maxXToCheck; x++)
-                {
-                    if (blockers.Any(blocker => blocker.X == x && blocker.Y == observerPosition.Y))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                
             }
+
+            // all else
 
             throw new NotImplementedException();
         }
