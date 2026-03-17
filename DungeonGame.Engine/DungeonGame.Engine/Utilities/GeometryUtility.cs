@@ -72,7 +72,7 @@ namespace DungeonGame.Engine.Utilities
 
                 var checkPosition = position.Translate(checkPositionXDelta, checkPositionYDelta);
 
-                if (blockers.Any(blocker => blocker == checkPosition))
+                if (checkPosition != targetPosition && blockers.Any(blocker => blocker == checkPosition))
                     return false;
 
                 // handle diagonal case

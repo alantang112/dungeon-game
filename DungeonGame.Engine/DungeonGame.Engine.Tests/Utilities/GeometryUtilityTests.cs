@@ -70,8 +70,12 @@ public class GeometryUtilityTests
     public void HasLineOfSightOf_GivenTargetInStraightLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, int wallXDelta, int wallYDelta, bool expected)
     {
         var observer = RandomPosition();
-        var target = observer.Translate(targetXDelta, targetYDelta);
-        var wall = observer.Translate(wallXDelta, wallYDelta);
+
+        var mirrorX = RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
+
+        var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
+        var wall = observer.Translate(wallXDelta * mirrorX, wallYDelta * mirrorY);
         var blockers = new Position[] { wall };
 
         var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers);
@@ -87,7 +91,7 @@ public class GeometryUtilityTests
     // 1 gap
     [TestCase(2, 2, "",true)]
     [TestCase(2, 2, "1,1",false)]
-    [TestCase(2, 2, "2,1|1,3",false)]
+    [TestCase(2, 2, "2,1|1,2",false)]
     [TestCase(2, 2, "0,1|1,0",false)]
     [TestCase(2, 2, "1,0|1,2",true)]
     [TestCase(2, 2, "0,1|2,1",true)]
@@ -96,8 +100,8 @@ public class GeometryUtilityTests
     {
         var observer = RandomPosition();
 
-        var mirrorX = 1; //RandomUtility.RandomBool() ? 1 : -1;
-        var mirrorY = 1; //RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorX = RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
 
         var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
 
