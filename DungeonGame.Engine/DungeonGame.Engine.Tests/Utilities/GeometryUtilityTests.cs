@@ -96,6 +96,19 @@ public class GeometryUtilityTests
     [TestCase(2, 2, "1,0|1,2",true)]
     [TestCase(2, 2, "0,1|2,1",true)]
     // 2 gap
+    [TestCase(3,3,"",true)]
+    [TestCase(3,3,"1,1",false)]
+    [TestCase(3,3,"2,2",false)]
+    [TestCase(3,3,"3,2|2,3",false)]
+    [TestCase(3,3,"3,2",true)]
+    [TestCase(3,3,"2,3",true)]
+    [TestCase(3,3,"2,1|1,2",false)]
+    [TestCase(3,3,"2,1",true)]
+    [TestCase(3,3,"1,2",true)]
+    [TestCase(3,3,"0,1|1,0",false)]
+    [TestCase(3,3,"0,1",true)]
+    [TestCase(3,3,"1,0",true)]
+    [TestCase(3,3,"4,3|3,4",true)]
     public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
         var observer = RandomPosition();
