@@ -13,6 +13,11 @@ namespace DungeonGame.Engine.Models
             Y = y;
         }
 
+        public Position Translate(int xDelta, int yDelta)
+        {
+            return new Position(X + xDelta, Y + yDelta);
+        }
+
         public override bool Equals(Object other)
         {
             return other is Position && this == (Position) other;

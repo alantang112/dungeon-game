@@ -81,17 +81,16 @@ public class GeometryUtilityTests
 
     // immediate neighbour
     [TestCase(1, 1, "", true)]
-    [TestCase(1, -1, "", true)]
-    [TestCase(-1, 1, "", true)]
-    [TestCase(-1, -1, "", true)]
+    [TestCase(1, 1, "0,1", true)]
+    [TestCase(1, 1, "1,0", true)]
+    [TestCase(1, 1, "0,1|1,0", false)]
     // 1 gap
-    [TestCase(2, 2, "0,2",true)]
-    [TestCase(2, 2, "1,2",true)]
-    [TestCase(2, 2, "0,1",true)]
+    [TestCase(2, 2, "",true)]
     [TestCase(2, 2, "1,1",false)]
-    [TestCase(2, 2, "2,1",true)]
-    [TestCase(2, 2, "1,0",true)]
-    [TestCase(2, 2, "2,0",true)]
+    [TestCase(2, 2, "2,1|1,3",false)]
+    [TestCase(2, 2, "0,1|1,0",false)]
+    [TestCase(2, 2, "1,0|1,2",true)]
+    [TestCase(2, 2, "0,1|2,1",true)]
     // 2 gap
     public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
