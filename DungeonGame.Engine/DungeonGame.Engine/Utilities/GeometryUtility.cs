@@ -34,22 +34,22 @@ namespace DungeonGame.Engine.Utilities
             throw new NotSupportedException("Code should never reach here");
         }
 
-        public static bool HasLineOfSightOf(Position observer, Position target, Position[] blockers)
+        public static bool HasLineOfSightOf(Position observerPosition, Position targetPosition, Position[] blockers)
         {
-            if (observer.Equals(target))
+            if (observerPosition == targetPosition)
             {
                 throw new ArgumentException($"observer and target are in the same position");
             }
 
             // straight line case
-            if (observer.X == target.X)
+            if (observerPosition.X == targetPosition.X)
             {
-                var minYToCheck = Math.Min(observer.Y, target.Y) + 1;
-                var maxYToCheck = Math.Max(observer.Y, target.Y) - 1;
+                var minYToCheck = Math.Min(observerPosition.Y, targetPosition.Y) + 1;
+                var maxYToCheck = Math.Max(observerPosition.Y, targetPosition.Y) - 1;
 
                 for (var y = minYToCheck; y <= maxYToCheck; y++)
                 {
-                    if (blockers.Any(blocker => blocker.X == observer.X && blocker.Y == y))
+                    if (blockers.Any(blocker => blocker.X == observerPosition.X && blocker.Y == y))
                     {
                         return false;
                     }
@@ -57,14 +57,14 @@ namespace DungeonGame.Engine.Utilities
 
                 return true;
             }
-            else if (observer.Y == target.Y)
+            else if (observerPosition.Y == targetPosition.Y)
             {
-                var minXToCheck = Math.Min(observer.X, target.X) + 1;
-                var maxXToCheck = Math.Max(observer.X, target.X) - 1;
+                var minXToCheck = Math.Min(observerPosition.X, targetPosition.X) + 1;
+                var maxXToCheck = Math.Max(observerPosition.X, targetPosition.X) - 1;
 
                 for (var x = minXToCheck; x <= maxXToCheck; x++)
                 {
-                    if (blockers.Any(blocker => blocker.X == x && blocker.Y == observer.Y))
+                    if (blockers.Any(blocker => blocker.X == x && blocker.Y == observerPosition.Y))
                     {
                         return false;
                     }

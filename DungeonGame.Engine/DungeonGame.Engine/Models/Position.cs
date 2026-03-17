@@ -2,7 +2,7 @@ using System;
 
 namespace DungeonGame.Engine.Models
 {
-    public struct Position : IEquatable<Position>
+    public struct Position
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -13,10 +13,24 @@ namespace DungeonGame.Engine.Models
             Y = y;
         }
 
-        public bool Equals(Position other)
+        public override bool Equals(Object other)
         {
-            return X == other.X 
-                && Y == other.Y;
+            return other is Position && this == (Position) other;
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(X, Y).GetHashCode();
+        }
+
+        public static bool operator ==(Position position, Position other)
+        {
+            return position.X == other.X && position.Y == other.Y;
+        }
+
+        public static bool operator !=(Position position, Position other)
+        {
+            return !(position == other);
         }
     }
 }
