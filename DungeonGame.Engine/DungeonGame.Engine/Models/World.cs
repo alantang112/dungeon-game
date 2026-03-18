@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonGame.Engine.Models.Entities;
+using DungeonGame.Engine.Models.Geometry;
 using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Models
