@@ -56,18 +56,7 @@ public class GeometryUtilityTests
 
     #region HasLineOfSightOf
     
-    // immediate neighbour
-    [TestCase(0, 1, 0, 2, true)]
-    [TestCase(1, 0, 1, 1, true)]
-    [TestCase(0, -1, 0, 1, true)]
-    [TestCase(-1, 0, -3, 2, true)]
-    // 1 gap
-    [TestCase(0, 2, 1, 2, true)]
-    [TestCase(2, 0, 1, 0, false)]
-    // 2 gap
-    [TestCase(0, -3, 1, 0, true)]
-    [TestCase(-3, 0, -2, 0, false)]
-    public void HasLineOfSightOf_GivenTargetInStraightLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, int wallXDelta, int wallYDelta, bool expected)
+    private void TestLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
         var observer = RandomPosition();
 
@@ -75,12 +64,34 @@ public class GeometryUtilityTests
         var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
 
         var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
-        var wall = observer.Translate(wallXDelta * mirrorX, wallYDelta * mirrorY);
-        var blockers = new Position[] { wall };
 
-        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers);
+        var blockers = new List<Position>();
+        foreach(var wallDelta in wallDeltas.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var wallDeltaSplit = wallDelta.Split(",");
+            var wall = observer.Translate(int.Parse(wallDeltaSplit[0]) * mirrorX, int.Parse(wallDeltaSplit[1]) * mirrorY);
+            blockers.Add(wall);
+        }
+
+        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers.ToArray());
 
         Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    // immediate neighbour
+    [TestCase(0, 1, "0,2", true)]
+    [TestCase(1, 0, "1,1", true)]
+    [TestCase(0, -1, "0,1", true)]
+    [TestCase(-1, 0, "-3,2", true)]
+    // 1 gap
+    [TestCase(0, 2, "1,2", true)]
+    [TestCase(2, 0, "1,0", false)]
+    // 2 gap
+    [TestCase(0, -3, "1,0", true)]
+    [TestCase(-3, 0, "-2,0", false)]
+    public void HasLineOfSightOf_GivenTargetInStraightLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
+    {
+        TestLineOfSight(targetXDelta, targetYDelta, wallDeltas, expected);
     }
 
     // immediate neighbour
@@ -111,24 +122,7 @@ public class GeometryUtilityTests
     [TestCase(3,3,"4,3|3,4",true)]
     public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
-        var observer = RandomPosition();
-
-        var mirrorX = RandomUtility.RandomBool() ? 1 : -1;
-        var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
-
-        var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
-
-        var blockers = new List<Position>();
-        foreach(var wallDelta in wallDeltas.Split("|").Where(x => !string.IsNullOrEmpty(x)))
-        {
-            var wallDeltaSplit = wallDelta.Split(",");
-            var wall = observer.Translate(int.Parse(wallDeltaSplit[0]) * mirrorX, int.Parse(wallDeltaSplit[1]) * mirrorY);
-            blockers.Add(wall);
-        }
-
-        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers.ToArray());
-
-        Assert.That(actual, Is.EqualTo(expected));
+        TestLineOfSight(targetXDelta, targetYDelta, wallDeltas, expected);
     }
 
     // (2,1) scenarios
@@ -140,9 +134,44 @@ public class GeometryUtilityTests
     [TestCase(2, 1, "0,2|1,2|2,2|2,0|1,0", true)]
     [TestCase(2, 1, "0,1|0,-1|1,-1|2,-1|1,1", true)]
     [TestCase(2, 1, "0,1|0,-1|1,-1|2,-1|2,0", true)]
+    // (3,1) scenarios
+    [TestCase(3, 1, "", true)]
+    [TestCase(3, 1, "1,0|0,1", false)]
+    [TestCase(3, 1, "1,0|1,1", false)]
+    [TestCase(3, 1, "2,0|1,1", false)]
+    [TestCase(3, 1, "2,0|2,1", false)]
+    [TestCase(3, 1, "3,0|2,1", false)]
+    [TestCase(3, 1, "-1,0|-1,-1|0,-1|1,-1|2,-1|3,-1|4,0|4,1|4,2|3,2|2,2|1,1|0,1|-1,1|2,1", true)]
+    [TestCase(3, 1, "-1,0|-1,-1|0,-1|1,-1|2,-1|3,-1|4,0|4,1|4,2|3,2|2,2|1,1|0,1|-1,1|3,0", true)]
+    [TestCase(3, 1, "-1,0|-1,-1|0,-1|1,-1|2,0|3,0|4,0|4,1|4,2|3,2|2,2|1,2|0,2|-1,1|0,1", true)]
+    [TestCase(3, 1, "-1,0|-1,-1|0,-1|1,-1|2,0|3,0|4,0|4,1|4,2|3,2|2,2|1,2|0,2|-1,1|1,0", true)]
+    // (3,2) scenarios
+    [TestCase(3, 2, "", true)]
+    [TestCase(3, 2, "1,0|0,1", false)]
+    [TestCase(3, 2, "1,0|1,1", false)]
+    [TestCase(3, 2, "1,2|1,1", false)]
+    [TestCase(3, 2, "2,0|1,1", false)]
+    [TestCase(3, 2, "2,0|2,1", false)]
+    [TestCase(3, 2, "3,1|2,2", false)]
+    [TestCase(3, 2, "1,1|3,1", false)]
+    [TestCase(3, 2, "2,1|0,1", false)]
+    [TestCase(3, 2, "2,1|1,1", false)]
+    [TestCase(3, 2, "2,1|1,2", false)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|1,0|2,0|2,1|3,1|4,1|4,2|4,3|3,3|2,3|1,3|0,3|0,2|-1,2|-1,1|-1,0", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|1,0|2,0|3,0|3,1|4,1|4,2|4,3|3,3|2,3|2,2|1,2|0,2|-1,2|-1,1|-1,0", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,0|3,0|4,1|4,2|4,3|3,3|2,3|1,2|0,2|-1,1|-1,0|0,1|2,2", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,0|3,0|4,1|4,2|4,3|3,3|2,3|1,2|0,2|-1,1|-1,0|1,0|3,1", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,0|3,1|4,1|4,2|4,3|3,3|2,3|1,3|0,2|-1,1|-1,0|0,1|1,2", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,0|3,1|4,1|4,2|4,3|3,3|2,3|1,3|0,2|-1,1|-1,0|1,0|2,1", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,-1|3,0|4,1|4,2|4,3|3,3|2,3|2,2|1,2|1,1|0,1|-1,1|-1,0", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,-1|3,0|4,0|4,1|4,2|4,3|3,3|2,3|2,2|1,2|0,1|-1,1|-1,0|1,1", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,-1|3,0|4,0|4,1|4,2|4,3|3,3|2,3|2,2|1,2|0,1|-1,1|-1,0|2,0", true)]
+    [TestCase(3, 2, "-1,-1|-1,0|1,-1|2,-1|3,0|4,1|4,2|4,3|3,3|2,3|1,2|0,1|-1,1|-1,0|1,1|2,2", true)]
+    [TestCase(3, 2, "-1,-1|-1,0|1,-1|2,-1|3,0|4,1|4,2|4,3|3,3|2,3|1,2|0,1|-1,1|-1,0|2,0|3,1", true)]
+    [TestCase(3, 2, "-1,-1|0,-1|1,-1|2,-1|2,0|3,0|3,1|4,1|4,2|4,3|3,3|2,3|1,3|1,2|0,2|0,1|-1,1|-1,0", true)]
     public void HasLineOfSightOf_GivenTargetInComplexLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
-        throw new NotImplementedException();
+        TestLineOfSight(targetXDelta, targetYDelta, wallDeltas, expected);
     }
     #endregion
 }
