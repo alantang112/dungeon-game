@@ -131,9 +131,16 @@ public class GeometryUtilityTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    // TODO:
-    [TestCase()]
-    public void HasLineOfSightOf_GivenTargetInComplexLines_ThenCalculateInLineOfSight()
+    // (2,1) scenarios
+    [TestCase(2, 1, "", true)]
+    [TestCase(2, 1, "1,0|1,1", false)]
+    [TestCase(2, 1, "2,0|1,1", false)]
+    [TestCase(2, 1, "1,0|0,1", false)]
+    [TestCase(2, 1, "0,2|1,2|2,2|2,0|0,1", true)]
+    [TestCase(2, 1, "0,2|1,2|2,2|2,0|1,0", true)]
+    [TestCase(2, 1, "0,1|0,-1|1,-1|2,-1|1,1", true)]
+    [TestCase(2, 1, "0,1|0,-1|1,-1|2,-1|2,0", true)]
+    public void HasLineOfSightOf_GivenTargetInComplexLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
         throw new NotImplementedException();
     }
