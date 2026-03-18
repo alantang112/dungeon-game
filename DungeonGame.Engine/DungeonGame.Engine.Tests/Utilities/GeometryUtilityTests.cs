@@ -1,4 +1,5 @@
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Geometry;
 using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests.Utilities;

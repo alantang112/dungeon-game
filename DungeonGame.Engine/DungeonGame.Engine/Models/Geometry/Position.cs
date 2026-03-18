@@ -1,6 +1,6 @@
 using System;
 
-namespace DungeonGame.Engine.Models
+namespace DungeonGame.Engine.Models.Geometry
 {
     public struct Position
     {

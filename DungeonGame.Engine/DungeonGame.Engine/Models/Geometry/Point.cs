@@ -1,11 +1,11 @@
 using System;
 
-namespace DungeonGame.Engine.Models
+namespace DungeonGame.Engine.Models.Geometry
 {
     public struct Point
     {
-        public decimal X { get; set; }
-        public decimal Y { get; set; }
+        public decimal X { get; }
+        public decimal Y { get; }
 
         public Point(decimal x, decimal y)
         {
@@ -36,6 +36,11 @@ namespace DungeonGame.Engine.Models
         public static bool operator !=(Point point, Point other)
         {
             return !(point == other);
+        }
+
+        public decimal DistanceFrom(Point point)
+        {
+            return (decimal) Math.Sqrt(Math.Pow((double)(point.X - X), 2) + Math.Pow((double)(point.Y - Y), 2));
         }
     }
 }

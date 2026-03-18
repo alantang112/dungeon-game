@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Geometry;
 
 namespace DungeonGame.Engine.Utilities
 {
@@ -112,14 +113,28 @@ namespace DungeonGame.Engine.Utilities
                                                 .Where(p => !IsHorizontalOrVerticalLine(p.ObserverVertex, p.TargetVertex))
                                                 .ToArray();
 
-            foreach(var vartexPair in vertexPairs)
+            foreach(var vertexPair in vertexPairs)
             {
+                var line = new Line(vertexPair.ObserverVertex, vertexPair.TargetVertex);
+
                 /// Check 1: 
                 /// Find all points that cross x or y
                 /// Order by distance from observer
                 /// Walk along line and find all squares it goes through
                 /// Filter out if contains observer or target
                 /// Id any of these are blocked, this line is blocked
+                var pointsAlongLine = new HashSet<Point>();
+                for (var x = vertexPair.ObserverVertex.X; x <= vertexPair.TargetVertex.X; x++)
+                {
+                    pointsAlongLine.Add(new Point(x, line.GetYAtX(x)));
+                }
+                for (var y = vertexPair.ObserverVertex.Y; y <= vertexPair.TargetVertex.Y; y++)
+                {
+                    pointsAlongLine.Add(new Point(line.GetXAtY(y), y));
+                }
+
+                var orderedPointsAlongLine = pointsAlongLine.OrderBy(x => x.DistanceFrom(vertexPair.ObserverVertex)).ToList();
+
                 /// 
                 /// Check 2:
                 /// Find all points where (x,y) are (int, int)
