@@ -117,23 +117,13 @@ namespace DungeonGame.Engine.Utilities
             {
                 var line = new Line(vertexPair.ObserverVertex, vertexPair.TargetVertex);
 
-                /// Check 1: 
-                /// Find all points that cross x or y
-                /// Order by distance from observer
-                /// Walk along line and find all squares it goes through
-                /// Filter out if contains observer or target
-                /// Id any of these are blocked, this line is blocked
-                var pointsAlongLine = new HashSet<Point>();
-                for (var x = vertexPair.ObserverVertex.X; x <= vertexPair.TargetVertex.X; x++)
-                {
-                    pointsAlongLine.Add(new Point(x, line.GetYAtX(x)));
-                }
-                for (var y = vertexPair.ObserverVertex.Y; y <= vertexPair.TargetVertex.Y; y++)
-                {
-                    pointsAlongLine.Add(new Point(line.GetXAtY(y), y));
-                }
-
-                var orderedPointsAlongLine = pointsAlongLine.OrderBy(x => x.DistanceFrom(vertexPair.ObserverVertex)).ToList();
+                // Check 1: 
+                var orderedInterceptsAlongLine = GetOrderedInterceptsAlongLine(line, vertexPair.ObserverVertex, vertexPair.TargetVertex);
+                var positionsBoundedByInterceptsAlongLine = GetPositionsBoundedByInterceptsAlongLine(orderedInterceptsAlongLine);
+                
+                // Filter out if contains observer or target
+                // If any of these are blocked, this line is blocked, 
+                
 
                 /// 
                 /// Check 2:
@@ -151,7 +141,46 @@ namespace DungeonGame.Engine.Utilities
 
         private static bool IsHorizontalOrVerticalLine(Point pointA, Point pointB)
         {
-            return (pointA.X == pointB.X || pointA.Y == pointB.Y);
+            return pointA.X == pointB.X || pointA.Y == pointB.Y;
+        }
+
+        private static List<Point> GetOrderedInterceptsAlongLine(Line line, Point start, Point end)
+        {
+            var minX = Math.Min(start.X, end.X);
+            var maxX = Math.Max(start.X, end.X);
+            var minY = Math.Min(start.Y, end.Y);
+            var maxY = Math.Max(start.Y, end.Y);
+
+            var pointsAlongLine = new HashSet<Point>();
+
+            for (var x = minX; x <= maxX; x++)
+            {
+                pointsAlongLine.Add(new Point(x, line.GetYAtX(x)));
+            }
+            for (var y = minY; y <= maxY; y++)
+            {
+                pointsAlongLine.Add(new Point(line.GetXAtY(y), y));
+            }
+
+            var orderedPointsAlongLine = pointsAlongLine.OrderBy(x => x.DistanceFrom(start)).ToList();
+
+            return orderedPointsAlongLine;
+        }
+
+        private static List<Position> GetPositionsBoundedByInterceptsAlongLine(List<Point> intercepts)
+        {
+            var positions = new HashSet<Position>();
+
+            for (var i = 0; i < intercepts.Count(); i++)
+            {
+                if (i == (intercepts.Count() - 1))
+                    continue; // we can actually skip the last point
+
+                var point = intercepts[i];
+                positions.Add(new Position((int) Math.Floor(point.X), (int) Math.Floor(point.Y)));
+            }
+
+            return positions.ToList();
         }
     }
 }
