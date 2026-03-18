@@ -120,12 +120,11 @@ namespace DungeonGame.Engine.Utilities
                 // Check 1: 
                 var orderedInterceptsAlongLine = GetOrderedInterceptsAlongLine(line, vertexPair.ObserverVertex, vertexPair.TargetVertex);
                 var positionsBoundedByInterceptsAlongLine = GetPositionsBoundedByInterceptsAlongLine(orderedInterceptsAlongLine);
-                
-                // Filter out if contains observer or target
-                // If any of these are blocked, this line is blocked, 
-                
+                if (positionsBoundedByInterceptsAlongLine.Where(p => p != observerPosition && p != targetPosition).Any(p => blockers.Contains(p)))
+                {
+                    continue; // this line is blocked
+                }                
 
-                /// 
                 /// Check 2:
                 /// Find all points where (x,y) are (int, int)
                 /// Find the perpendicular squares above and below
@@ -133,7 +132,9 @@ namespace DungeonGame.Engine.Utilities
                 /// Filter out points that is only connected to a line segment that is occupied by an observer or target
                 /// If any(perp. square above) is blocked AND any(perp. square below) is blocked, this line is blocked
                 /// 
-                /// If Check 1 is unblocked AND Check 2 is unblocked, then there is line of sight
+                
+                // If Check 1 is unblocked AND Check 2 is unblocked, then there is line of sight       
+                return true;
             }
 
             return false;
