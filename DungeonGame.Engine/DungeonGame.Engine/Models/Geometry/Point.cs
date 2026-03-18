@@ -1,19 +1,20 @@
 using System;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Models.Geometry
 {
     public struct Point
     {
-        public decimal X { get; }
-        public decimal Y { get; }
+        public double X { get; }
+        public double Y { get; }
 
-        public Point(decimal x, decimal y)
+        public Point(double x, double y)
         {
-            X = x;
-            Y = y;
+            X = GeometryUtility.Snap(x);
+            Y = GeometryUtility.Snap(y);
         }
 
-        public Point Translate(decimal xDelta, decimal yDelta)
+        public Point Translate(double xDelta, double yDelta)
         {
             return new Point(X + xDelta, Y + yDelta);
         }
@@ -38,9 +39,9 @@ namespace DungeonGame.Engine.Models.Geometry
             return !(point == other);
         }
 
-        public decimal DistanceFrom(Point point)
+        public double DistanceFrom(Point point)
         {
-            return (decimal) Math.Sqrt(Math.Pow((double)(point.X - X), 2) + Math.Pow((double)(point.Y - Y), 2));
+            return (double) Math.Sqrt(Math.Pow((double)(point.X - X), 2) + Math.Pow((double)(point.Y - Y), 2));
         }
     }
 }

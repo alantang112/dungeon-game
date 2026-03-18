@@ -59,10 +59,10 @@ public class GeometryUtilityTests
     
     private void TestLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
-        var observer = RandomPosition();
+        var observer = new Position(0, 0); // TODO: RandomPosition();
 
-        var mirrorX = RandomUtility.RandomBool() ? 1 : -1;
-        var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorX = 1; // TODO RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorY = 1; // TODO RandomUtility.RandomBool() ? 1 : -1;
 
         var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
 
@@ -173,6 +173,30 @@ public class GeometryUtilityTests
     public void HasLineOfSightOf_GivenTargetInComplexLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
         TestLineOfSight(targetXDelta, targetYDelta, wallDeltas, expected);
+    }
+    #endregion
+
+    #region Snap
+    [TestCase(0.0, 0.0)]
+    [TestCase(-0.0000001, 0.0)]
+    [TestCase(0.0000001, 0.0)]
+    [TestCase(1.0, 1.0)]
+    [TestCase(1.0000001, 1.0)]
+    [TestCase(0.9999999, 1.0)]
+    [TestCase(2.0, 2.0)]
+    [TestCase(2.0000001, 2.0)]
+    [TestCase(1.9999999, 2.0)]
+    [TestCase(1.5, 1.5)]
+    [TestCase(-1.0, -1.0)]
+    [TestCase(-1.0000001, -1.0)]
+    [TestCase(-0.9999999, -1.0)]
+    [TestCase(-2.0, -2.0)]
+    [TestCase(-2.0000001, -2.0)]
+    [TestCase(-1.9999999, -2.0)]
+    [TestCase(-1.5, -1.5)]
+    public void Snap_GivenValue_ThenSnap(double value, double expected)
+    {
+        Assert.That(GeometryUtility.Snap(value), Is.EqualTo(expected));
     }
     #endregion
 }

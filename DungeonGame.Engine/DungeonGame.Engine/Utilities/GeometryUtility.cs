@@ -122,7 +122,7 @@ namespace DungeonGame.Engine.Utilities
                 var positionsBoundedByInterceptsAlongLine = GetPositionsBoundedByInterceptsAlongLine(orderedInterceptsAlongLine);
                 if (positionsBoundedByInterceptsAlongLine.Where(p => p != observerPosition && p != targetPosition).Any(p => blockers.Contains(p)))
                 {
-                    continue;
+                    continue; // this line is blocked so continue to check the next vertex pair
                 }                
 
                 /// Check 2:
@@ -177,11 +177,24 @@ namespace DungeonGame.Engine.Utilities
                 if (i == (intercepts.Count() - 1))
                     continue; // we can actually skip the last point
 
-                var point = intercepts[i];
-                positions.Add(new Position((int) Math.Floor(point.X), (int) Math.Floor(point.Y)));
+                var point1 = intercepts[i];
+                var point2 = intercepts[i + 1];
+
+                var position = new Position(
+                    (int) Math.Floor(Math.Min(point1.X, point2.X)),
+                    (int) Math.Floor(Math.Min(point1.Y, point2.Y))
+                );
+
+                positions.Add(position);
             }
 
             return positions.ToList();
+        }
+
+        public static double Snap(double value)
+        {
+            double snapped = Math.Round(value / GameConstants.GeometryCalculationEpsilon) * GameConstants.GeometryCalculationEpsilon;
+            return Math.Round(snapped, GameConstants.GeometryCalculationDecimalPlaces);
         }
     }
 }

@@ -13,10 +13,10 @@ namespace DungeonGame.Engine.Models.Geometry
             YIntercept = pointA.Y - Gradient * pointA.X;
         }
 
-        public decimal Gradient { get; }
-        public decimal YIntercept { get; }
+        public double Gradient { get; }
+        public double YIntercept { get; }
 
-        public decimal GetYAtX(decimal x) => Gradient * x + YIntercept;
-        public decimal GetXAtY(decimal y) => (y - YIntercept) / Gradient;
+        public double GetYAtX(double x) => Gradient * x + YIntercept;
+        public double GetXAtY(double y) => (y - YIntercept) / Gradient;
     }
 }
