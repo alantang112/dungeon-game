@@ -117,12 +117,12 @@ namespace DungeonGame.Engine.Utilities
             {
                 var line = new Line(vertexPair.ObserverVertex, vertexPair.TargetVertex);
 
-                // Check 1: 
+                // Check 1: If any square crossed by line is blocked, this line is blocked
                 var orderedInterceptsAlongLine = GetOrderedInterceptsAlongLine(line, vertexPair.ObserverVertex, vertexPair.TargetVertex);
                 var positionsBoundedByInterceptsAlongLine = GetPositionsBoundedByInterceptsAlongLine(orderedInterceptsAlongLine);
                 if (positionsBoundedByInterceptsAlongLine.Where(p => p != observerPosition && p != targetPosition).Any(p => blockers.Contains(p)))
                 {
-                    continue; // this line is blocked
+                    continue;
                 }                
 
                 /// Check 2:
