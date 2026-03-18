@@ -43,5 +43,11 @@ namespace DungeonGame.Engine.Models.Geometry
         {
             return (double) Math.Sqrt(Math.Pow((double)(point.X - X), 2) + Math.Pow((double)(point.Y - Y), 2));
         }
+
+        public bool IsCornerPoint()
+        {
+            return (Math.Abs(X - Math.Round(X)) < GameConstants.GeometryCalculationEpsilon) 
+                && (Math.Abs(Y - Math.Round(Y)) < GameConstants.GeometryCalculationEpsilon);
+        }
     }
 }

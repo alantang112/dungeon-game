@@ -127,6 +127,7 @@ namespace DungeonGame.Engine.Utilities
 
                 /// Check 2:
                 /// Find all points where (x,y) are (int, int)
+                var orderedInterceptsAlongLineAtCorners = orderedInterceptsAlongLine; // TODO
                 /// Find the perpendicular squares above and below
                 /// Filter out pairs where perp square has observer or target
                 /// Filter out points that is only connected to a line segment that is occupied by an observer or target

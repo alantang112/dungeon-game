@@ -1,5 +1,6 @@
 using System.Text.Json;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.InputEventModels;
 using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
@@ -24,9 +25,9 @@ public class EnergyDicePreRollTests
     [Test]
     public void WhenRoll_ThenInitializeEnergyDice()
     {
-        _sut.ProcessInput(new Models.InputEventModels.InputEvent()
+        _sut.ProcessInput(new InputEvent()
         {
-            EventType = Models.InputEventModels.InputEventType.EnergyDiceRoll
+            EventType = InputEventType.EnergyDiceRoll
         });
 
         var gameState = _sut.GetCurrentState();
@@ -37,9 +38,9 @@ public class EnergyDicePreRollTests
     [Test]
     public void WhenRoll_ThenUpdateGamePhaseToEnergyDiceAssignment()
     {
-        _sut.ProcessInput(new Models.InputEventModels.InputEvent()
+        _sut.ProcessInput(new InputEvent()
         {
-            EventType = Models.InputEventModels.InputEventType.EnergyDiceRoll
+            EventType = InputEventType.EnergyDiceRoll
         });
 
         var gameState = _sut.GetCurrentState();
