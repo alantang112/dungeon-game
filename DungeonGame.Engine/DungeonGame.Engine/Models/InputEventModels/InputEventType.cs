@@ -5,10 +5,24 @@ namespace DungeonGame.Engine.Models.InputEventModels
         // Start actions
         NewGame,
         
-        // Game actions
+        // Game actions - EnergyDice
         EnergyDiceRoll,
         EnergyDiceAssign,
         EnergyDiceResetAssignment,
         EnergyDiceConfirmAssignment,
+
+        // Game actions - Hero
+        HeroActionMove,
+        HeroActionAttack,
+        HeroActionReset,
+        HeroActionConfirm,
+
+        // Game actions - Monsters
+        MonsterTurnContinue,
+
+        // Game actions - LevelEnd
+        LevelEndChooseUpgrade,
+
+        // Game actions - GameEnd
     }
 }

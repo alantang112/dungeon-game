@@ -27,7 +27,8 @@ namespace DungeonGame.Engine
 
             firstHandler
                 .SetNext(new EnergyDicePreRollHandler())
-                .SetNext(new EnergyDiceAssignmentHandler());
+                .SetNext(new EnergyDiceAssignmentHandler())
+                .SetNext(new HeroActionsHandler());
 
             return firstHandler;
         }
