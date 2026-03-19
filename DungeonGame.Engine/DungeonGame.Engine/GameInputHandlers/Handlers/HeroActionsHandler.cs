@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
@@ -27,9 +28,21 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var newPosition = new Position(parameters.X, parameters.Y);
                 var movementPointsRequired = GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, newPosition);
 
+                if (movementPointsRequired > 3 || movementPointsRequired == 0)
+                {
+                    gameState.GameMessage = GameMessages.CanOnlyMoveAdjacently;
+                    return gameState;
+                }
+
                 if (gameState.Hero.ActionPoints[SkillType.Movement] < movementPointsRequired)
                 {
                     gameState.GameMessage = GameMessages.NotEnoughMovementActionPoints;
+                    return gameState;
+                }
+
+                if (gameState.World.Walls.Contains(newPosition) || gameState.World.Monsters.Any(x => x.Position == newPosition))
+                {
+                    gameState.GameMessage = GameMessages.CannotMoveToThatSpace;
                     return gameState;
                 }
 

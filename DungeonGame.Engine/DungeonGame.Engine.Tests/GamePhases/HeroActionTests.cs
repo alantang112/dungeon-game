@@ -48,11 +48,11 @@ public class HeroActionTests
     [TestCase(1, -1, -3)]
     public void Movement_WhenMoveHero_ThenHeroMove_AndMovementPointsDecrease(int xDelta, int yDelta, int expectedMovementPointsDelta)
     {
-        var heroInitialX = 1;
-        var heroInitialY = 3;
+        var heroInitialX = 2;
+        var heroInitialY = 4;
         var heroInitialMovementPoints = 3 + RandomUtility.RandomInt(0, 3);
 
-        // set hero position to (1,3) no walls/monsters in surrounding spaces
+        // set hero position to (2,3) no walls/monsters in surrounding spaces
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
@@ -87,16 +87,16 @@ public class HeroActionTests
     [TestCase(1, 1, 2)]
     [TestCase(1, 1, 1)]
     [TestCase(1, 1, 0)]
-    public void Movement_GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int xDelta, int yDelta, int initialMovementsPoints)
+    public void Movement_GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int xDelta, int yDelta, int initialMovementPoints)
     {
-        var heroInitialX = 1;
-        var heroInitialY = 3;
+        var heroInitialX = 2;
+        var heroInitialY = 4;
         
-        // set hero position to (1,3) no walls/monsters in surrounding spaces
+        // set hero position to (2,3) no walls/monsters in surrounding spaces
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementsPoints);
+        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -117,7 +117,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
         var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
-        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementsPoints));
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
 
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughMovementActionPoints));
     }
@@ -133,31 +133,93 @@ public class HeroActionTests
     [TestCase(1, -2)]
     public void Movement_WhenMoveHeroNotAdjacent_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int xDelta, int yDelta)
     {
-        throw new NotImplementedException();  
+        var heroInitialX = 3;
+        var heroInitialY = 3;
+        var initialMovementPoints = 10;
+        
+        // set hero position to center of level
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        // set hero movement points
+        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
+
+        // remove walls and monsters
+        gameState.World.Walls.Clear();
+        gameState.World.Monsters.Clear();
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionMoveEventParameters()
+        {
+            X = heroInitialX + xDelta,
+            Y = heroInitialY + yDelta
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionMove,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
+
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CanOnlyMoveAdjacently));  
     }
 
-    [Test]
-    public void Movement_WhenMoveHeroIntoWall_ThenDoNotMove_AndDoNotDecreaseMovementPoints()
+    [TestCase(0, -1)]
+    [TestCase(0, 1)]
+    [TestCase(1, 1)]
+    public void Movement_WhenMoveHeroIntoWallOrMonster_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int xDelta, int yDelta)
     {
-        throw new NotImplementedException();
-    }
+        var heroInitialX = 4;
+        var heroInitialY = 3;
+        var initialMovementPoints = 3;
+        
+        // set hero position to center of level
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        // set hero movement points
+        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
-    [Test]
-    public void Movement_WhenMoveHeroIntoSameSpace_ThenDoNotMove_AndDoNotDecreaseMovementPoints()
-    {
-        throw new NotImplementedException();
-    }
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
-    [Test]
-    public void Movement_WhenMoveHeroIntoMonster_ThenDoNotMove_AndDoNotDecreaseMovementPoints_AndReturnGameError()
-    {
-        throw new NotImplementedException();
+        var inputEventParameters = new HeroActionMoveEventParameters()
+        {
+            X = heroInitialX + xDelta,
+            Y = heroInitialY + yDelta
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionMove,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
+
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CannotMoveToThatSpace)); 
     }
     #endregion
 
     #region Attacking
     [Test]
     public void Attacking_GivenMonsterInRangeInLineOfSight_AndHeroHasEnoughAttackPoints_WhenAttack_ThenMonsterLosesHealth()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Attacking_WhenAttackMonster_AndMonsterDefeated_RemoveMonsterFromWorld()
     {
         throw new NotImplementedException();
     }

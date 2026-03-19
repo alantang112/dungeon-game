@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Geometry;
-using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Models
 {
@@ -10,7 +10,7 @@ namespace DungeonGame.Engine.Models
     {
         public Position HeroPosition { get; set; }
         public HashSet<Position>? Walls { get; set; }
-        public List<(Monster, Position)>? Monsters { get; set; }
+        public List<MonsterPosition>? Monsters { get; set; }
 
         public void InitializeLevel(int levelNumber)
         {
@@ -26,7 +26,7 @@ namespace DungeonGame.Engine.Models
             }
 
             // init level
-            var template = LevelDefinitions.Levels.Single(x => x.LevelNumber == levelNumber);
+            var template = LevelTemplates.Levels.Single(x => x.LevelNumber == levelNumber);
             HeroPosition = template.HeroPosition;
 
             foreach(var wallPosition in template.WallPositions)
@@ -34,13 +34,16 @@ namespace DungeonGame.Engine.Models
                 Walls.Add(wallPosition);
             }
 
-            Monsters = new List<(Monster, Position)>();
+            Monsters = new List<MonsterPosition>();
             foreach(var monster in template.MonsterPositions)
             {
                 var monsterType = monster.Item1;
                 var monsterPosition = monster.Item2;
                 
-                Monsters.Add((MonsterSpawner.Spawn(monsterType), monsterPosition));
+                Monsters.Add(new MonsterPosition() {
+                    Monster = MonsterSpawner.Spawn(monsterType), 
+                    Position = monsterPosition
+                });
             }
         }
     }

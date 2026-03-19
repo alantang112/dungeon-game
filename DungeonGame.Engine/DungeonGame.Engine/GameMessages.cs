@@ -6,5 +6,7 @@ namespace DungeonGame.Engine
         public static string InvalidSkillForEnergyDiceAssignment = "This skill type cannot be assigned an energy dice";
         public static string AssignAllEnergyDiceBeforeProceeding = "Please assign all energy dice before proceeding";
         public static string NotEnoughMovementActionPoints = "You do not have enough movement action points";
+        public static string CanOnlyMoveAdjacently = "You can only move to adjacent spaces";
+        public static string CannotMoveToThatSpace = "You cannot move to that space";
     }
 }

@@ -1,9 +1,10 @@
+using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
 
-namespace DungeonGame.Engine.Models
+namespace DungeonGame.Engine.GameTemplates
 {
-    public static class LevelDefinitions
+    public static class LevelTemplates
     {
         public static Level[] Levels = new Level[]
         {
