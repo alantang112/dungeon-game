@@ -23,28 +23,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (!ValidSkillTypeForEnergyDiceAssignment.Contains(parameters.SkillType))
                 {
-                    gameState.GameMessage = GameConstants.InvalidSkillForEnergyDiceAssignment;
+                    gameState.GameMessage = GameMessages.InvalidSkillForEnergyDiceAssignment;
                     return gameState;
                 }
 
                 if (gameState.EnergyDice.AssignedSkills[parameters.DiceIndex] != null)
                 {
-                    gameState.GameMessage = GameConstants.SkillAlreadyAssignedEnergyDice;
+                    gameState.GameMessage = GameMessages.SkillAlreadyAssignedEnergyDice;
                     return gameState;
                 }
 
                 gameState.EnergyDice.AssignDice(parameters.DiceIndex, parameters.SkillType);
-                return gameState;
-            } 
-            else if (inputEvent.EventType == InputEventType.EnergyDiceConfirmAssignment)
-            {
-                if (gameState.EnergyDice.AssignedSkills.Any(x => x == null))
-                {
-                    gameState.GameMessage = GameConstants.AssignAllEnergyDiceBeforeProceeding;
-                    return gameState;
-                }
-
-                gameState.GamePhase = GamePhase.HeroActions;
                 return gameState;
             } 
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)
@@ -52,6 +41,26 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.EnergyDice.ResetAssignment();
                 return gameState;
             }
+            else if (inputEvent.EventType == InputEventType.EnergyDiceConfirmAssignment)
+            {
+                if (gameState.EnergyDice.AssignedSkills.Any(x => x == null))
+                {
+                    gameState.GameMessage = GameMessages.AssignAllEnergyDiceBeforeProceeding;
+                    return gameState;
+                }
+
+                gameState.Hero.ActionPoints.Clear();
+                for (var i = 0; i < gameState.EnergyDice.AssignedSkills.Count(); i++)
+                {
+                    var skillType = (SkillType) gameState.EnergyDice.AssignedSkills[i];
+                    var diceValue = gameState.EnergyDice.Dice[i];
+
+                    gameState.Hero.ActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
+                }
+
+                gameState.GamePhase = GamePhase.HeroActions;
+                return gameState;
+            } 
 
             throw new NotImplementedException();
         }

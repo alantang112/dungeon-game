@@ -17,9 +17,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 throw new ArgumentException("NewGameEventParameters required for NewGame input");
 
             gameState.Hero.Name = newGameParameters.HeroName;
+            gameState.Hero.Stats.Add(SkillType.Movement, 1);
+            gameState.Hero.Stats.Add(SkillType.Attack, 1);
+            gameState.Hero.Stats.Add(SkillType.Defence, 1);
+            gameState.Hero.Stats.Add(SkillType.AttackRange, 2);
+
             gameState.LevelNumber = 1;
             gameState.World = new World();
             gameState.World.InitializeLevel(1);
+
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
             return gameState;
         }

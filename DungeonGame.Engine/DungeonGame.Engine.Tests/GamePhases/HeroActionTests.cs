@@ -66,7 +66,7 @@ public class HeroActionTests
             Y = heroInitialY + yDelta
         };
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
@@ -81,15 +81,45 @@ public class HeroActionTests
     }
 
     // orthogonal
-    [TestCase(1, 1, 0)]
-    [TestCase(0, 1, 0)]
+    [TestCase(1, 0, 1)]
+    [TestCase(1, 0, 0)]
     // diagonal
-    [TestCase(2, 1, 1)]
+    [TestCase(1, 1, 2)]
     [TestCase(1, 1, 1)]
-    [TestCase(0, 1, 1)]
-    public void Movement_GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int movementsRemaining, int xDelta, int yDelta)
+    [TestCase(1, 1, 0)]
+    public void Movement_GivenNotEnoughMovement_WhenMoveHero_ThenDoNotMove_AndDoNotDecreaseMovementPoints(int xDelta, int yDelta, int initialMovementsPoints)
     {
-        throw new NotImplementedException();  
+        var heroInitialX = 1;
+        var heroInitialY = 3;
+        
+        // set hero position to (1,3) no walls/monsters in surrounding spaces
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        // set hero movement points
+        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementsPoints);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionMoveEventParameters()
+        {
+            X = heroInitialX + xDelta,
+            Y = heroInitialY + yDelta
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionMove,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementsPoints));
+
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughMovementActionPoints));
     }
 
     [TestCase(0, 0)]

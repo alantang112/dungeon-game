@@ -47,6 +47,14 @@ public class StartPhaseTests
         Assert.That(gameState.World.HeroPosition, Is.EqualTo(new Position(1, 1)));
         Assert.That(gameState.World.Walls.Count(), Is.EqualTo(27));
         Assert.That(gameState.World.Monsters.Count(), Is.EqualTo(2));
+
+        // Hero stats initialized
+        Assert.That(gameState.Hero.Stats[SkillType.Movement], Is.EqualTo(1));
+        Assert.That(gameState.Hero.Stats[SkillType.Attack], Is.EqualTo(1));
+        Assert.That(gameState.Hero.Stats[SkillType.Defence], Is.EqualTo(1));
+        Assert.That(gameState.Hero.Stats[SkillType.AttackRange], Is.EqualTo(2));
+
+        Assert.That(gameState.Hero.ActionPoints, Is.Empty);
     }
 
     [Test]

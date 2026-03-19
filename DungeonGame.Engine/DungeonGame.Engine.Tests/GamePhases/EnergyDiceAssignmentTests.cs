@@ -63,7 +63,7 @@ public class EnergyDiceAssignmentTests
         });
 
         var gameState = _sut.GetCurrentState();
-        Assert.That(gameState.GameMessage, Is.Not.EqualTo(GameConstants.SkillAlreadyAssignedEnergyDice));
+        Assert.That(gameState.GameMessage, Is.Not.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
 
         _sut.ProcessInput(new InputEvent()
         {
@@ -76,7 +76,7 @@ public class EnergyDiceAssignmentTests
         });
 
         var newGameState = _sut.GetCurrentState();
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameConstants.SkillAlreadyAssignedEnergyDice));
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
     }
 
     [TestCase(SkillType.AttackRange)]
@@ -93,7 +93,7 @@ public class EnergyDiceAssignmentTests
         });
 
         var gameState = _sut.GetCurrentState();
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameConstants.InvalidSkillForEnergyDiceAssignment));
+        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.InvalidSkillForEnergyDiceAssignment));
     }
 
     [Test]
@@ -163,7 +163,7 @@ public class EnergyDiceAssignmentTests
 
         var gameState = _sut.GetCurrentState();
         
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameConstants.AssignAllEnergyDiceBeforeProceeding));
+        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.AssignAllEnergyDiceBeforeProceeding));
     }
 
     [Test]
@@ -176,6 +176,16 @@ public class EnergyDiceAssignmentTests
             {
                 Dice = new int[3] { 1, 4, 6 },
                 AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
+            },
+            Hero = new Engine.Models.Entities.Hero()
+            {
+                Stats = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 1 },
+                    { SkillType.Attack, 2 },
+                    { SkillType.Defence, 3 },
+                    { SkillType.AttackRange, 4 }
+                }
             }
         });
 
@@ -189,5 +199,10 @@ public class EnergyDiceAssignmentTests
         var gameState = _sut.GetCurrentState();
         
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
+
+        Assert.That(gameState.Hero.ActionPoints[SkillType.Movement], Is.EqualTo(2));
+        Assert.That(gameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(8));
+        Assert.That(gameState.Hero.ActionPoints[SkillType.Defence], Is.EqualTo(7));
+        Assert.That(gameState.Hero.ActionPoints.Count(), Is.EqualTo(3));
     }
 }

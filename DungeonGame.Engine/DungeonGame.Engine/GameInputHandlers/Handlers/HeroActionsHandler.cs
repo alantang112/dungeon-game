@@ -27,6 +27,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var newPosition = new Position(parameters.X, parameters.Y);
                 var movementPointsRequired = GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, newPosition);
 
+                if (gameState.Hero.ActionPoints[SkillType.Movement] < movementPointsRequired)
+                {
+                    gameState.GameMessage = GameMessages.NotEnoughMovementActionPoints;
+                    return gameState;
+                }
+
                 gameState.World.HeroPosition = newPosition; 
                 gameState.Hero.ActionPoints[SkillType.Movement] -= movementPointsRequired;
 

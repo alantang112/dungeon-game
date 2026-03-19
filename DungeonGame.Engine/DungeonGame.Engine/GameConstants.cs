@@ -10,10 +10,5 @@ namespace DungeonGame.Engine
 
         public static double GeometryCalculationEpsilon = 0.00001;
         public static int GeometryCalculationDecimalPlaces = 5;
-
-        // Game Messages
-        public static string SkillAlreadyAssignedEnergyDice = "This skill type is already assigned an energy dice";
-        public static string InvalidSkillForEnergyDiceAssignment = "This skill type cannot be assigned an energy dice";
-        public static string AssignAllEnergyDiceBeforeProceeding = "Please assign all energy dice before proceeding";
     }
 }
