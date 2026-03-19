@@ -8,6 +8,6 @@ namespace DungeonGame.Engine.Models.Entities
         public MonsterType Type { get; set; }
 
         public int Health { get; set; }
-        public Dictionary<SkillType, int> Stats { get; set; }
+        public Dictionary<SkillType, int> Stats { get; set; } = new Dictionary<SkillType, int>();
     }
 }

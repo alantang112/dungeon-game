@@ -125,6 +125,7 @@ public class GeometryUtilityTests
     [TestCase(3, 3, "2,1|2,3", true)]
     [TestCase(3, 3, "2,3|0,1", true)]
     [TestCase(3, 3, "1,2|3,2", true)]
+    [TestCase(3, 3, "2,1|2,3|0,1", false)]
     public void HasLineOfSightOf_GivenTargetInDiagonalLines_ThenCalculateInLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
         TestLineOfSight(targetXDelta, targetYDelta, wallDeltas, expected);

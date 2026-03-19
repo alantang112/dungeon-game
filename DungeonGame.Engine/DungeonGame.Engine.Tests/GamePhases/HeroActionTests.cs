@@ -28,6 +28,15 @@ public class HeroActionTests
             LevelNumber = 1,
             World = new World(),
             Hero = new Hero()
+            {
+                Stats = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 1 },
+                    { SkillType.Attack, 1 },
+                    { SkillType.Defence, 1 },
+                    { SkillType.AttackRange, 2 }
+                },
+            }
         };
 
         initialGameState.World.InitializeLevel(1);
@@ -215,43 +224,235 @@ public class HeroActionTests
     [Test]
     public void Attacking_GivenMonsterInRangeInLineOfSight_AndHeroHasEnoughAttackPoints_WhenAttack_ThenMonsterLosesHealth()
     {
-        throw new NotImplementedException();
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        var initialAttackPoints = 4;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var monster = newGameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster;
+        Assert.That(monster.Health, Is.EqualTo(1)); // decreased from 2
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(0));
     }
 
     [Test]
     public void Attacking_WhenAttackMonster_AndMonsterDefeated_RemoveMonsterFromWorld()
     {
-        throw new NotImplementedException();
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        var initialAttackPoints = 4;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var monsterPosition = newGameState.World.Monsters.FirstOrDefault(x => x.Position.X == monsterX && x.Position.Y == monsterY);
+        Assert.That(monsterPosition, Is.Null);
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(1)); // 1 other monster remaining
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(0));
     }
 
     [Test]
     public void Attacking_GivenMonsterNotInRange_WhenAttack_ThenReturnGameMessage()
     {
-        throw new NotImplementedException();
+        var heroInitialX = 5;
+        var heroInitialY = 2;
+        var initialAttackPoints = 4;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInRangeToAttack));   
     }
 
     [Test]
     public void Attacking_GivenMonsterNotPresent_WhenAttack_ThenReturnGameMessage()
     {
-        throw new NotImplementedException();
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        var initialAttackPoints = 4;
+        
+        var monsterX = 4;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NoMonsterToAttackAtThatSpace));   
     }
 
-    [Test]
-    public void Attacking_GivenMonsterNotInLineOfSight_WhenAttack_ThenReturnGameMessage()
+    [TestCase(3,4)]
+    [TestCase(2,4)]
+    [TestCase(3,1)]
+    [TestCase(1,1)]
+    [TestCase(2,1)]
+    public void Attacking_GivenMonsterNotInLineOfSight_WhenAttack_ThenReturnGameMessage(int heroInitialX, int heroInitialY)
     {
-        throw new NotImplementedException();
+        var initialAttackPoints = 4;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.Hero.Stats[SkillType.AttackRange] = 100;
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInLineOfSightToAttack));
     }
 
     [Test]
     public void Attacking_GivenMonsterHasMoreDefenceThanYourAttack_WhenAttack_ThenReturnGameMessage()
     {
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        var initialAttackPoints = 3;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
+        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughAttackToAttackMonster));   
+    }
+    #endregion
+
+    #region Reset
+    [Test]
+    public void Reset_GivenHeroActionsMade_WhenReset_ThenReturnToStateAtStartOfActions()
+    {
         throw new NotImplementedException();
     }
-
-    /*
-    * TODO: need another unit test class to test InRange, InLineOfSight
-    */
-
     #endregion
 
     #region Continue

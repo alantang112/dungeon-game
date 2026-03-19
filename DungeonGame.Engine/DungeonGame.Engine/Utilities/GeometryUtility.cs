@@ -42,13 +42,16 @@ namespace DungeonGame.Engine.Utilities
                 throw new ArgumentException($"observer and target are in the same position");
             }
 
-            // straight line case (horizontal, vertical, diagonal)
-            if (observerPosition.X == targetPosition.X 
-                || observerPosition.Y == targetPosition.Y 
-                || Math.Abs(observerPosition.X - targetPosition.X) == Math.Abs(observerPosition.Y - targetPosition.Y))
+            // straight line case (horizontal, vertical)
+            if (IsHorizontalOrVerticalLine(observerPosition, targetPosition))
             {
                 return HasLineOfSightOfInAStraightLine(observerPosition, targetPosition, blockers);
             }
+
+            // diagonal case: always needs an unblocked direct path similar to straight line case
+            // in addition to the 'complex' scenario rules
+            if (IsDiagonalLine(observerPosition, targetPosition) && !HasLineOfSightOfInAStraightLine(observerPosition, targetPosition, blockers))
+                return false;
 
             // all else
             return HasLineOfSightOfComplexLine(observerPosition, targetPosition, blockers);
@@ -56,12 +59,8 @@ namespace DungeonGame.Engine.Utilities
 
         private static bool HasLineOfSightOfInAStraightLine(Position observerPosition, Position targetPosition, Position[] blockers)
         {
-            if (observerPosition.X != targetPosition.X 
-                && observerPosition.Y != targetPosition.Y 
-                && Math.Abs(observerPosition.X - targetPosition.X) != Math.Abs(observerPosition.Y - targetPosition.Y))
-                throw new ArgumentException("Input positions are not in a straight line or diagonal");
-
-            var diagonalLine = Math.Abs(observerPosition.X - targetPosition.X) == Math.Abs(observerPosition.Y - targetPosition.Y);
+            if (!IsHorizontalOrVerticalLine(observerPosition, targetPosition) && !IsDiagonalLine(observerPosition, targetPosition))
+                throw new ArgumentException("Input positions are not in a straight or diagonal line");
 
             var position = observerPosition;
 
@@ -75,16 +74,6 @@ namespace DungeonGame.Engine.Utilities
 
                 if (checkPosition != targetPosition && blockers.Any(blocker => blocker == checkPosition))
                     return false;
-
-                // handle diagonal case
-                if (diagonalLine)
-                {
-                    var checkPosition1 = position.Translate(checkPositionXDelta, 0);
-                    var checkPosition2 = position.Translate(0, checkPositionYDelta);
-
-                    if (blockers.Any(blocker => blocker == checkPosition1) && blockers.Any(blocker => blocker == checkPosition2))
-                        return false;
-                }
 
                 // update position
                 position = checkPosition;
@@ -156,6 +145,16 @@ namespace DungeonGame.Engine.Utilities
             return pointA.X == pointB.X || pointA.Y == pointB.Y;
         }
 
+        private static bool IsHorizontalOrVerticalLine(Position positionA, Position positionB)
+        {
+            return positionA.X == positionB.X || positionA.Y == positionB.Y;
+        }
+
+        private static bool IsDiagonalLine(Position positionA, Position positionB)
+        {
+            return Math.Abs(positionA.X - positionB.X) == Math.Abs(positionA.Y - positionB.Y);
+        }
+
         private static List<Point> GetOrderedInterceptsAlongLine(Line line, Point start, Point end)
         {
             var minX = Math.Min(start.X, end.X);
@@ -210,6 +209,9 @@ namespace DungeonGame.Engine.Utilities
 
         private static List<Point> FilterOutPointsOutsideBoundedPositions(List<Point> points, List<Position> boundedPositions)
         {
+            if (!boundedPositions.Any())
+                return points;
+
             var minX = boundedPositions[0].X;
             var maxX = boundedPositions[0].X + 1; // need to +1 because the position is a box
             var minY = boundedPositions[0].Y;

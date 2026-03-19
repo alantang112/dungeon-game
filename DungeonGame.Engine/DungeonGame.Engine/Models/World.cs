@@ -9,8 +9,8 @@ namespace DungeonGame.Engine.Models
     public class World
     {
         public Position HeroPosition { get; set; }
-        public HashSet<Position>? Walls { get; set; }
-        public List<MonsterPosition>? Monsters { get; set; }
+        public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
+        public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
 
         public void InitializeLevel(int levelNumber)
         {

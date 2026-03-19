@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
@@ -53,7 +54,52 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             } 
             else if (inputEvent.EventType == InputEventType.HeroActionAttack)
             {
+                var parameters = (HeroActionAttackEventParameters) inputEvent.EventParameters!;
+                var attackAtPosition = new Position(parameters.X, parameters.Y);
                 
+                var monsterPosition = gameState.World.Monsters.FirstOrDefault(x => x.Position == attackAtPosition);
+
+                if (monsterPosition == null)
+                {
+                    gameState.GameMessage = GameMessages.NoMonsterToAttackAtThatSpace;
+                    return gameState;
+                }
+
+                if (GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, monsterPosition.Position) > gameState.Hero.Stats[SkillType.AttackRange])
+                {
+                    gameState.GameMessage = GameMessages.MonsterNotInRangeToAttack;
+                    return gameState;
+                }
+
+                var blockers = new List<Position>();
+                blockers.AddRange(gameState.World.Walls);
+                blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
+                if (!GeometryUtility.HasLineOfSightOf(gameState.World.HeroPosition, monsterPosition.Position, blockers.ToArray()))
+                {
+                    gameState.GameMessage = GameMessages.MonsterNotInLineOfSightToAttack;
+                    return gameState;
+                }
+
+                if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.Hero.ActionPoints[SkillType.Attack])
+                {
+                    gameState.GameMessage = GameMessages.NotEnoughAttackToAttackMonster;
+                    return gameState;
+                }
+
+                monsterPosition.Monster.Health -= 1;
+                gameState.Hero.ActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
+
+                if (monsterPosition.Monster.Health <= 0)
+                {
+                    // TODO: Add a game message?
+                    gameState.World.Monsters.Remove(monsterPosition);
+                }
+                else
+                {
+                    // TODO: Add a game message?
+                }
+                
+                return gameState;
             }
             else if (inputEvent.EventType == InputEventType.HeroActionReset)
             {
