@@ -21,9 +21,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 // For each monster
                 //      If monster already at max attack range from hero, continue
                 //      Find all possible squares that can be walked to - WalkDistanceFrom (monsters can walk through but not end on monsters)
-                //      Find candidate destinations:
-                //          Find empty squares in attack range from hero with line of sight -> store listA (priority: order by attack range desc) - InRangeFrom + HasLineOfSightOf(blockers: walls + monsters)
-                //          If none, find empty squares closest to hero ignoring monsters -> store listC (priority: order by distance to hero asc) - WalkDistanceFrom(hero, walls, levelSize ** 2)
+                //      Check if any in range and in line of sight of hero. If yes, find best (max range, then lowest movements required). Move there, end.
+                //      Otherwise, find empty squares in attack range from hero with line of sight -> (priority: order by attack range desc) - InRangeFrom + HasLineOfSightOf(blockers: walls + monsters)
+                //      Otherwise, find empty squares closest to hero ignoring monsters -> (priority: order by distance to hero asc) - WalkDistanceFrom(hero, walls, levelSize ** 2)
+                //      Find optimal square(s).
                 //      For each walkable square, calculate the min distance to an optimal destination (use flood algorithm). It should take into account walls (all lists) and monsters (listA only)
                 //      Choose the square that has the min distance. If tied, order by walkDistance from starting position (i.e. walk the minimum steps)
 
