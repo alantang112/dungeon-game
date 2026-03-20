@@ -1,4 +1,4 @@
-namespace DungeonGame.Engine.Models.InputEventModels
+namespace DungeonGame.Engine.Models.Enums
 {
     public enum InputEventType
     {
@@ -15,13 +15,15 @@ namespace DungeonGame.Engine.Models.InputEventModels
         HeroActionMove,
         HeroActionAttack,
         HeroActionReset,
-        HeroActionConfirm,
+        HeroActionEnd, // will trigger monster actions
 
         // Game actions - Monsters
-        MonsterTurnContinue,
+        MonstersMove,
+        MonstersAttack,
+        MonsterActionsEnd,
 
         // Game actions - LevelEnd
-        LevelEndChooseUpgrade,
+        LevelEnd,
 
         // Game actions - GameEnd
     }

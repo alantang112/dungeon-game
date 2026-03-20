@@ -41,6 +41,16 @@ public class HeroActionTests
 
         initialGameState.World.InitializeLevel(1);
 
+        var worldSnapshot = initialGameState.World.DeepClone();
+        worldSnapshot.Monsters.ForEach(mp => {
+            mp.Monster.Health = 3;
+        });
+        worldSnapshot.HeroActionPoints[SkillType.Movement] = 10;
+        worldSnapshot.HeroActionPoints[SkillType.Attack] = 11;
+        worldSnapshot.HeroActionPoints[SkillType.Defence] = 12;
+
+        initialGameState.WorldSnapshot = worldSnapshot;
+
         var initialGameStateJson = JsonSerializer.Serialize(initialGameState);
 
         _sut.LoadGameStateSnapshot(initialGameStateJson);
@@ -300,6 +310,42 @@ public class HeroActionTests
     }
 
     [Test]
+    public void Attacking_GivenOneMonsterRemaining_WhenAttackMonster_AndMonsterDefeated_MoveToLevelEnd()
+    {
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        var initialAttackPoints = 4;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
+        var otherMonster = gameState.World.Monsters.First(x => x.Position.X == 4 && x.Position.Y == 5);
+        gameState.World.Monsters.Remove(otherMonster);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
+    }
+
+    [Test]
     public void Attacking_GivenMonsterNotInRange_WhenAttack_ThenReturnGameMessage()
     {
         var heroInitialX = 5;
@@ -451,7 +497,18 @@ public class HeroActionTests
     [Test]
     public void Reset_GivenHeroActionsMade_WhenReset_ThenReturnToStateAtStartOfActions()
     {
-        throw new NotImplementedException();
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionReset
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(10));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(11));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(12));
+        Assert.That(newGameState.World.Monsters.Count(), Is.EqualTo(2));
+        Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 3), Is.True);
     }
     #endregion
 
@@ -459,7 +516,14 @@ public class HeroActionTests
     [Test]
     public void Continue_WhenContinue_ThenGoToNextPhase()
     {
-        throw new NotImplementedException();
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionEnd
+        });
+
+        var newGameState = _sut.GetCurrentState();
+
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
     }
     #endregion
 }

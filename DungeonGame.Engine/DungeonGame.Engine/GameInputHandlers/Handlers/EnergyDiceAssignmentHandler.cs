@@ -3,6 +3,7 @@ using System.Linq;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.GameInputHandlers.Handlers
 {
@@ -58,6 +59,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     gameState.World.HeroActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
                 }
 
+                gameState.WorldSnapshot = gameState.World.DeepClone();
                 gameState.GamePhase = GamePhase.HeroActions;
                 return gameState;
             } 

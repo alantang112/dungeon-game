@@ -9,8 +9,7 @@ namespace DungeonGame.Engine.Models.Enums
         EnergyDicePreRoll,
         EnergyDiceAssignment,
         HeroActions,
-        MonstersMove,
-        MonstersAttack,
+        MonsterActions,
         LevelEnd,
         GameEnd
     }

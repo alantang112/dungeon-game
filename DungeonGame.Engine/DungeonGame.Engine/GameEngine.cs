@@ -1,9 +1,12 @@
 using System;
+using System.Linq;
 using System.Text.Json;
 using DungeonGame.Engine.GameInputHandlers;
 using DungeonGame.Engine.GameInputHandlers.Handlers;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine
 {
@@ -14,6 +17,8 @@ namespace DungeonGame.Engine
         public event Action OnStateChanged = delegate { };
 
         internal IGameInputHandler _gameInputHandler;
+
+        private InputEventType[] InternalInputEventTypes = new InputEventType[] { InputEventType.MonstersMove, InputEventType.MonstersAttack };
 
         public GameEngine()
         {
@@ -28,21 +33,31 @@ namespace DungeonGame.Engine
             firstHandler
                 .SetNext(new EnergyDicePreRollHandler())
                 .SetNext(new EnergyDiceAssignmentHandler())
-                .SetNext(new HeroActionsHandler());
+                .SetNext(new HeroActionsHandler())
+                .SetNext(new MonsterActionsHandler());
 
             return firstHandler;
         }
 
-        public GameState GetCurrentState()
-        {
-            // return deep copy so client cannot modify
-            return JsonSerializer.Deserialize<GameState>(JsonSerializer.Serialize(CurrentState))!;
-        }
+        public GameState GetCurrentState() => CurrentState.DeepClone();
 
         public void ProcessInput(InputEvent inputEvent)
         {
-            CurrentState.GameMessage = null; // clear the game message
-            CurrentState = _gameInputHandler.Handle(CurrentState, inputEvent);
+            if (InternalInputEventTypes.Contains(inputEvent.EventType))
+                throw new NotSupportedException($"Input Event Type not allowed: {inputEvent.EventType}");
+
+            CurrentState.GameMessage = null;
+            CurrentState.ScheduledEvents.Clear();
+
+            CurrentState.ScheduledEvents.Add(inputEvent);
+
+            while (CurrentState.ScheduledEvents.Any())
+            {
+                var scheduledEvent = CurrentState.ScheduledEvents[0];
+                CurrentState.ScheduledEvents.RemoveAt(0);
+                CurrentState = _gameInputHandler.Handle(CurrentState, scheduledEvent);
+            }
+
             OnStateChanged?.Invoke();
         }
 

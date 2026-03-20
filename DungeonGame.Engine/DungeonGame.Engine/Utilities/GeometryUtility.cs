@@ -7,6 +7,12 @@ namespace DungeonGame.Engine.Utilities
 {
     public class GeometryUtility
     {
+        public static double Snap(double value)
+        {
+            double snapped = Math.Round(value / GameConstants.GeometryCalculationEpsilon) * GameConstants.GeometryCalculationEpsilon;
+            return Math.Round(snapped, GameConstants.GeometryCalculationDecimalPlaces);
+        }
+
         public static int CalculateDistanceBetween(Position position1, Position position2)
         {
             var xAbsDelta = Math.Abs(position1.X - position2.X);
@@ -35,6 +41,7 @@ namespace DungeonGame.Engine.Utilities
             throw new NotSupportedException("Code should never reach here");
         }
 
+        #region LineOfSight
         public static bool HasLineOfSightOf(Position observerPosition, Position targetPosition, Position[] blockers)
         {
             if (observerPosition == targetPosition)
@@ -201,12 +208,6 @@ namespace DungeonGame.Engine.Utilities
             return positions.ToList();
         }
 
-        public static double Snap(double value)
-        {
-            double snapped = Math.Round(value / GameConstants.GeometryCalculationEpsilon) * GameConstants.GeometryCalculationEpsilon;
-            return Math.Round(snapped, GameConstants.GeometryCalculationDecimalPlaces);
-        }
-
         private static List<Point> FilterOutPointsOutsideBoundedPositions(List<Point> points, List<Position> boundedPositions)
         {
             if (!boundedPositions.Any())
@@ -248,5 +249,6 @@ namespace DungeonGame.Engine.Utilities
                 return new PerpendicularPositions(new Position((int)point.X, (int)point.Y), new Position((int)point.X - 1, (int)point.Y - 1));
             }
         }
+        #endregion
     }
 }

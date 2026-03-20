@@ -1,5 +1,6 @@
 using System.Text.Json;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests;
@@ -41,7 +42,10 @@ public class GameEngineTests
     {
         var expected = new GameState()
         {
-            GamePhase = GamePhase.MonstersAttack
+            Hero = new Hero()
+            {
+                Name = "Alfred"
+            }
         };
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected));
@@ -50,6 +54,6 @@ public class GameEngineTests
 
         var snapshotDeserialized = JsonSerializer.Deserialize<GameState>(snapshot);
 
-        Assert.That(snapshotDeserialized!.GamePhase, Is.EqualTo(GamePhase.MonstersAttack));
+        Assert.That(snapshotDeserialized!.Hero.Name, Is.EqualTo("Alfred"));
     }
 }

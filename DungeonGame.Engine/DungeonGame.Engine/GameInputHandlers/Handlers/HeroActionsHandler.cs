@@ -17,7 +17,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             InputEventType.HeroActionMove, 
             InputEventType.HeroActionAttack, 
             InputEventType.HeroActionReset,
-            InputEventType.HeroActionConfirm
+            InputEventType.HeroActionEnd
         };
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
@@ -93,6 +93,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     // TODO: Add a game message?
                     gameState.World.Monsters.Remove(monsterPosition);
+
+                    if (!gameState.World.Monsters.Any())
+                    {
+                        gameState.GamePhase = GamePhase.LevelEnd;
+                        // TODO: game message?
+                    }
                 }
                 else
                 {
@@ -103,11 +109,23 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.HeroActionReset)
             {
-                
+                gameState.World = gameState.WorldSnapshot.DeepClone();
+                return gameState;
             }
-            else if (inputEvent.EventType == InputEventType.HeroActionConfirm)
+            else if (inputEvent.EventType == InputEventType.HeroActionEnd)
             {
-                
+                // Trigger monster actions
+                gameState.ScheduledEvents.Add(new InputEvent()
+                {
+                   EventType =  InputEventType.MonstersMove
+                });
+                gameState.ScheduledEvents.Add(new InputEvent()
+                {
+                   EventType =  InputEventType.MonstersAttack
+                });
+
+                gameState.GamePhase = GamePhase.MonsterActions;
+                return gameState;
             }
 
             throw new NotImplementedException();
