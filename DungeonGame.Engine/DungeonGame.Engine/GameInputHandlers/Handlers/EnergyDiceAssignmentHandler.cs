@@ -49,13 +49,13 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     return gameState;
                 }
 
-                gameState.Hero.ActionPoints.Clear();
+                gameState.World.HeroActionPoints.Clear();
                 for (var i = 0; i < gameState.EnergyDice.AssignedSkills.Count(); i++)
                 {
                     var skillType = (SkillType) gameState.EnergyDice.AssignedSkills[i];
                     var diceValue = gameState.EnergyDice.Dice[i];
 
-                    gameState.Hero.ActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
+                    gameState.World.HeroActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
                 }
 
                 gameState.GamePhase = GamePhase.HeroActions;

@@ -65,7 +65,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.Hero.ActionPoints.Add(SkillType.Movement, heroInitialMovementPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, heroInitialMovementPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -85,7 +85,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(inputEventParameters.X));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(inputEventParameters.Y));
 
-        var actualHeroMovementPointsDelta = newGameState.Hero.ActionPoints[SkillType.Movement] - heroInitialMovementPoints;
+        var actualHeroMovementPointsDelta = newGameState.World.HeroActionPoints[SkillType.Movement] - heroInitialMovementPoints;
         Assert.That(actualHeroMovementPointsDelta, Is.EqualTo(expectedMovementPointsDelta));
     }
 
@@ -105,7 +105,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -125,7 +125,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
-        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
 
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughMovementActionPoints));
@@ -150,7 +150,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
         // remove walls and monsters
         gameState.World.Walls.Clear();
@@ -174,7 +174,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
-        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
 
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CanOnlyMoveAdjacently));  
@@ -193,7 +193,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.Hero.ActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -213,7 +213,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
-        var actualHeroMovementPoints = newGameState.Hero.ActionPoints[SkillType.Movement];
+        var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
 
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CannotMoveToThatSpace)); 
@@ -233,7 +233,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -256,7 +256,7 @@ public class HeroActionTests
 
         var monster = newGameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster;
         Assert.That(monster.Health, Is.EqualTo(1)); // decreased from 2
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(0));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(0));
     }
 
     [Test]
@@ -271,7 +271,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
         gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
@@ -296,7 +296,7 @@ public class HeroActionTests
         var monsterPosition = newGameState.World.Monsters.FirstOrDefault(x => x.Position.X == monsterX && x.Position.Y == monsterY);
         Assert.That(monsterPosition, Is.Null);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(1)); // 1 other monster remaining
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(0));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(0));
     }
 
     [Test]
@@ -311,7 +311,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -329,7 +329,7 @@ public class HeroActionTests
 
         var newGameState = _sut.GetCurrentState();
 
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInRangeToAttack));   
@@ -347,7 +347,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -365,7 +365,7 @@ public class HeroActionTests
 
         var newGameState = _sut.GetCurrentState();
 
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NoMonsterToAttackAtThatSpace));   
@@ -385,7 +385,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
         gameState.Hero.Stats[SkillType.AttackRange] = 100;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
@@ -404,7 +404,7 @@ public class HeroActionTests
 
         var newGameState = _sut.GetCurrentState();
 
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInLineOfSightToAttack));
@@ -422,7 +422,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
-        gameState.Hero.ActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
 
@@ -440,7 +440,7 @@ public class HeroActionTests
 
         var newGameState = _sut.GetCurrentState();
 
-        Assert.That(newGameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
+        Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughAttackToAttackMonster));   

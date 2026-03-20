@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models.Entities;
+using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
 
 namespace DungeonGame.Engine.Models
@@ -9,6 +10,7 @@ namespace DungeonGame.Engine.Models
     public class World
     {
         public Position HeroPosition { get; set; }
+        public Dictionary<SkillType, int> HeroActionPoints { get; set; } = new Dictionary<SkillType, int>();
         public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
         public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
 

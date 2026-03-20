@@ -200,9 +200,9 @@ public class EnergyDiceAssignmentTests
         
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
 
-        Assert.That(gameState.Hero.ActionPoints[SkillType.Movement], Is.EqualTo(2));
-        Assert.That(gameState.Hero.ActionPoints[SkillType.Attack], Is.EqualTo(8));
-        Assert.That(gameState.Hero.ActionPoints[SkillType.Defence], Is.EqualTo(7));
-        Assert.That(gameState.Hero.ActionPoints.Count(), Is.EqualTo(3));
+        Assert.That(gameState.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(2));
+        Assert.That(gameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(8));
+        Assert.That(gameState.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(7));
+        Assert.That(gameState.World.HeroActionPoints.Count(), Is.EqualTo(3));
     }
 }

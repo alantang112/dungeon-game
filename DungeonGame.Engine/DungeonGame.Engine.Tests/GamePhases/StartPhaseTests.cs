@@ -55,7 +55,7 @@ public class StartPhaseTests
         Assert.That(gameState.Hero.Stats[SkillType.Defence], Is.EqualTo(1));
         Assert.That(gameState.Hero.Stats[SkillType.AttackRange], Is.EqualTo(2));
 
-        Assert.That(gameState.Hero.ActionPoints, Is.Empty);
+        Assert.That(gameState.World.HeroActionPoints, Is.Empty);
     }
 
     [Test]

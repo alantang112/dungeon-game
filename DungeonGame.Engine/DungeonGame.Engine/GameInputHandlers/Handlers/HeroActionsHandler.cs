@@ -35,7 +35,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     return gameState;
                 }
 
-                if (gameState.Hero.ActionPoints[SkillType.Movement] < movementPointsRequired)
+                if (gameState.World.HeroActionPoints[SkillType.Movement] < movementPointsRequired)
                 {
                     gameState.GameMessage = GameMessages.NotEnoughMovementActionPoints;
                     return gameState;
@@ -48,7 +48,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 gameState.World.HeroPosition = newPosition; 
-                gameState.Hero.ActionPoints[SkillType.Movement] -= movementPointsRequired;
+                gameState.World.HeroActionPoints[SkillType.Movement] -= movementPointsRequired;
 
                 return gameState;
             } 
@@ -80,14 +80,14 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     return gameState;
                 }
 
-                if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.Hero.ActionPoints[SkillType.Attack])
+                if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
                     gameState.GameMessage = GameMessages.NotEnoughAttackToAttackMonster;
                     return gameState;
                 }
 
                 monsterPosition.Monster.Health -= 1;
-                gameState.Hero.ActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
+                gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
 
                 if (monsterPosition.Monster.Health <= 0)
                 {
