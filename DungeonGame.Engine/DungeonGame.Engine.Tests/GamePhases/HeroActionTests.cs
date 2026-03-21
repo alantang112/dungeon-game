@@ -527,7 +527,7 @@ public class HeroActionTests
     public void Reset_GivenHeroActionsMade_WhenReset_ThenReturnToStateAtStartOfActions()
     {
         var initialGameState = _sut.GetCurrentState();
-        
+
         var worldSnapshot = initialGameState.World.DeepClone();
         worldSnapshot.Monsters.ForEach(mp => {
             mp.Monster.Health = 3;
@@ -537,6 +537,8 @@ public class HeroActionTests
         worldSnapshot.HeroActionPoints[SkillType.Defence] = 12;
 
         initialGameState.WorldSnapshot = worldSnapshot;
+        
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
         _sut.ProcessInput(new InputEvent()
         {
