@@ -11,6 +11,7 @@ namespace DungeonGame.Engine.Models
     {
         public Position HeroPosition { get; set; }
         public Dictionary<SkillType, int> HeroActionPoints { get; set; } = new Dictionary<SkillType, int>();
+        public HashSet<Position> Borders { get; set; } = new HashSet<Position>();
         public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
         public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
 
@@ -26,6 +27,8 @@ namespace DungeonGame.Engine.Models
                 Walls.Add(new Position(GameConstants.LevelSize + 1, i));
                 Walls.Add(new Position(i, GameConstants.LevelSize + 1));
             }
+
+            Borders = new HashSet<Position>(Walls);
 
             // init level
             var template = LevelTemplates.Levels.Single(x => x.LevelNumber == levelNumber);
