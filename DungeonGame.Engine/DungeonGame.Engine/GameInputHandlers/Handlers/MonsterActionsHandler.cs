@@ -49,7 +49,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                         continue;
                     
                     var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
-                    var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, gameState.World.Walls.ToArray());
+                    var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, gameState.World.Walls.ToList());
 
                     // If monster already at max attack range from hero and in line of sight of hero, continue
                     if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
@@ -69,9 +69,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     var wallsMonsters = new List<Position>();
                     wallsMonsters.AddRange(gameState.World.Walls);
                     wallsMonsters.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
-                    var wallsMonstersArray = wallsMonsters.ToArray();
 
-                    var bestWalkableSquareInRangeAndLineOfSight = GetBestPositionInRangeAndLineOfSightOfHero(walkableSquares, gameState, monsterPosition, wallsMonstersArray);
+                    var bestWalkableSquareInRangeAndLineOfSight = GetBestPositionInRangeAndLineOfSightOfHero(walkableSquares, gameState, monsterPosition, wallsMonsters);
 
                     if (bestWalkableSquareInRangeAndLineOfSight != null)
                     {
@@ -89,7 +88,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     }
 
                     // Otherwise, try to get as close as possible to max attack range and in line of sight
-                    // Otherwise, try to get as close as possible to hero
+                    var optimalSquares = new List<Position>();
+                    optimalSquares.AddRange(GetBestPositionsInAttackRangeAndLineOfSightOfHero(monsterPosition, gameState));
+
+                    if (!optimalSquares.Any())
+                    {
+                        // Otherwise, try to get as possible to hero
+                        
+                    }
+
+                    // Choose walkable square based on walk distance from optimal square
+                    // TODO
                 }
 
                 return gameState;
@@ -130,7 +139,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return walkableSquares;
         }
 
-        private static CandidateMovementSquare? GetBestPositionInRangeAndLineOfSightOfHero(Dictionary<Position, int> walkableSquares, GameState gameState, MonsterPosition monsterPosition, Position[] blockers)
+        private static CandidateMovementSquare? GetBestPositionInRangeAndLineOfSightOfHero(Dictionary<Position, int> walkableSquares, GameState gameState, MonsterPosition monsterPosition, List<Position> blockers)
         {
             var inRangeAndLineOfSight = walkableSquares
                 .Select(walkableSquare => new CandidateMovementSquare
@@ -149,6 +158,40 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 .FirstOrDefault();
 
             return optimalSquare;
+        }
+
+        private static List<Position> GetBestPositionsInAttackRangeAndLineOfSightOfHero(MonsterPosition monsterPosition, GameState gameState)
+        {
+            var wallsMonstersExcludingSelf = new List<Position>();
+            wallsMonstersExcludingSelf.AddRange(gameState.World.Walls);
+            wallsMonstersExcludingSelf.AddRange(gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Select(mp => mp.Position));
+
+            Func<Position, int, bool, int, int> valueFunction = (Position position, int stepNumber, bool isDiagonalStep, int previousValue) =>
+            {
+                if (wallsMonstersExcludingSelf.Contains(position))
+                    return int.MaxValue;
+
+                if (!GeometryUtility.HasLineOfSightOf(position, gameState.World.HeroPosition, wallsMonstersExcludingSelf))
+                    return int.MaxValue;
+
+                return WalkValueFunction(position, stepNumber, isDiagonalStep, previousValue);
+            };
+
+            Func<Dictionary<Position, int>, int?> floodUntilStep = (Dictionary<Position, int> floodValues) =>
+            {
+                return monsterPosition.Monster.Stats[SkillType.AttackRange] - 2;
+            };
+
+            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
+            {
+                return value <= monsterPosition.Monster.Stats[SkillType.AttackRange] && value > 0 && !gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Any(mp => mp.Position == position);
+            };
+
+            var bestPositionsInAttackRangeAndLineOfSight = GeometryUtility.PlotValuesByFloodSearch(gameState.World.HeroPosition, gameState.World.Borders.ToList(), valueFunction, floodUntilStep, returnPositionsFilter);
+            
+            var maxAttackRange = bestPositionsInAttackRangeAndLineOfSight.Values.Max();
+
+            return bestPositionsInAttackRangeAndLineOfSight.Where(kv => kv.Value == maxAttackRange).Select(x => x.Key).ToList();
         }
 
         private static int WalkValueFunction(Position position, int stepNumber, bool isDiagonalStep, int previousValue)

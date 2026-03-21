@@ -88,7 +88,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var blockers = new List<Position>();
                 blockers.AddRange(gameState.World.Walls);
                 blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
-                if (!GeometryUtility.HasLineOfSightOf(gameState.World.HeroPosition, monsterPosition.Position, blockers.ToArray()))
+                if (!GeometryUtility.HasLineOfSightOf(gameState.World.HeroPosition, monsterPosition.Position, blockers))
                 {
                     gameState.GameMessage = GameMessages.MonsterNotInLineOfSightToAttack;
                     return gameState;

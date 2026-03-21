@@ -73,7 +73,7 @@ public class GeometryUtilityTests
             blockers.Add(wall);
         }
 
-        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers.ToArray());
+        var actual = GeometryUtility.HasLineOfSightOf(observer, target, blockers);
 
         Assert.That(actual, Is.EqualTo(expected));
     }

@@ -42,7 +42,7 @@ namespace DungeonGame.Engine.Utilities
             throw new NotSupportedException("Code should never reach here");
         }
 
-        public static bool HasLineOfSightOf(Position observerPosition, Position targetPosition, Position[] blockers)
+        public static bool HasLineOfSightOf(Position observerPosition, Position targetPosition, List<Position> blockers)
         {
             if (observerPosition == targetPosition)
             {

@@ -7,7 +7,7 @@ namespace DungeonGame.Engine.Utilities
 {
     public partial class GeometryUtility
     {
-        private static bool HasLineOfSightOfInAStraightLine(Position observerPosition, Position targetPosition, Position[] blockers)
+        private static bool HasLineOfSightOfInAStraightLine(Position observerPosition, Position targetPosition, List<Position> blockers)
         {
             if (!IsHorizontalOrVerticalLine(observerPosition, targetPosition) && !IsDiagonalLine(observerPosition, targetPosition))
                 throw new ArgumentException("Input positions are not in a straight or diagonal line");
@@ -32,7 +32,7 @@ namespace DungeonGame.Engine.Utilities
             return true;
         } 
 
-        private static bool HasLineOfSightOfComplexLine(Position observerPosition, Position targetPosition, Position[] blockers)
+        private static bool HasLineOfSightOfComplexLine(Position observerPosition, Position targetPosition, List<Position> blockers)
         {
             var observerVertices = new Point[] { 
                 new Point(observerPosition.X, observerPosition.Y),  
