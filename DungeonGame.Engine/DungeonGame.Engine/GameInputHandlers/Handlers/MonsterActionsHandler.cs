@@ -28,6 +28,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
+                gameState.World.HeroActionPoints.Clear();
                 gameState.GamePhase = GamePhase.EnergyDicePreRoll;
                 return gameState;
             }
@@ -118,7 +119,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                     if (!optimalPositions.Any())
                     {
-                        // Otherwise, try to get as possible to hero
+                        // Otherwise, try to get as close as possible to hero
                         optimalPositions.AddRange(GetClosestPositionsToHero(monsterPosition, gameState));
                     }
 

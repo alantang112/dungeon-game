@@ -16,23 +16,9 @@ public class StartPhaseTests
     }
 
     [Test]
-    public void GivenGameInStartPhase_WhenNewGame_ThenReceiveGameChangedEvent()
-    {
-        var gameChangedCount = 0;
-        var gameChangedListener = () => { gameChangedCount++; };
-
-        _sut.OnStateChanged += gameChangedListener;
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
-
-        Assert.That(gameChangedCount, Is.EqualTo(1));
-    }
-
-    [Test]
     public void WhenStartGame_SetHeroName()
     {
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
-
-        var gameState = _sut.GetCurrentState();
+        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
 
         Assert.That(gameState.Hero.Name, Is.EqualTo("Conan"));
     }
@@ -40,9 +26,7 @@ public class StartPhaseTests
     [Test]
     public void WhenStartGame_InitializeLevelOne()
     {
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
-
-        var gameState = _sut.GetCurrentState();
+        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
 
         Assert.That(gameState.LevelNumber, Is.EqualTo(1));
         Assert.That(gameState.World.HeroPosition, Is.EqualTo(new Position(1, 1)));
@@ -63,8 +47,7 @@ public class StartPhaseTests
     [Test]
     public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
-        _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
-        var currentState = _sut.GetCurrentState();
+        var currentState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
         Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 

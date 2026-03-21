@@ -68,12 +68,10 @@ public class MonsterActionsAttackTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth));
     }
@@ -91,12 +89,10 @@ public class MonsterActionsAttackTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth));
     }
@@ -117,12 +113,10 @@ public class MonsterActionsAttackTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth - expectedHealthLoss));
     }
@@ -147,12 +141,10 @@ public class MonsterActionsAttackTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth - expectedHealthLoss));
     }
@@ -173,14 +165,12 @@ public class MonsterActionsAttackTests
 
         initialGameState.World.HeroActionPoints[SkillType.Defence] = heroDefence;
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        var newGameState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
         _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(gameEndExpected ? GamePhase.GameEnd : GamePhase.MonsterActions));
     }

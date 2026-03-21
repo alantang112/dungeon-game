@@ -25,12 +25,10 @@ public class EnergyDicePreRollTests
     [Test]
     public void WhenRoll_ThenInitializeEnergyDice()
     {
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceRoll
         });
-
-        var gameState = _sut.GetCurrentState();
 
         Assert.That(gameState.EnergyDice.Dice.All(x => x >= 1 && x <= 6), Is.True);
     }
@@ -38,12 +36,10 @@ public class EnergyDicePreRollTests
     [Test]
     public void WhenRoll_ThenUpdateGamePhaseToEnergyDiceAssignment()
     {
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceRoll
         });
-
-        var gameState = _sut.GetCurrentState();
 
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.EnergyDiceAssignment));
     }

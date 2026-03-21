@@ -63,12 +63,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
@@ -85,12 +83,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
@@ -109,12 +105,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
@@ -130,12 +124,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(3, 2)));
@@ -151,12 +143,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
@@ -200,12 +190,10 @@ public class MonsterActionsMoveTests
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(1, 3)));

@@ -60,12 +60,10 @@ public class MonsterActionsTests
     [Test]
     public void WhenContinue_ThenGoToNextGamePhase()
     {
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.MonsterActionsEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }

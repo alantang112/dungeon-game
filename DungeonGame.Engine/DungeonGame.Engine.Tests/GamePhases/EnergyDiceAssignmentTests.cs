@@ -32,7 +32,7 @@ public class EnergyDiceAssignmentTests
     [TestCase(2, SkillType.Defence)]
     public void WhenAssignDiceToSkill_ThenAssignDice(int index, SkillType skillType)
     {
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceAssign,
             EventParameters = new EnergyDiceAssignEventParameters()
@@ -41,8 +41,6 @@ public class EnergyDiceAssignmentTests
                 SkillType = skillType
             }
         });
-
-        var gameState = _sut.GetCurrentState();
 
         Assert.That(gameState.EnergyDice.AssignedSkills[index], Is.EqualTo(skillType));
     }
@@ -52,7 +50,7 @@ public class EnergyDiceAssignmentTests
     [TestCase(2)]
     public void GivenDiceAssigned_WhenAssignDiceToAlreadyAssignedSkill_ThenReturnInvalid(int index)
     {
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceAssign,
             EventParameters = new EnergyDiceAssignEventParameters()
@@ -62,10 +60,9 @@ public class EnergyDiceAssignmentTests
             }
         });
 
-        var gameState = _sut.GetCurrentState();
         Assert.That(gameState.GameMessage, Is.Not.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceAssign,
             EventParameters = new EnergyDiceAssignEventParameters()
@@ -75,14 +72,13 @@ public class EnergyDiceAssignmentTests
             }
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
     }
 
     [TestCase(SkillType.AttackRange)]
     public void WhenAssignDiceToInvalidSkill_ThenReturnInvalid(SkillType skillType)
     {
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceAssign,
             EventParameters = new EnergyDiceAssignEventParameters()
@@ -92,7 +88,6 @@ public class EnergyDiceAssignmentTests
             }
         });
 
-        var gameState = _sut.GetCurrentState();
         Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.InvalidSkillForEnergyDiceAssignment));
     }
 
@@ -111,12 +106,10 @@ public class EnergyDiceAssignmentTests
 
         _sut.LoadGameStateSnapshot(initialGameState);
 
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceResetAssignment
         });
-
-        var gameState = _sut.GetCurrentState();
 
         Assert.That(gameState.EnergyDice.AssignedSkills.All(x => x == null), Is.True);
     }
@@ -156,12 +149,10 @@ public class EnergyDiceAssignmentTests
 
         _sut.LoadGameStateSnapshot(initialGameState);
 
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceConfirmAssignment
         });
-
-        var gameState = _sut.GetCurrentState();
         
         Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.AssignAllEnergyDiceBeforeProceeding));
     }
@@ -191,12 +182,10 @@ public class EnergyDiceAssignmentTests
 
         _sut.LoadGameStateSnapshot(initialGameState);
 
-        _sut.ProcessInput(new InputEvent()
+        var gameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.EnergyDiceConfirmAssignment
         });
-
-        var gameState = _sut.GetCurrentState();
         
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
 

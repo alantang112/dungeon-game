@@ -75,13 +75,12 @@ public class HeroActionTests
             Y = heroInitialY + yDelta
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(inputEventParameters.X));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(inputEventParameters.Y));
 
@@ -115,13 +114,12 @@ public class HeroActionTests
             Y = heroInitialY + yDelta
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
@@ -164,13 +162,12 @@ public class HeroActionTests
             Y = heroInitialY + yDelta
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
@@ -203,13 +200,12 @@ public class HeroActionTests
             Y = 4
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
@@ -242,13 +238,12 @@ public class HeroActionTests
             Y = heroInitialY + yDelta
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionMove,
             EventParameters = inputEventParameters
         });
 
-        var newGameState = _sut.GetCurrentState();
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
@@ -282,13 +277,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
@@ -321,13 +314,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
@@ -363,13 +354,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
     }
@@ -396,13 +385,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
@@ -432,13 +419,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
@@ -471,13 +456,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
@@ -507,13 +490,11 @@ public class HeroActionTests
             Y = monsterY
         };
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionAttack,
             EventParameters = inputEventParameters
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
@@ -540,12 +521,10 @@ public class HeroActionTests
         
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionReset
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(10));
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(11));
@@ -559,12 +538,10 @@ public class HeroActionTests
     [Test]
     public void Continue_WhenContinue_ThenGoToNextPhase()
     {
-        _sut.ProcessInput(new InputEvent()
+        var newGameState = _sut.ProcessInput(new InputEvent()
         {
             EventType = InputEventType.HeroActionEnd
         });
-
-        var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
     }

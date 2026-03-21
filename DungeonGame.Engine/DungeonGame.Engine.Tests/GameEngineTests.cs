@@ -30,9 +30,7 @@ public class GameEngineTests
             GamePhase = GamePhase.HeroActions
         };
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected));
-
-        var currentState = _sut.GetCurrentState();
+        var currentState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected));
 
         Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
     }

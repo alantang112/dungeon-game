@@ -41,7 +41,7 @@ namespace DungeonGame.Engine
 
         public GameState GetCurrentState() => CurrentState.DeepClone();
 
-        public void ProcessInput(InputEvent inputEvent)
+        public GameState ProcessInput(InputEvent inputEvent)
         {
             if (InternalInputEventTypes.Contains(inputEvent.EventType))
                 throw new NotSupportedException($"Input Event Type not allowed: {inputEvent.EventType}");
@@ -58,7 +58,7 @@ namespace DungeonGame.Engine
                 CurrentState = _gameInputHandler.Handle(CurrentState, scheduledEvent);
             }
 
-            OnStateChanged?.Invoke();
+            return GetCurrentState();
         }
 
         public string GetGameStateSnapshot()
@@ -66,7 +66,7 @@ namespace DungeonGame.Engine
             return JsonSerializer.Serialize(CurrentState);
         }
 
-        public void LoadGameStateSnapshot(string snapshot)
+        public GameState LoadGameStateSnapshot(string snapshot)
         {
             var gameState = JsonSerializer.Deserialize<GameState>(snapshot);
 
@@ -74,7 +74,7 @@ namespace DungeonGame.Engine
                 throw new ArgumentException("Invalid game state snapshot");
 
             CurrentState = gameState;
-            OnStateChanged?.Invoke();
+            return GetCurrentState();
         }
     }
 }
