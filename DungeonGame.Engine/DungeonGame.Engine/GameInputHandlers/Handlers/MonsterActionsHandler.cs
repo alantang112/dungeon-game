@@ -26,7 +26,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 // For each monster
                 //      If monster already at max attack range from hero and in line of sight of hero, continue
                 //      Find all possible squares that can be walked to - WalkDistanceFrom (monsters can walk through but not end on monsters)
-                //          :PlotValuesByFloodSearch(MonsterPosition, Walls, () => previousValue + D*3 + O*2), Max(Values) >= MonsterMovement, !monsters.Contains(position) && value <= monsterMovement)
+                //          :PlotValuesByFloodSearch(MonsterPosition, Walls+Hero, () => previousValue + D*3 + O*2), Max(Values) >= MonsterMovement, !monsters.Contains(position) && value <= monsterMovement)
                 //          If no walkable squares, continue          
                 //      Check if any in range and in line of sight of hero. If yes, find best (max range, then lowest movements required). Move there, end.
 
@@ -35,7 +35,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 //      Otherwise, find empty squares closest to hero ignoring monsters -> (priority: order by distance to hero asc)
                 //          :PlotValuesByFloodSearch(HeroPosition, walls, () => previousValue + D*3 + O*2), positions.Any(p => !(walls+monsters).Contains(p)), value > min(value where position is empty))
                 //      For each optimal square, find closest walkable square OR current position
-                //          : PlotValuesByFloodSearch(OptimalSquare, walls, () => previousValue + D*3 + O*2), positions.Any(p => target.Contains(p)), target.Contains(position))
+                //          : PlotValuesByFloodSearch(OptimalSquare, walls+hero, () => previousValue + D*3 + O*2), positions.Any(p => target.Contains(p)), target.Contains(position))
                 //      Choose walkable square based on walk distance from optimal square. Break tie by movements required, otherwise just get first
 
                 return gameState;
