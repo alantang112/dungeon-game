@@ -86,7 +86,7 @@ public class MonsterActionsTests
         var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
-        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
     }
 
     [Test]
@@ -110,7 +110,7 @@ public class MonsterActionsTests
         var newGameState = _sut.GetCurrentState();
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
-        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
     }
 
     [Test]
