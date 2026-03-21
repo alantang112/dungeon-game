@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <FingerprintAssets>false</FingerprintAssets>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +15,22 @@
   <ItemGroup>
     <ProjectReference Include="..\DungeonGame.Engine\DungeonGame.Engine\DungeonGame.Engine.csproj" />
   </ItemGroup>
+
+  <Target Name="BuildVite" AfterTargets="Build">
+    <PropertyGroup>
+      <VitePublicFramework>..\DungeonGame.UI\public\_framework\</VitePublicFramework>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(VitePublicFramework)" />
+
+    <ItemGroup>
+      <WasmFiles Include="$(TargetDir)wwwroot\_framework\**\*.*" />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(WasmFiles)"
+      DestinationFolder="$(VitePublicFramework)%(RecursiveDir)"
+      SkipUnchangedFiles="false" />
+  </Target>
 
 </Project>
