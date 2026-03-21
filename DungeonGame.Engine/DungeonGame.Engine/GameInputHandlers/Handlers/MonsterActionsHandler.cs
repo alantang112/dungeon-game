@@ -24,16 +24,47 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.MonstersAttack)
             {
-                // Find all monsters in line of sight and in range, add up monster attack, divide by hero defence points, decrease hero health
-
-                return gameState;
+                return PerformMonsterAttack(gameState);
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
-                // Simply move to LevelEnd
+                gameState.GamePhase = GamePhase.EnergyDicePreRoll;
+                return gameState;
             }
 
             throw new NotImplementedException();
+        }
+
+        private static GameState PerformMonsterAttack(GameState gameState)
+        {
+            var wallsAndMonsters = new List<Position>();
+                wallsAndMonsters.AddRange(gameState.World.Walls);
+                wallsAndMonsters.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
+
+                // Find all monsters in line of sight and in range, add up monster attack, divide by hero defence points, decrease hero health
+                var totalMonsterAttack = 0;
+                foreach(var monsterPosition in gameState.World.Monsters)
+                {
+                    if (GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition) <= monsterPosition.Monster.Stats[SkillType.AttackRange]
+                            && GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonsters))
+                    {
+                        totalMonsterAttack += monsterPosition.Monster.Stats[SkillType.Attack];
+                    }
+                }
+
+                if (totalMonsterAttack > 0)
+                {
+                    var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
+
+                    gameState.Hero.Health -= damageDealt;
+
+                    if (gameState.Hero.Health <= 0)
+                    {
+                        gameState.GamePhase = GamePhase.GameEnd;
+                    }
+                }
+
+                return gameState;
         }
 
         #region MovementHelpers

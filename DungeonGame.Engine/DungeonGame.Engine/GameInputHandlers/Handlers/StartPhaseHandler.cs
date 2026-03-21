@@ -21,6 +21,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.Hero.Stats.Add(SkillType.Attack, 1);
             gameState.Hero.Stats.Add(SkillType.Defence, 1);
             gameState.Hero.Stats.Add(SkillType.AttackRange, 2);
+            gameState.Hero.Health = 10;
 
             gameState.LevelNumber = 1;
             gameState.World = new World();
