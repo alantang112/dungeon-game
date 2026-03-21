@@ -29,10 +29,24 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var newPosition = new Position(parameters.X, parameters.Y);
                 var movementPointsRequired = GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, newPosition);
 
-                if (movementPointsRequired > 3 || movementPointsRequired == 0)
+                if (movementPointsRequired > GameConstants.MovementPointsDiagonal || movementPointsRequired == 0)
                 {
                     gameState.GameMessage = GameMessages.CanOnlyMoveAdjacently;
                     return gameState;
+                }
+
+                if (movementPointsRequired == GameConstants.MovementPointsDiagonal)
+                {
+                    var blockers = new List<Position>();
+                    blockers.AddRange(gameState.World.Walls);
+                    blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
+
+                    if (blockers.Contains(new Position(gameState.World.HeroPosition.X, newPosition.Y))
+                        && blockers.Contains(new Position(newPosition.X, gameState.World.HeroPosition.Y)))
+                    {
+                        gameState.GameMessage = GameMessages.CannotMoveToThatSpace;
+                        return gameState;
+                    }
                 }
 
                 if (gameState.World.HeroActionPoints[SkillType.Movement] < movementPointsRequired)

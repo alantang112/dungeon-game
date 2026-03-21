@@ -190,6 +190,45 @@ public class HeroActionTests
         Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CanOnlyMoveAdjacently));  
     }
 
+    [TestCase]
+    public void Movement_WhenMoveHeroDiagonallyThroughWall_ThenDoNotMove()
+    {
+        var heroInitialX = 4;
+        var heroInitialY = 3;
+        var initialMovementPoints = 3;
+        
+        // set hero position to center of level
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        // set hero movement points
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        // add another wall
+        gameState.World.Walls.Add(new Position(3, 3));
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+
+        var inputEventParameters = new HeroActionMoveEventParameters()
+        {
+            X = 3,
+            Y = 4
+        };
+
+        _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionMove,
+            EventParameters = inputEventParameters
+        });
+
+        var newGameState = _sut.GetCurrentState();
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(heroInitialX));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
+
+        var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
+
+        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CannotMoveToThatSpace)); 
+    }
+
     [TestCase(0, -1)]
     [TestCase(0, 1)]
     [TestCase(1, 1)]

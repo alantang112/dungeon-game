@@ -21,21 +21,21 @@ namespace DungeonGame.Engine.Utilities
             // straight up/down/left/right:
             if (xAbsDelta == 0 || yAbsDelta == 0)
             {
-                return (xAbsDelta + yAbsDelta) * 2;
+                return (xAbsDelta + yAbsDelta) * GameConstants.MovementPointsOrthogonal;
             }
             // diagonal:
             else if (xAbsDelta == yAbsDelta)
             {
-                return xAbsDelta * 3;
+                return xAbsDelta * GameConstants.MovementPointsDiagonal;
             }
             // everything else:
             else if (xAbsDelta > yAbsDelta)
             {
-                return (xAbsDelta * 2) + yAbsDelta;
+                return (xAbsDelta * GameConstants.MovementPointsOrthogonal) + yAbsDelta * (GameConstants.MovementPointsDiagonal - GameConstants.MovementPointsOrthogonal);
             }
             else if (yAbsDelta > xAbsDelta)
             {
-                return (yAbsDelta * 2) + xAbsDelta;
+                return (yAbsDelta * GameConstants.MovementPointsOrthogonal) + xAbsDelta * (GameConstants.MovementPointsDiagonal - GameConstants.MovementPointsOrthogonal);
             }
 
             throw new NotSupportedException("Code should never reach here");

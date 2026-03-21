@@ -8,6 +8,9 @@ namespace DungeonGame.Engine
 
         public static int LevelSize = 5;
 
+        public static int MovementPointsDiagonal = 3;
+        public static int MovementPointsOrthogonal = 2;
+
         public static double GeometryCalculationEpsilon = 0.00001;
         public static int GeometryCalculationDecimalPlaces = 5;
     }
