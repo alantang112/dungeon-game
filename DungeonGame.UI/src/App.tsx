@@ -4,14 +4,19 @@ import './App.css'
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
-  const [jsonInput, setJsonInput] = useState('');
+  const [jsonInput, setJsonInput] = useState(`{
+    "EventType": "NewGame",
+    "EventParameters": {
+        "HeroName": "Bob"
+    }
+}`);
 
   const handleDispatch = async () => {
     try {
-      const payload = JSON.parse(jsonInput);
-      await dispatch(payload);
+      await dispatch(jsonInput);
     } catch (e) {
-      alert("Invalid JSON format. Please check your syntax.");
+      console.log(jsonInput, e);
+      alert("Could not process input event!");
     }
   }
 

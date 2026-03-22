@@ -165,9 +165,9 @@ public class MonsterActionsAttackTests
 
         initialGameState.World.HeroActionPoints[SkillType.Defence] = heroDefence;
 
-        var newGameState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
-        _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
             EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
         });

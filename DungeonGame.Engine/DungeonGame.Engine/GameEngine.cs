@@ -68,7 +68,7 @@ namespace DungeonGame.Engine
 
         public GameState LoadGameStateSnapshot(string snapshot)
         {
-            var gameState = JsonSerializer.Deserialize<GameState>(snapshot);
+            var gameState = JsonSerializer.Deserialize<GameState>(snapshot, SerializationUtility.JsonSerializerOptions);
 
             if (gameState == null)
                 throw new ArgumentException("Invalid game state snapshot");

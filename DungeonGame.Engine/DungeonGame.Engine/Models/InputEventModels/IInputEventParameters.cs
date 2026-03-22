@@ -1,4 +1,4 @@
 namespace DungeonGame.Engine.Models.InputEventModels
 {
-    public interface IInputEventParameters { }
+    public abstract class IInputEventParameters { }
 }

@@ -2,6 +2,7 @@ using System.Text.Json;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests;
 
@@ -50,7 +51,7 @@ public class GameEngineTests
 
         var snapshot = _sut.GetGameStateSnapshot();
 
-        var snapshotDeserialized = JsonSerializer.Deserialize<GameState>(snapshot);
+        var snapshotDeserialized = JsonSerializer.Deserialize<GameState>(snapshot, SerializationUtility.JsonSerializerOptions);
 
         Assert.That(snapshotDeserialized!.Hero.Name, Is.EqualTo("Alfred"));
     }

@@ -131,11 +131,11 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 // Trigger monster actions
                 gameState.ScheduledEvents.Add(new InputEvent()
                 {
-                   EventType =  InputEventType.MonstersMove
+                   EventType = InputEventType.MonstersMove
                 });
                 gameState.ScheduledEvents.Add(new InputEvent()
                 {
-                   EventType =  InputEventType.MonstersAttack
+                   EventType = InputEventType.MonstersAttack
                 });
 
                 gameState.GamePhase = GamePhase.MonsterActions;

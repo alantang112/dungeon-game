@@ -15,6 +15,14 @@ export function useGameEngine() {
                     window.IsBlazorStarted = true;
                     await window.Blazor.start();
                     console.log("🚀 .NET Engine Started");
+
+                    await new Promise(r => setTimeout(r, 150));
+
+                    const newState = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'Initialize', null);
+                    setState(newState);
+                    setIsReady(true);
+
+                    console.log("🤖 Game engine ready");
                 }
 
                 setIsReady(true);
@@ -24,12 +32,6 @@ export function useGameEngine() {
                 } else {
                     console.error("Blazor Start Error:", err);
                 }
-            }
-
-            if (window.IsBlazorStarted)
-            {
-                const newState = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'Initialize');
-                setState(newState);
             }
         };
         init();
