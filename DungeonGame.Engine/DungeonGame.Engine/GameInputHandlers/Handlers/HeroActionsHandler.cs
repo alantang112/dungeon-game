@@ -31,7 +31,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (movementPointsRequired > GameConstants.MovementPointsDiagonal || movementPointsRequired == 0)
                 {
-                    gameState.AddGameMessage(GameMessages.CanOnlyMoveAdjacently);
+                    gameState.AddGameMessage(string.Format(GameMessages.CanOnlyMoveAdjacently, gameState.Hero.Name));
                     return gameState;
                 }
 
@@ -44,20 +44,20 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     if (blockers.Contains(new Position(gameState.World.HeroPosition.X, newPosition.Y))
                         && blockers.Contains(new Position(newPosition.X, gameState.World.HeroPosition.Y)))
                     {
-                        gameState.AddGameMessage(GameMessages.CannotMoveToThatSpace);
+                        gameState.AddGameMessage(string.Format(GameMessages.CannotMoveToThatSpace, gameState.Hero.Name));
                         return gameState;
                     }
                 }
 
                 if (gameState.World.HeroActionPoints[SkillType.Movement] < movementPointsRequired)
                 {
-                    gameState.AddGameMessage(GameMessages.NotEnoughMovementActionPoints);
+                    gameState.AddGameMessage(string.Format(GameMessages.NotEnoughMovementActionPoints, gameState.Hero.Name));
                     return gameState;
                 }
 
                 if (gameState.World.Walls.Contains(newPosition) || gameState.World.Monsters.Any(x => x.Position == newPosition))
                 {
-                    gameState.AddGameMessage(GameMessages.CannotMoveToThatSpace);
+                    gameState.AddGameMessage(string.Format(GameMessages.CannotMoveToThatSpace, gameState.Hero.Name));
                     return gameState;
                 }
 
@@ -97,7 +97,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
-                    gameState.AddGameMessage(GameMessages.NotEnoughAttackToAttackMonster);
+                    gameState.AddGameMessage(string.Format(GameMessages.NotEnoughAttackToAttackMonster, gameState.Hero.Name));
                     return gameState;
                 }
 

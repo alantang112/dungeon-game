@@ -10,7 +10,7 @@ function App() {
   const [jsonInput, setJsonInput] = useState(`{
     "EventType": "NewGame",
     "EventParameters": {
-        "HeroName": "Bob"
+        "HeroName": "Lil Timmy"
     }
 }`);
 

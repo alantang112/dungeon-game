@@ -58,11 +58,11 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
 
                     gameState.Hero.Health -= damageDealt;
-                    gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, gameState.Hero.Name, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
                     if (gameState.Hero.Health <= 0)
                     {
                         gameState.GamePhase = GamePhase.GameEnd;
-                        gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name));
+                        gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.BirthYear, DateTime.Now.Year));
                     }
                 }
                 else

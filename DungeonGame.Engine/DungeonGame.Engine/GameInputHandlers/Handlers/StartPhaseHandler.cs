@@ -22,13 +22,14 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.Hero.Stats.Add(SkillType.Defence, 1);
             gameState.Hero.Stats.Add(SkillType.AttackRange, 2);
             gameState.Hero.Health = 10;
+            gameState.Hero.BirthYear = DateTime.Now.Year;
 
             gameState.LevelNumber = 1;
             gameState.World = new World();
             gameState.World.InitializeLevel(1);
 
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
-            gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.LevelNumber));
+            gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
             return gameState;
         }
     }  

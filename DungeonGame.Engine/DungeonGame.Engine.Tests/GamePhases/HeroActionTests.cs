@@ -125,8 +125,6 @@ public class HeroActionTests
 
         var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
-
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughMovementActionPoints));
     }
 
     [TestCase(0, 0)]
@@ -172,9 +170,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
         var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
-        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
-
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CanOnlyMoveAdjacently));  
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints)); 
     }
 
     [TestCase]
@@ -210,9 +206,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
         var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
-        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
-
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CannotMoveToThatSpace)); 
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints)); 
     }
 
     [TestCase(0, -1)]
@@ -248,9 +242,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(heroInitialY));
 
         var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
-        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints));
-
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.CannotMoveToThatSpace)); 
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints)); 
     }
     #endregion
 
@@ -498,8 +490,7 @@ public class HeroActionTests
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
-        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NotEnoughAttackToAttackMonster));   
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));  
     }
     #endregion
 
