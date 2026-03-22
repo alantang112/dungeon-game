@@ -35,6 +35,23 @@ public class EnergyDicePreRollTests
     }
 
     [Test]
+    public void WhenRoll_ThenResetAssignment()
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.EnergyDice.AssignDice(0, SkillType.Movement);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var gameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceRoll
+        });
+
+        Assert.That(gameState.EnergyDice.AssignedSkills.All(x => x == null), Is.True);
+    }
+
+    [Test]
     public void WhenRoll_ThenUpdateGamePhaseToEnergyDiceAssignment()
     {
         var gameState = _sut.ProcessInput(new InputEvent()
