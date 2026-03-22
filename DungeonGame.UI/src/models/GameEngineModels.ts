@@ -78,6 +78,7 @@ export class GameState {
     World?: World;
     LevelNumber?: number;
     GameMessage?: string;
+    GameMessageLog?: string[];
 }
 
 export class GameInputEventParameters {

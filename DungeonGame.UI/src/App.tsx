@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
 import { GameInputEvent, MonsterPosition, Position } from './models/GameEngineModels'
-import { Tile } from './Tile';
+import { Tile } from './props/Tile';
+import { GameLog } from './props/GameLog';
 import './App.css'
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
+  const [ logs, setLogs ] = useState<string[]>([]);
   const [jsonInput, setJsonInput] = useState(`{
     "EventType": "NewGame",
     "EventParameters": {
@@ -56,6 +58,8 @@ function App() {
     }
   }
 
+  setLogs(state.GameMessageLog ?? []);
+
   return (
     <>
       <div style={{ position: 'absolute', height: '350px', width: '100vw', display: 'flex', gap: '20px', padding: '20px', fontFamily: 'monospace' }}>
@@ -97,6 +101,7 @@ function App() {
           {gridRows}
         </div>
       </div>
+      <GameLog messages={logs}/>
     </>
   );
 }

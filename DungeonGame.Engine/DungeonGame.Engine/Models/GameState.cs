@@ -13,7 +13,7 @@ namespace DungeonGame.Engine.Models
         public World World { get; set; } = new World();
         public World? WorldSnapshot { get; set; }
         public int? LevelNumber { get; set; }
-        public string? GameMessage { get; private set; }
+        public string? GameMessage { get; set; }
         public List<InputEvent> ScheduledEvents { get; set;} = new List<InputEvent>();
         public List<string> GameMessageLog { get; set; } = new List<string>();
 
