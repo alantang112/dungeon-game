@@ -134,8 +134,9 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(3, 2)));
     }
 
-    [Test]
-    public void GivenNoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight()
+    [TestCase(2, 1, 5, 5, 4, 3)]
+    [TestCase(4, 1, 5, 4, 5, 3)]
+    public void GivenNoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight(int heroX, int heroY, int monsterX, int monsterY, int expectedMonsterX, int expectedMonsterY)
     {
         var initialGameState = _sut.GetCurrentState();
 
@@ -151,6 +152,32 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
+    }
+
+    [Test]
+    public void GivenTwoMonsters_NoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight()
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.World.HeroPosition = new Position(2, 1);
+        initialGameState.World.Monsters[0].Position = new Position(5, 5);
+
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = initialGameState.World.Monsters[0].Monster,
+            Position = new Position(4, 5)
+        });
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
+        });
+
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
+        Assert.That(newGameState.World.Monsters[1].Position, Is.EqualTo(new Position(3, 3)));
     }
 
     [Test]

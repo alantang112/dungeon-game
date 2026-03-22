@@ -12,17 +12,16 @@ export const GameLog = ({ messages }: GameLogProps) => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-40 w-full max-w-md bg-slate-950 border border-slate-700 rounded p-2">
-      <div className="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700">
-        {messages.map((msg, i) => (
-          <div key={i} className="text-sm text-slate-300 font-mono mb-1">
-            <span className="text-slate-500 mr-2">[{i}]</span>
-            {msg}
-          </div>
-        ))}
-        {/* Invisible element to anchor the scroll */}
-        <div ref={logEndRef} />
-      </div>
+    <div className="fixed bottom-0 left-0 w-full p-[10px] pointer-events-none">
+    <div className="mx-auto bg-slate-950/90 border border-slate-700 rounded-t-lg p-2 h-40 overflow-y-auto pointer-events-auto shadow-2xl backdrop-blur-sm">
+      {messages.map((msg, i) => (
+        <div key={i} className="text-sm font-mono text-slate-300">
+          <span className="text-slate-600 mr-2">{'>'}</span>
+          {" "}{msg}
+        </div>
+      ))}
+      <div ref={logEndRef} />
     </div>
+  </div>
   );
 };

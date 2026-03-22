@@ -41,7 +41,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)
             {
                 gameState.EnergyDice.ResetAssignment();
-                gameState.AddGameMessage(GameMessages.DiceAssignmentReset);
+                gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name));
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.EnergyDiceConfirmAssignment)

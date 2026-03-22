@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
-import { GameInputEvent, MonsterPosition, Position } from './models/GameEngineModels'
+import { GameInputEvent, MonsterPosition, Position, GameState } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import './App.css'
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
-  const [ logs, setLogs ] = useState<string[]>([]);
   const [jsonInput, setJsonInput] = useState(`{
     "EventType": "NewGame",
     "EventParameters": {
@@ -17,7 +16,7 @@ function App() {
 
   const handleDispatch = async () => {
     try {
-      const inputModel: GameInputEvent = JSON.parse(jsonInput) as GameInputEvent; 
+      const inputModel : GameInputEvent = JSON.parse(jsonInput) as GameInputEvent; 
       await dispatch(inputModel);
     } catch (e) {
       console.log(jsonInput, e);
@@ -27,38 +26,23 @@ function App() {
 
   if (!isReady) return <div>Loading game engine...</div>;
 
-  const gridSize = 5;
+  const gridSize : number = 5;
   const gridRows = [];
-
-  const getTileBackgroundColor = (x : number, y : number) => {
-        if (state?.World?.HeroPosition?.X == x && state?.World?.HeroPosition?.Y == y)
-            return "green";
-
-        if (state?.World?.Walls?.some((wall: Position) => wall.X == x && wall.Y == y))
-            return "darkgrey"
-
-        if (state?.World?.Monsters?.find((mp: MonsterPosition) => mp.Position.X == x && mp.Position.Y == y))
-            return "darkred";
-
-        return "";
-    };
 
   for (let y = gridSize; y >= 1; y--) {
     for (let x = 1; x <= gridSize; x++) {
-
-
       gridRows.push(
         <Tile
           key={`${x}-${y}`}
           x={x}
           y={y}
-          backgroundColor={`${getTileBackgroundColor(x, y)}`}
+          backgroundColor={`${getTileBackgroundColor(state, x, y)}`}
         />
       );
     }
   }
 
-  setLogs(state.GameMessageLog ?? []);
+  
 
   return (
     <>
@@ -88,7 +72,7 @@ function App() {
             border: '1px solid #ccc', 
             overflow: 'auto' 
           }}>
-            {state ? JSON.stringify(state, null, 2) : ""}
+            {state ? getGameStateJson(state) : ""}
           </pre>
         </div>
 
@@ -101,9 +85,28 @@ function App() {
           {gridRows}
         </div>
       </div>
-      <GameLog messages={logs}/>
+      <GameLog messages={state.GameMessageLog ?? []}/>
     </>
   );
+}
+
+const getTileBackgroundColor = (state: GameState, x: number, y: number) : string => {
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return "green";
+    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return "darkgrey";
+    if (state?.World?.Monsters?.some((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y)) return "darkred";
+    return "";
+};
+
+const getGameStateJson = (state: GameState) : string => {
+  const stateJson = JSON.parse(JSON.stringify(state));
+
+  if (stateJson?.World?.Borders)
+  {
+    stateJson.World.Borders = null;
+    stateJson.World.Walls = null;
+  }
+
+  return JSON.stringify(stateJson, null, 2);
 }
 
 export default App
