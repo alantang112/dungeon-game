@@ -113,7 +113,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (bestWalkablePositionInRangeAndLineOfSight != null)
                 {
                     // check if current position is better
-                    if (currentlyHasLineOfSight && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
+                    if (currentlyHasLineOfSight && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
                     {
                         gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
                         continue;
@@ -187,13 +187,16 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             wallsMonsters.AddRange(gameState.World.Walls);
             wallsMonsters.AddRange(gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Select(mp => mp.Position));
 
-            var inRangeAndLineOfSight = walkablePositions
+            var walkablePositionsCalculation = walkablePositions
                 .Select(walkablePosition => new CandidateMovementPosition
                 {
                     Position = walkablePosition.Key,
                     MovementPointsRequired = walkablePosition.Value,
                     DistanceFromTarget = GeometryUtility.CalculateDistanceBetween(walkablePosition.Key, gameState.World.HeroPosition)
                 })
+                .ToList();
+
+            var inRangeAndLineOfSight = walkablePositionsCalculation
                 .Where(candidate => candidate.DistanceFromTarget <= monsterPosition.Monster.Stats[SkillType.AttackRange])
                 .Where(candidate => GeometryUtility.HasLineOfSightOf(candidate.Position, gameState.World.HeroPosition, wallsMonsters))
                 .ToList();
