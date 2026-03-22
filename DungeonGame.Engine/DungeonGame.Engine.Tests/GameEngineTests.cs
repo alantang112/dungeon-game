@@ -31,7 +31,7 @@ public class GameEngineTests
             GamePhase = GamePhase.HeroActions
         };
 
-        var currentState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected));
+        var currentState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected, SerializationUtility.JsonSerializerOptions));
 
         Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
     }
@@ -47,7 +47,7 @@ public class GameEngineTests
             }
         };
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected, SerializationUtility.JsonSerializerOptions));
 
         var snapshot = _sut.GetGameStateSnapshot();
 

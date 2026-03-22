@@ -2,6 +2,7 @@ using System.Text.Json;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
 
@@ -22,7 +23,7 @@ public class EnergyDiceAssignmentTests
                 Dice = new int[3] { 1, 4, 6 },
                 AssignedSkills = new SkillType?[3] { null, null, null }
             }
-        });
+        }, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameState);
     }
@@ -102,7 +103,7 @@ public class EnergyDiceAssignmentTests
                 Dice = new int[3] { 1, 4, 6 },
                 AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
             }
-        });
+        }, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameState);
 
@@ -145,7 +146,7 @@ public class EnergyDiceAssignmentTests
         {
             GamePhase = GamePhase.EnergyDiceAssignment,
             EnergyDice = energyDice
-        });
+        }, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameState);
 
@@ -178,7 +179,7 @@ public class EnergyDiceAssignmentTests
                     { SkillType.AttackRange, 4 }
                 }
             }
-        });
+        }, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameState);
 

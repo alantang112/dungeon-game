@@ -63,7 +63,7 @@ namespace DungeonGame.Engine
 
         public string GetGameStateSnapshot()
         {
-            return JsonSerializer.Serialize(CurrentState);
+            return JsonSerializer.Serialize(CurrentState, SerializationUtility.JsonSerializerOptions);
         }
 
         public GameState LoadGameStateSnapshot(string snapshot)

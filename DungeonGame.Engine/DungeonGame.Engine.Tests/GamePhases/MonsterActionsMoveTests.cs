@@ -3,6 +3,7 @@ using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
 
@@ -49,7 +50,7 @@ public class MonsterActionsMoveTests
             { SkillType.Defence, 7 },
         };
 
-        var initialGameStateJson = JsonSerializer.Serialize(initialGameState);
+        var initialGameStateJson = JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions);
         _sut.LoadGameStateSnapshot(initialGameStateJson);
     }   
 
@@ -61,7 +62,7 @@ public class MonsterActionsMoveTests
         initialGameState.World.HeroPosition = new Position(3, 4);
         initialGameState.World.Monsters[0].Position = new Position(4, 3);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
@@ -81,7 +82,7 @@ public class MonsterActionsMoveTests
         initialGameState.World.Monsters[0].Position = new Position(5, 5);
         initialGameState.World.Walls.Add(new Position(5, 4));
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
@@ -103,7 +104,7 @@ public class MonsterActionsMoveTests
         initialGameState.World.Walls.Add(new Position(3, 4));
         initialGameState.World.Walls.Add(new Position(5, 4));
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
@@ -122,7 +123,7 @@ public class MonsterActionsMoveTests
         initialGameState.World.HeroPosition = new Position(2, 1);
         initialGameState.World.Monsters[0].Position = new Position(5, 3);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
@@ -141,7 +142,7 @@ public class MonsterActionsMoveTests
         initialGameState.World.HeroPosition = new Position(2, 1);
         initialGameState.World.Monsters[0].Position = new Position(5, 5);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {
@@ -188,7 +189,7 @@ public class MonsterActionsMoveTests
             Position = new Position(1, 2)
         });
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
         var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
         {

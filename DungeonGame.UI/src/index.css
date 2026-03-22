@@ -1,4 +1,13 @@
+@import "tailwindcss";
+
 * {
   margin: 0;
   padding: 0;
+}
+
+@theme {
+  --color-dungeon-wall: #0f172a;
+  --color-dungeon-floor: #1e293b;
+  
+  --grid-cols-game: repeat(5, minmax(0, 1fr));
 }

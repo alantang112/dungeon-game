@@ -2,6 +2,7 @@ using System.Text.Json;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.InputEventModels;
 using DungeonGame.Engine.Models.Enums;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
 
@@ -17,7 +18,7 @@ public class EnergyDicePreRollTests
         var initialGameState = JsonSerializer.Serialize(new GameState()
         {
             GamePhase = GamePhase.EnergyDicePreRoll,
-        });
+        }, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameState);
     }

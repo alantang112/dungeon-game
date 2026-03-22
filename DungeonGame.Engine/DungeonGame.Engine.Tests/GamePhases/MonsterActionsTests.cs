@@ -2,6 +2,7 @@ using System.Text.Json;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
 
@@ -53,7 +54,7 @@ public class MonsterActionsTests
             { SkillType.Defence, 7 },
         };
 
-        var initialGameStateJson = JsonSerializer.Serialize(initialGameState);
+        var initialGameStateJson = JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions);
         _sut.LoadGameStateSnapshot(initialGameStateJson);
     }
 

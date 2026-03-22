@@ -41,7 +41,7 @@ public class HeroActionTests
 
         initialGameState.World.InitializeLevel(1);
 
-        var initialGameStateJson = JsonSerializer.Serialize(initialGameState);
+        var initialGameStateJson = JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions);
 
         _sut.LoadGameStateSnapshot(initialGameStateJson);
     }
@@ -67,7 +67,7 @@ public class HeroActionTests
         // set hero movement points
         gameState.World.HeroActionPoints.Add(SkillType.Movement, heroInitialMovementPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionMoveEventParameters()
         {
@@ -106,7 +106,7 @@ public class HeroActionTests
         // set hero movement points
         gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionMoveEventParameters()
         {
@@ -154,7 +154,7 @@ public class HeroActionTests
         gameState.World.Walls.Clear();
         gameState.World.Monsters.Clear();
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionMoveEventParameters()
         {
@@ -192,7 +192,7 @@ public class HeroActionTests
         // add another wall
         gameState.World.Walls.Add(new Position(3, 3));
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionMoveEventParameters()
         {
@@ -230,7 +230,7 @@ public class HeroActionTests
         // set hero movement points
         gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionMoveEventParameters()
         {
@@ -269,7 +269,7 @@ public class HeroActionTests
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -306,7 +306,7 @@ public class HeroActionTests
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
         gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -346,7 +346,7 @@ public class HeroActionTests
         var otherMonster = gameState.World.Monsters.First(x => x.Position.X == 4 && x.Position.Y == 5);
         gameState.World.Monsters.Remove(otherMonster);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -377,7 +377,7 @@ public class HeroActionTests
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -411,7 +411,7 @@ public class HeroActionTests
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -448,7 +448,7 @@ public class HeroActionTests
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
         gameState.Hero.Stats[SkillType.AttackRange] = 100;
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
@@ -482,7 +482,7 @@ public class HeroActionTests
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
         gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
 
-        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState));
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
         var inputEventParameters = new HeroActionAttackEventParameters()
         {
