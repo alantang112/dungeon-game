@@ -3,6 +3,7 @@ import { useGameEngine } from './hooks/useGameEngine';
 import { GameInputEvent, MonsterPosition, Position, GameState } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
+import GameActions from './interfaces/gameEngineInterface';
 import './App.css'
 
 function App() {
@@ -26,18 +27,35 @@ function App() {
 
   if (!isReady) return <div>Loading game engine...</div>;
 
+  const handleTileClick = async (state: GameState, x: number, y: number) => {
+    try {
+      if (state.World?.Monsters?.some(mp => mp.Position.X == x && mp.Position.Y == y))
+      {
+        await dispatch(GameActions.HeroAttackEvent(x, y));
+      }
+      else {
+        await dispatch(GameActions.HeroMoveEvent(x, y));
+      }
+    } catch (e) {
+      console.log(jsonInput, e);
+      alert("Could not process input event!");
+    }
+  }
+
   const gridSize : number = 5;
   const gridRows = [];
 
   for (let y = gridSize; y >= 1; y--) {
     for (let x = 1; x <= gridSize; x++) {
       gridRows.push(
-        <Tile
+        <div onClick={() => handleTileClick(state, x, y)}>
+          <Tile
           key={`${x}-${y}`}
           x={x}
           y={y}
           backgroundColor={`${getTileBackgroundColor(state, x, y)}`}
-        />
+          />
+        </div>
       );
     }
   }
