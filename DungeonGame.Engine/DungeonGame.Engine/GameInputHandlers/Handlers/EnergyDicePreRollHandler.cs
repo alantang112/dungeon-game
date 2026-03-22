@@ -15,6 +15,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.EnergyDice.Roll();
             gameState.EnergyDice.ResetAssignment();
             gameState.GamePhase = GamePhase.EnergyDiceAssignment;
+            gameState.AddGameMessage(GameMessages.DiceRolled);
             return gameState;
         }
     }

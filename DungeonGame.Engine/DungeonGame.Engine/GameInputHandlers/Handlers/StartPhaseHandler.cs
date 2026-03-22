@@ -28,6 +28,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.World.InitializeLevel(1);
 
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
+            gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.LevelNumber));
             return gameState;
         }
     }  

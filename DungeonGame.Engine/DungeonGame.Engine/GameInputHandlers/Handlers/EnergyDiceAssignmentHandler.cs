@@ -24,29 +24,31 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (!ValidSkillTypeForEnergyDiceAssignment.Contains(parameters.SkillType))
                 {
-                    gameState.GameMessage = GameMessages.InvalidSkillForEnergyDiceAssignment;
+                    gameState.AddGameMessage(GameMessages.InvalidSkillForEnergyDiceAssignment);
                     return gameState;
                 }
 
                 if (gameState.EnergyDice.AssignedSkills[parameters.DiceIndex] != null)
                 {
-                    gameState.GameMessage = GameMessages.SkillAlreadyAssignedEnergyDice;
+                    gameState.AddGameMessage(GameMessages.SkillAlreadyAssignedEnergyDice);
                     return gameState;
                 }
 
                 gameState.EnergyDice.AssignDice(parameters.DiceIndex, parameters.SkillType);
+                gameState.AddGameMessage(string.Format(GameMessages.DiceAssignedToSkill, parameters.DiceIndex + 1, parameters.SkillType.ToString()));
                 return gameState;
             } 
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)
             {
                 gameState.EnergyDice.ResetAssignment();
+                gameState.AddGameMessage(GameMessages.DiceAssignmentReset);
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.EnergyDiceConfirmAssignment)
             {
                 if (gameState.EnergyDice.AssignedSkills.Any(x => x == null))
                 {
-                    gameState.GameMessage = GameMessages.AssignAllEnergyDiceBeforeProceeding;
+                    gameState.AddGameMessage(GameMessages.AssignAllEnergyDiceBeforeProceeding);
                     return gameState;
                 }
 
@@ -59,6 +61,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     gameState.World.HeroActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
                 }
 
+                gameState.AddGameMessage(GameMessages.DiceAssignmentConfirmed);
                 gameState.WorldSnapshot = gameState.World.DeepClone();
                 gameState.GamePhase = GamePhase.HeroActions;
                 return gameState;

@@ -13,5 +13,7 @@ namespace DungeonGame.Engine
 
         public static double GeometryCalculationEpsilon = 0.00001;
         public static int GeometryCalculationDecimalPlaces = 5;
+
+        public static int GameMessageLogLimit = 20;
     }
 }

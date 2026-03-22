@@ -31,7 +31,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (movementPointsRequired > GameConstants.MovementPointsDiagonal || movementPointsRequired == 0)
                 {
-                    gameState.GameMessage = GameMessages.CanOnlyMoveAdjacently;
+                    gameState.AddGameMessage(GameMessages.CanOnlyMoveAdjacently);
                     return gameState;
                 }
 
@@ -44,25 +44,26 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     if (blockers.Contains(new Position(gameState.World.HeroPosition.X, newPosition.Y))
                         && blockers.Contains(new Position(newPosition.X, gameState.World.HeroPosition.Y)))
                     {
-                        gameState.GameMessage = GameMessages.CannotMoveToThatSpace;
+                        gameState.AddGameMessage(GameMessages.CannotMoveToThatSpace);
                         return gameState;
                     }
                 }
 
                 if (gameState.World.HeroActionPoints[SkillType.Movement] < movementPointsRequired)
                 {
-                    gameState.GameMessage = GameMessages.NotEnoughMovementActionPoints;
+                    gameState.AddGameMessage(GameMessages.NotEnoughMovementActionPoints);
                     return gameState;
                 }
 
                 if (gameState.World.Walls.Contains(newPosition) || gameState.World.Monsters.Any(x => x.Position == newPosition))
                 {
-                    gameState.GameMessage = GameMessages.CannotMoveToThatSpace;
+                    gameState.AddGameMessage(GameMessages.CannotMoveToThatSpace);
                     return gameState;
                 }
 
                 gameState.World.HeroPosition = newPosition; 
                 gameState.World.HeroActionPoints[SkillType.Movement] -= movementPointsRequired;
+                gameState.AddGameMessage(string.Format(GameMessages.HeroMovedTo, gameState.Hero.Name, newPosition.X, newPosition.Y));
 
                 return gameState;
             } 
@@ -75,13 +76,13 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (monsterPosition == null)
                 {
-                    gameState.GameMessage = GameMessages.NoMonsterToAttackAtThatSpace;
+                    gameState.AddGameMessage(GameMessages.NoMonsterToAttackAtThatSpace);
                     return gameState;
                 }
 
                 if (GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, monsterPosition.Position) > gameState.Hero.Stats[SkillType.AttackRange])
                 {
-                    gameState.GameMessage = GameMessages.MonsterNotInRangeToAttack;
+                    gameState.AddGameMessage(GameMessages.MonsterNotInRangeToAttack);
                     return gameState;
                 }
 
@@ -90,33 +91,30 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
                 if (!GeometryUtility.HasLineOfSightOf(gameState.World.HeroPosition, monsterPosition.Position, blockers))
                 {
-                    gameState.GameMessage = GameMessages.MonsterNotInLineOfSightToAttack;
+                    gameState.AddGameMessage(GameMessages.MonsterNotInLineOfSightToAttack);
                     return gameState;
                 }
 
                 if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
-                    gameState.GameMessage = GameMessages.NotEnoughAttackToAttackMonster;
+                    gameState.AddGameMessage(GameMessages.NotEnoughAttackToAttackMonster);
                     return gameState;
                 }
 
                 monsterPosition.Monster.Health -= 1;
                 gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
+                gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
 
                 if (monsterPosition.Monster.Health <= 0)
                 {
-                    // TODO: Add a game message?
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterDefeated, monsterPosition.Monster.Type.ToString()));
                     gameState.World.Monsters.Remove(monsterPosition);
-
+                    
                     if (!gameState.World.Monsters.Any())
                     {
                         gameState.GamePhase = GamePhase.LevelEnd;
-                        // TODO: game message?
+                        gameState.AddGameMessage(GameMessages.AllMonstersDefeated);
                     }
-                }
-                else
-                {
-                    // TODO: Add a game message?
                 }
                 
                 return gameState;
@@ -124,6 +122,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             else if (inputEvent.EventType == InputEventType.HeroActionReset)
             {
                 gameState.World = gameState.WorldSnapshot.DeepClone();
+                gameState.AddGameMessage(string.Format(GameMessages.HeroTurnReset, gameState.Hero.Name));
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.HeroActionEnd)

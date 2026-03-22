@@ -46,7 +46,7 @@ namespace DungeonGame.Engine
             if (InternalInputEventTypes.Contains(inputEvent.EventType))
                 throw new NotSupportedException($"Input Event Type not allowed: {inputEvent.EventType}");
 
-            CurrentState.GameMessage = null;
+            CurrentState.ClearGameMessage();
             CurrentState.ScheduledEvents.Clear();
 
             CurrentState.ScheduledEvents.Add(inputEvent);

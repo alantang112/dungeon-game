@@ -58,10 +58,11 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
 
                     gameState.Hero.Health -= damageDealt;
-
+                    gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
                     if (gameState.Hero.Health <= 0)
                     {
                         gameState.GamePhase = GamePhase.GameEnd;
+                        gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name));
                     }
                 }
 
@@ -72,68 +73,72 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         private static GameState PerformMonsterMove(GameState gameState)
         {
             foreach(var monsterPosition in gameState.World.Monsters)
+            {
+                var monsterOriginalPosition = monsterPosition.Position;
+                
+                if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
+                    continue;
+                
+                var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
+
+                var wallsAndMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
+                var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
+
+                // If monster already at max attack range from hero and in line of sight of hero, continue
+                if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
                 {
-                    if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
-                        continue;
-                    
-                    var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
+                    continue;
+                }
 
-                    var wallsAndMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
-                    var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
+                // Find all possible positions that can be walked to
+                var walkablePositions = GetWalkablePositions(monsterPosition, gameState);
 
-                    // If monster already at max attack range from hero and in line of sight of hero, continue
-                    if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
+                if (!walkablePositions.Any())
+                {
+                    continue;
+                }
+
+                // Check if any walkable positions are in range and in line of sight of hero
+                var bestWalkablePositionInRangeAndLineOfSight = GetBestPositionInRangeAndLineOfSightOfHero(walkablePositions, gameState, monsterPosition);
+
+                if (bestWalkablePositionInRangeAndLineOfSight != null)
+                {
+                    // check if current position is better
+                    if (currentlyHasLineOfSight && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
                     {
                         continue;
                     }
-
-                    // Find all possible positions that can be walked to
-                    var walkablePositions = GetWalkablePositions(monsterPosition, gameState);
-
-                    if (!walkablePositions.Any())
-                    {
-                        continue;
-                    }
-
-                    // Check if any walkable positions are in range and in line of sight of hero
-                    var bestWalkablePositionInRangeAndLineOfSight = GetBestPositionInRangeAndLineOfSightOfHero(walkablePositions, gameState, monsterPosition);
-
-                    if (bestWalkablePositionInRangeAndLineOfSight != null)
-                    {
-                        // check if current position is better
-                        if (currentlyHasLineOfSight && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
-                        {
-                            continue;
-                        }
-                        else 
-                        {
-                            // TODO: figure out how monster walks there
-                            monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
-                            continue;
-                        }
-                    }
-
-                    // Otherwise, try to get as close as possible to max attack range and in line of sight
-                    var optimalPositions = new List<Position>();
-                    optimalPositions.AddRange(GetBestPositionsInAttackRangeAndLineOfSightOfHero(monsterPosition, gameState));
-
-                    if (!optimalPositions.Any())
-                    {
-                        // Otherwise, try to get as close as possible to hero
-                        optimalPositions.AddRange(GetClosestPositionsToHero(monsterPosition, gameState));
-                    }
-
-                    var bestWalkablePositionCandidate = GetBestWalkableCandidateFromOptimalPositions(walkablePositions, monsterPosition, gameState, optimalPositions);
-
-                    if (bestWalkablePositionCandidate.Position != monsterPosition.Position)
+                    else 
                     {
                         // TODO: figure out how monster walks there
-                        monsterPosition.Position = bestWalkablePositionCandidate.Position;
+                        monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
+                        gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
                         continue;
                     }
                 }
 
-                return gameState;
+                // Otherwise, try to get as close as possible to max attack range and in line of sight
+                var optimalPositions = new List<Position>();
+                optimalPositions.AddRange(GetBestPositionsInAttackRangeAndLineOfSightOfHero(monsterPosition, gameState));
+
+                if (!optimalPositions.Any())
+                {
+                    // Otherwise, try to get as close as possible to hero
+                    optimalPositions.AddRange(GetClosestPositionsToHero(monsterPosition, gameState));
+                }
+
+                var bestWalkablePositionCandidate = GetBestWalkableCandidateFromOptimalPositions(walkablePositions, monsterPosition, gameState, optimalPositions);
+
+                if (bestWalkablePositionCandidate.Position != monsterPosition.Position)
+                {
+                    // TODO: figure out how monster walks there
+                    monsterPosition.Position = bestWalkablePositionCandidate.Position;
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
+                    continue;
+                }
+            }
+
+            return gameState;
         }
 
         private static Dictionary<Position, int> GetWalkablePositions(MonsterPosition monsterPosition, GameState gameState)
