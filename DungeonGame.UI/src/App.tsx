@@ -60,40 +60,32 @@ function App() {
     }
   }
 
-  
-
   return (
     <>
-      <div style={{ position: 'absolute', height: '350px', width: '100vw', display: 'flex', gap: '20px', padding: '20px', fontFamily: 'monospace' }}>
-        
+      <div className="absolute top-0 left-0 w-full h-[350px] flex p-5 gap-5 font-mono">
         {/* LEFT SIDE: INPUT */}
-        <div style={{ height: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="flex-1 flex flex-col gap-2">
           <h3>Engine Input (JSON)</h3>
           <textarea
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
-            style={{ height: '300px', backgroundColor: '#1e1e1e', color: '#d4d4d4' }}
+            className="h-full bg-[#1e1e1e] text-[#d4d4d4] p-2 resize-none"
           />
           <button 
             onClick={handleDispatch}
-            style={{ padding: '10px', cursor: 'pointer', backgroundColor: '#007acc', color: 'white', border: 'none' }}
+            className="p-2.5 cursor-pointer bg-[#007acc] text-white border-none hover:bg-[#005fa3]"
           >
             Dispatch to C# Engine
           </button>
         </div>
 
         {/* RIGHT SIDE: OUTPUT */}
-        <div style={{ height: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden">
           <h3>Current Game State</h3>
-          <pre style={{ 
-            backgroundColor: '#f4f4f4', 
-            border: '1px solid #ccc', 
-            overflow: 'auto' 
-          }}>
+          <pre className="h-full bg-[#f4f4f4] border border-gray-300 overflow-auto p-2 text-xs">
             {state ? getGameStateJson(state) : ""}
           </pre>
         </div>
-
       </div>
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
         <div 
@@ -102,6 +94,26 @@ function App() {
         >
           {gridRows}
         </div>
+        <div className="flex gap-6 mt-15 h-12 items-center justify-center">
+          {GetAvailableButtons(state)?.map((button: AvailableButton, index: number) => (
+            <button
+              key={index}
+              onClick={async () => await dispatch(button.gameEventOnClick)}
+              className="
+          
+              inline-block
+              px-7 py-3
+              bg-indigo-600 hover:bg-indigo-500 
+              text-white font-bold tracking-wide
+              rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 
+              transform transition-all active:scale-95
+              border border-indigo-400/30
+            "
+            >
+              {button.text}
+            </button>
+          ))}
+      </div>
       </div>
       <GameLog messages={state.GameMessageLog ?? []}/>
     </>
@@ -125,6 +137,65 @@ const getGameStateJson = (state: GameState) : string => {
   }
 
   return JSON.stringify(stateJson, null, 2);
+}
+
+interface AvailableButton {
+  text: string;
+  gameEventOnClick: GameInputEvent;
+}
+
+const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
+  const availableButtons: AvailableButton[] = [];
+
+  if (state.GamePhase == "Start")
+  {
+    availableButtons.push({
+      text: "New Game",
+      gameEventOnClick: GameActions.NewGameEvent("Lil Timmy") // todo: user to enter name
+    });
+  } 
+  else if (state.GamePhase == "EnergyDicePreRoll")
+  {
+    availableButtons.push({
+      text: "Roll Energy Dice",
+      gameEventOnClick: GameActions.RollDiceEvent()
+    });
+  } 
+  else if (state.GamePhase == "EnergyDiceAssignment")
+  {
+    availableButtons.push({
+      text: "Reset Dice Assignment",
+      gameEventOnClick: GameActions.ResetDiceEvent()
+    });
+    if (!state.EnergyDice?.AssignedSkills?.some(x => x == null))
+    {
+      availableButtons.push({
+        text: "Confirm Dice Assignment",
+        gameEventOnClick: GameActions.ConfirmDiceAssignmentEvent()
+      });
+    }
+  } 
+  else if (state.GamePhase == "HeroActions")
+  {
+    availableButtons.push({
+      text: "Reset Actions",
+      gameEventOnClick: GameActions.HeroActionResetEvent()
+    });
+
+    availableButtons.push({
+      text: "End Actions",
+      gameEventOnClick: GameActions.HeroActionEndEvent()
+    });
+  }
+  else if (state.GamePhase == "MonsterActions")
+  {
+    availableButtons.push({
+      text: "Continue",
+      gameEventOnClick: GameActions.MonsterActionEndEvent()
+    });
+  }
+
+  return availableButtons;
 }
 
 export default App

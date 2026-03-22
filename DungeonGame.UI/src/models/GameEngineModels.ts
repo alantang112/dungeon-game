@@ -9,16 +9,16 @@ export type GamePhase =
 ;
 
 export type GameInputEventType = 
-    "NewGame"                       // TODO UI
-    | "EnergyDiceRoll"              // TODO UI
+    "NewGame"
+    | "EnergyDiceRoll"              
     | "EnergyDiceAssign"            // TODO UI
-    | "EnergyDiceResetAssignment"   // TODO UI
-    | "EnergyDiceConfirmAssignment" // TODO UI
+    | "EnergyDiceResetAssignment"   
+    | "EnergyDiceConfirmAssignment" 
     | "HeroActionMove"
     | "HeroActionAttack"
-    | "HeroActionReset"             // TODO UI
-    | "HeroActionEnd"               // TODO UI
-    | "MonsterActionsEnd"           // TODO UI
+    | "HeroActionReset"  
+    | "HeroActionEnd"    
+    | "MonsterActionsEnd"
     | "LevelEnd"
     | "GameEnd"
 ;

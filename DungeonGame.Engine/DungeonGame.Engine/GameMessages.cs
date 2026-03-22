@@ -2,7 +2,7 @@ namespace DungeonGame.Engine
 {
     public static class GameMessages
     {
-        public static string YouHaveEnteredLevel = "{0} has entered level {0}";
+        public static string YouHaveEnteredLevel = "{0} has entered level {1}";
         public static string DiceRolled = "Energy dice rolled: {0}, {1}, {2}";
         public static string DiceAssignedToSkill = "Energy dice {0} assigned to {1}";
         public static string DiceAssignmentConfirmed = "Energy dice assignment confirmed";

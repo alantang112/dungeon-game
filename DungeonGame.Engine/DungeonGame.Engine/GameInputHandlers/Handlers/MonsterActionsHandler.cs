@@ -206,7 +206,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             var optimalPosition = inRangeAndLineOfSight
                 .OrderByDescending(x => x.DistanceFromTarget)
-                .ThenByDescending(x => x.MovementPointsRequired)
+                .ThenBy(x => x.MovementPointsRequired)
                 .FirstOrDefault();
 
             return optimalPosition;
