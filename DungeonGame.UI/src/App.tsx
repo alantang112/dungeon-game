@@ -91,7 +91,7 @@ function App() {
       </div>
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
         <div 
-          className="grid grid-cols-5 gap-1 w-full max-w-md border-2 border-slate-600 bg-slate-700 p-1"
+          className="grid grid-cols-5 gap-1 aspect-square border-2 border-slate-600 bg-slate-700 p-1"
           style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
         >
           {gridRows}
