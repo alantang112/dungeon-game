@@ -1,7 +1,6 @@
 using System.Runtime.Serialization;
 using System.Text.Json;
 using DungeonGame.Engine;
-using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.InputEventModels;
 using DungeonGame.Engine.Utilities;
 using Microsoft.JSInterop;
@@ -13,7 +12,7 @@ public static class JSBridge
     private static IGameEngine? _engine;
 
     [JSInvokable]
-    public static GameState Initialize(IGameEngine? engine = null)
+    public static string Initialize(IGameEngine? engine = null)
     {
         if (engine != null)
         {
@@ -28,11 +27,12 @@ public static class JSBridge
                 throw new NotSupportedException("Game engine not yet initialized");
         }
 
-        return _engine.GetCurrentState();
+        var gameState = _engine.GetCurrentState();
+        return JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions);
     } 
 
     [JSInvokable]
-    public static GameState ProcessInput(string inputEvent)
+    public static string ProcessInput(string inputEvent)
     {
         var inputEventModel = JsonSerializer.Deserialize<InputEvent>(inputEvent, SerializationUtility.JsonSerializerOptions);
 
@@ -40,12 +40,20 @@ public static class JSBridge
             throw new SerializationException($"Could not parsed inputEvent: {inputEvent}");
 
         var gameState = _engine!.ProcessInput(inputEventModel);
-        return gameState;
+        return JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions);
     } 
 
     [JSInvokable]
-    public static string GetGameStateSnapshot() => _engine!.GetGameStateSnapshot();
+    public static string GetGameStateSnapshot()
+    {
+        var gameState = _engine!.GetGameStateSnapshot();
+        return JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions);
+    }
     
     [JSInvokable]
-    public static GameState LoadGameStateSnapshot(string snapshot) => _engine!.LoadGameStateSnapshot(snapshot);
+    public static string LoadGameStateSnapshot(string snapshot)
+    {
+        var newGameState = _engine!.LoadGameStateSnapshot(snapshot);
+        return JsonSerializer.Serialize(newGameState, SerializationUtility.JsonSerializerOptions);
+    } 
 }

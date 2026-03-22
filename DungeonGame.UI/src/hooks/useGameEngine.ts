@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { GameState, GameInputEvent } from '../models/GameEngineModels';
 
 export function useGameEngine() {
-    const [state, setState] = useState<any>(null);
+    const [state, setState] = useState<GameState>(new GameState());
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
@@ -18,7 +19,8 @@ export function useGameEngine() {
 
                     await new Promise(r => setTimeout(r, 150));
 
-                    const newState = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'Initialize', null);
+                    const newStateJson : string = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'Initialize', null);
+                    const newState = JSON.parse(newStateJson) as GameState;
                     setState(newState);
                     setIsReady(true);
 
@@ -37,8 +39,10 @@ export function useGameEngine() {
         init();
     }, []);
 
-    const dispatch = async (payload: any) => {
-        const newState = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'ProcessInput', payload);
+    const dispatch = async (payload: GameInputEvent) => {
+        console.log(payload);
+        const newStateJson : string = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'ProcessInput', JSON.stringify(payload));
+        const newState = JSON.parse(newStateJson) as GameState;
         setState(newState);
     };
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
+import { GameInputEvent, MonsterPosition, Position } from './models/GameEngineModels'
 import { Tile } from './Tile';
 import './App.css'
 
@@ -14,7 +15,8 @@ function App() {
 
   const handleDispatch = async () => {
     try {
-      await dispatch(jsonInput);
+      const inputModel: GameInputEvent = JSON.parse(jsonInput) as GameInputEvent; 
+      await dispatch(inputModel);
     } catch (e) {
       console.log(jsonInput, e);
       alert("Could not process input event!");
@@ -26,14 +28,14 @@ function App() {
   const gridSize = 5;
   const gridRows = [];
 
-  const getBackgroundColor = (x :number, y: number) => {
-        if (state?.world?.heroPosition?.x == x && state?.world?.heroPosition?.y == y)
+  const getTileBackgroundColor = (x : number, y : number) => {
+        if (state?.World?.HeroPosition?.X == x && state?.World?.HeroPosition?.Y == y)
             return "green";
 
-        if (state?.world?.walls?.some((wall: any) => wall.x == x && wall.y == y))
+        if (state?.World?.Walls?.some((wall: Position) => wall.X == x && wall.Y == y))
             return "darkgrey"
 
-        if (state?.world?.monsters?.find((mp:any) => mp.position.x == x && mp.position.y == y))
+        if (state?.World?.Monsters?.find((mp: MonsterPosition) => mp.Position.X == x && mp.Position.Y == y))
             return "darkred";
 
         return "";
@@ -48,7 +50,7 @@ function App() {
           key={`${x}-${y}`}
           x={x}
           y={y}
-          backgroundColor={`${getBackgroundColor(x, y)}`}
+          backgroundColor={`${getTileBackgroundColor(x, y)}`}
         />
       );
     }
