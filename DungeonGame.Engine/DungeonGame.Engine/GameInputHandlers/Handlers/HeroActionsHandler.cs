@@ -103,7 +103,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 monsterPosition.Monster.Health -= 1;
                 gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
-                gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type.ToString(), 
+                    monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Health));
 
                 if (monsterPosition.Monster.Health <= 0)
                 {
