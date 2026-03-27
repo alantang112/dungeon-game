@@ -47,7 +47,7 @@ export class Position {
 
 export class World {
     HeroPosition!: Position;
-    HeroActionPoints?: Map<SkillType, number>;
+    HeroActionPoints?: Record<SkillType, number>;
     Walls?: Position[];
     Monsters?: MonsterPosition[];
 }
@@ -55,13 +55,13 @@ export class World {
 export class Hero {
     Name?: string;
     Health?: number;
-    Stats?: Map<SkillType, number>;
+    Stats?: Record<SkillType, number>;
 }
 
 export class Monster {
     Type!: MonsterType;
     Health!: number;
-    Stats!: Map<SkillType, number>;
+    Stats!: Record<SkillType, number>;
 }
 
 export class MonsterPosition {

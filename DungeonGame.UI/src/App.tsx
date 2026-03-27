@@ -1,29 +1,13 @@
-import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
-import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType } from './models/GameEngineModels'
+import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType, EnergyDice } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
+import { HeroStats } from './props/HeroStats';
 import GameActions from './interfaces/gameEngineInterface';
 import './App.css'
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
-  const [jsonInput, setJsonInput] = useState(`{
-    "EventType": "NewGame",
-    "EventParameters": {
-        "HeroName": "Lil Timmy"
-    }
-}`);
-
-  const handleDispatch = async () => {
-    try {
-      const inputModel : GameInputEvent = JSON.parse(jsonInput) as GameInputEvent; 
-      await dispatch(inputModel);
-    } catch (e) {
-      console.log(jsonInput, e);
-      alert("Could not process input event!");
-    }
-  }
 
   if (!isReady) return <div>Loading game engine...</div>;
 
@@ -37,7 +21,6 @@ function App() {
         await dispatch(GameActions.HeroMoveEvent(x, y));
       }
     } catch (e) {
-      console.log(jsonInput, e);
       alert("Could not process input event!");
     }
   }
@@ -48,9 +31,8 @@ function App() {
   for (let y = gridSize; y >= 1; y--) {
     for (let x = 1; x <= gridSize; x++) {
       gridRows.push(
-        <div onClick={() => handleTileClick(state, x, y)}>
+        <div key={`${x}-${y}`} onClick={() => handleTileClick(state, x, y)}>
           <Tile
-          key={`${x}-${y}`}
           x={x}
           y={y}
           backgroundColor={`${getTileBackgroundColor(state, x, y)}`}
@@ -60,23 +42,42 @@ function App() {
     }
   }
 
+  const heroInitialized: boolean = state.Hero?.Name != undefined;
+
+  var heroEnergy: Record<SkillType, number> = {
+    "Movement": 0,
+    "Attack": 0,
+    "Defence": 0,
+    "AttackRange": 0
+  };
+
+  if (heroInitialized) {
+    if (state.GamePhase == "EnergyDiceAssignment")
+    {
+      console.log("hero initialized, gamePhase EnergyDiceAssignment")
+
+      heroEnergy = {
+        "Movement": state.Hero!.Stats!["Movement"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Movement"),
+        "Attack": state.Hero!.Stats!["Attack"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Attack"),
+        "Defence": state.Hero!.Stats!["Defence"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Defence"),
+        "AttackRange": 0
+      }
+    }
+    else if (state.World?.HeroActionPoints)
+    {
+      heroEnergy = { ...state.World!.HeroActionPoints! };
+    }
+  }
+
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-[350px] flex p-5 gap-5 font-mono">
         {/* LEFT SIDE: INPUT */}
         <div className="flex-1 flex flex-col gap-2">
-          <h3>Engine Input (JSON)</h3>
-          <textarea
-            value={jsonInput}
-            onChange={(e) => setJsonInput(e.target.value)}
-            className="h-full bg-[#1e1e1e] text-[#d4d4d4] p-2 resize-none"
+          <HeroStats 
+            hero={heroInitialized ? state.Hero : undefined} 
+            energy={heroEnergy} 
           />
-          <button 
-            onClick={handleDispatch}
-            className="p-2.5 cursor-pointer bg-[#007acc] text-white border-none hover:bg-[#005fa3]"
-          >
-            Dispatch to C# Engine
-          </button>
         </div>
 
         {/* RIGHT SIDE: OUTPUT */}
@@ -87,6 +88,7 @@ function App() {
           </pre>
         </div>
       </div>
+
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
         <div 
           className="grid grid-cols-5 gap-1 aspect-square border-2 border-slate-600 bg-slate-700 p-1"
@@ -117,7 +119,7 @@ function App() {
       </div>
       <GameLog messages={state.GameMessageLog ?? []}/>
     </>
-  );
+  )
 }
 
 const getTileBackgroundColor = (state: GameState, x: number, y: number) : string => {
@@ -214,6 +216,19 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   }
 
   return availableButtons;
+}
+
+const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): number => {
+  if (energyDice?.AssignedSkills?.includes(skill))
+  {
+    console.log(`Energy dice includes ${skill}`)
+    const index = energyDice!.AssignedSkills!.findIndex(x => x == skill);
+    const result =  energyDice!.Dice![index];
+    console.log(energyDice!.Dice!, index, result);
+    return result;
+  }
+
+  return 0;
 }
 
 export default App
