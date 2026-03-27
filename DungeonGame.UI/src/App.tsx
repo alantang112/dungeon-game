@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
-import { GameInputEvent, MonsterPosition, Position, GameState } from './models/GameEngineModels'
+import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import GameActions from './interfaces/gameEngineInterface';
@@ -163,6 +163,24 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   } 
   else if (state.GamePhase == "EnergyDiceAssignment")
   {
+    const assignableSkillTypes: SkillType[] = ["Movement", "Attack", "Defence"];
+    const currentDiceIndex: number = state.EnergyDice?.AssignedSkills?.findIndex(x => x == null) ?? -1;
+
+    if (currentDiceIndex >= 0)
+    {
+      const currentDiceValue: number = state.EnergyDice!.Dice![currentDiceIndex];
+
+      assignableSkillTypes.forEach(skillType => {
+        if (!state.EnergyDice?.AssignedSkills?.includes(skillType))
+        {
+          availableButtons.push({
+            text: `Assign +${currentDiceValue} energy to ${skillType}`,
+            gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
+          });
+        }
+      });
+    }
+
     availableButtons.push({
       text: "Reset Dice Assignment",
       gameEventOnClick: GameActions.ResetDiceEvent()
