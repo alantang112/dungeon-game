@@ -1,6 +1,7 @@
 using System;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.GameTemplates
 {
@@ -13,7 +14,9 @@ namespace DungeonGame.Engine.GameTemplates
             switch (type)
             {
                 case MonsterType.Spider:
+                    monster.Name = CharacterNameUtility.GetRandomName();
                     monster.Health = 2;
+                    monster.MaxHealth = monster.Health;
                     monster.Stats.Add(SkillType.Movement, 5);
                     monster.Stats.Add(SkillType.Attack, 4);
                     monster.Stats.Add(SkillType.Defence, 4);

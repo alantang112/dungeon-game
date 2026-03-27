@@ -1,8 +1,8 @@
 import { useGameEngine } from './hooks/useGameEngine';
-import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType, EnergyDice } from './models/GameEngineModels'
+import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType, EnergyDice, Monster } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
-import { HeroStats } from './props/HeroStats';
+import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
 import './App.css'
 
@@ -69,23 +69,46 @@ function App() {
     }
   }
 
+  const monsterRows = [];
+  
+  const monsterCount = state.World?.Monsters?.length ?? 0;
+  for (let i = 0; i < monsterCount; i++)
+  {
+    const monster = state.World!.Monsters![i].Monster;
+    monsterRows.push(
+      <div key={`monster-${i}`}>
+        <CharacterStats 
+              name={`${monster.Type} ${monster.Name}`}
+              health={monster.Health}
+              maxHealth={monster.MaxHealth}
+              stats={monster.Stats}
+              energy={undefined} 
+              displayEnergy={false}
+              isEnemy={true}
+            />
+      </div>
+    )
+  }
+
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[350px] flex p-5 gap-5 font-mono">
+      <div className="absolute top-0 left-0 w-full h-[350px] grid grid-cols-12 p-5 gap-5 font-mono">
         {/* LEFT SIDE: INPUT */}
-        <div className="flex-1 flex flex-col gap-2">
-          <HeroStats 
-            hero={heroInitialized ? state.Hero : undefined} 
+        <div className="col-span-3 flex flex-col gap-2">
+          <CharacterStats 
+            name={heroInitialized ? state.Hero!.Name! : "Hero"}
+            health={heroInitialized ? state.Hero!.Health! : 10}
+            maxHealth={10}
+            stats={heroInitialized ? state.Hero!.Stats : undefined}
             energy={heroEnergy} 
+            displayEnergy={true}
+            isEnemy={false}
           />
         </div>
-
+        <div className="col-span-6 flex flex-col gap-2"></div>
         {/* RIGHT SIDE: OUTPUT */}
-        <div className="flex-1 flex flex-col gap-2 overflow-hidden">
-          <h3>Current Game State</h3>
-          <pre className="h-full bg-[#f4f4f4] border border-gray-300 overflow-auto p-2 text-xs">
-            {state ? getGameStateJson(state) : ""}
-          </pre>
+        <div className="col-span-3 flex flex-col gap-2">
+          {monsterRows}
         </div>
       </div>
 
@@ -128,18 +151,6 @@ const getTileBackgroundColor = (state: GameState, x: number, y: number) : string
     if (state?.World?.Monsters?.some((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y)) return "darkred";
     return "";
 };
-
-const getGameStateJson = (state: GameState) : string => {
-  const stateJson = JSON.parse(JSON.stringify(state));
-
-  if (stateJson?.World?.Borders)
-  {
-    stateJson.World.Borders = null;
-    stateJson.World.Walls = null;
-  }
-
-  return JSON.stringify(stateJson, null, 2);
-}
 
 interface AvailableButton {
   text: string;

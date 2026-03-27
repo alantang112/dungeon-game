@@ -58,10 +58,10 @@ public class GeometryUtilityTests
     
     private void TestLineOfSight(int targetXDelta, int targetYDelta, string wallDeltas, bool expected)
     {
-        var observer = new Position(0, 0); // TODO: RandomPosition();
+        var observer = RandomPosition();
 
-        var mirrorX = 1; // TODO RandomUtility.RandomBool() ? 1 : -1;
-        var mirrorY = 1; // TODO RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorX = RandomUtility.RandomBool() ? 1 : -1;
+        var mirrorY = RandomUtility.RandomBool() ? 1 : -1;
 
         var target = observer.Translate(targetXDelta * mirrorX, targetYDelta * mirrorY);
 

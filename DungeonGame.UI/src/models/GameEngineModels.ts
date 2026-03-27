@@ -11,7 +11,7 @@ export type GamePhase =
 export type GameInputEventType = 
     "NewGame"
     | "EnergyDiceRoll"              
-    | "EnergyDiceAssign"            // TODO UI
+    | "EnergyDiceAssign"
     | "EnergyDiceResetAssignment"   
     | "EnergyDiceConfirmAssignment" 
     | "HeroActionMove"
@@ -60,7 +60,9 @@ export class Hero {
 
 export class Monster {
     Type!: MonsterType;
+    Name!: string;
     Health!: number;
+    MaxHealth!: number;
     Stats!: Record<SkillType, number>;
 }
 
