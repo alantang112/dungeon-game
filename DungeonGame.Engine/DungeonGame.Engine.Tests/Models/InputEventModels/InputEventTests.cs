@@ -21,22 +21,24 @@ public class InputEventTests
     }
 
     [Test]
-    public void CanDeserializeNewGameEvent()
+    public void CanDeserializeEvent()
     {
         var json = @"{
-            ""EventType"": ""NewGame"",
+            ""EventType"": ""HeroActionMove"",
             ""EventParameters"": {
-                ""HeroName"": ""Bob""
+                ""X"": 2,
+                ""Y"": 3
             }
         }";
 
         var parsed = JsonSerializer.Deserialize<InputEvent>(json, SerializationUtility.JsonSerializerOptions);
 
-        Assert.That(parsed.EventType, Is.EqualTo(InputEventType.NewGame));
+        Assert.That(parsed.EventType, Is.EqualTo(InputEventType.HeroActionMove));
         Assert.That(parsed.EventParameters, Is.Not.Null);
 
-        var parsedEventParameters = parsed.EventParameters as NewGameEventParameters;
-        Assert.That(parsedEventParameters.HeroName, Is.EqualTo("Bob"));
+        var parsedEventParameters = parsed.EventParameters as HeroActionMoveEventParameters;
+        Assert.That(parsedEventParameters.X, Is.EqualTo(2));
+        Assert.That(parsedEventParameters.Y, Is.EqualTo(3));
     }
 
     [Test]

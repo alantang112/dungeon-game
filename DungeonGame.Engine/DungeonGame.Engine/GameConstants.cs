@@ -15,5 +15,7 @@ namespace DungeonGame.Engine
         public static int GeometryCalculationDecimalPlaces = 5;
 
         public static int GameMessageLogLimit = 20;
+
+        public static int HeroMaxHealth = 10;
     }
 }

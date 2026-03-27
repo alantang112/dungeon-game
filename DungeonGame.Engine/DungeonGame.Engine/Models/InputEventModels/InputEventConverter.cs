@@ -27,7 +27,6 @@ namespace DungeonGame.Engine.Models.InputEventModels
         {
             result.EventParameters = result.EventType switch
             {
-                InputEventType.NewGame => paramsProp.Deserialize<NewGameEventParameters>(options),
                 InputEventType.EnergyDiceAssign => paramsProp.Deserialize<EnergyDiceAssignEventParameters>(options),
                 InputEventType.HeroActionMove => paramsProp.Deserialize<HeroActionMoveEventParameters>(options),
                 InputEventType.HeroActionAttack => paramsProp.Deserialize<HeroActionAttackEventParameters>(options),

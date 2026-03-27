@@ -17,15 +17,15 @@ public class StartPhaseTests
     [Test]
     public void WhenStartGame_SetHeroName()
     {
-        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
+        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
 
-        Assert.That(gameState.Hero.Name, Is.EqualTo("Conan"));
+        Assert.That(gameState.Hero.Name, Is.Not.Null);
     }
 
     [Test]
     public void WhenStartGame_InitializeLevelOne()
     {
-        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
+        var gameState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
 
         Assert.That(gameState.LevelNumber, Is.EqualTo(1));
         Assert.That(gameState.World.HeroPosition, Is.EqualTo(new Position(1, 1)));
@@ -46,7 +46,7 @@ public class StartPhaseTests
     [Test]
     public void GivenGameInStartPhase_WhenNewGameInput_ThenGoToEnergyDicePreRoll()
     {
-        var currentState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame, EventParameters = new NewGameEventParameters() { HeroName = "Conan" } });
+        var currentState = _sut.ProcessInput(new InputEvent() { EventType = InputEventType.NewGame });
         Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 

@@ -19,7 +19,7 @@ export type GameInputEventType =
     | "HeroActionReset"  
     | "HeroActionEnd"    
     | "MonsterActionsEnd"
-    | "LevelEnd"
+    | "NextLevel"
     | "GameEnd"
 ;
 

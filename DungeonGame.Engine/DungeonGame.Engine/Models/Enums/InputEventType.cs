@@ -23,7 +23,7 @@ namespace DungeonGame.Engine.Models.Enums
         MonsterActionsEnd,
 
         // Game actions - LevelEnd
-        LevelEnd,
+        NextLevel,
 
         // Game actions - GameEnd
     }

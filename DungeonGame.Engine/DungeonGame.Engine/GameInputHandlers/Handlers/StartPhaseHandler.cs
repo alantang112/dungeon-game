@@ -2,6 +2,7 @@ using System;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.GameInputHandlers.Handlers
 {
@@ -12,21 +13,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
-            var newGameParameters = inputEvent.EventParameters as NewGameEventParameters;
-            if (newGameParameters == null)
-                throw new ArgumentException("NewGameEventParameters required for NewGame input");
-
-            gameState.Hero.Name = newGameParameters.HeroName;
+            gameState.Hero.Name = $"Lil {CharacterNameUtility.GetRandomName()}";
             gameState.Hero.Stats.Add(SkillType.Movement, 1);
             gameState.Hero.Stats.Add(SkillType.Attack, 1);
             gameState.Hero.Stats.Add(SkillType.Defence, 1);
             gameState.Hero.Stats.Add(SkillType.AttackRange, 2);
-            gameState.Hero.Health = 10;
+            gameState.Hero.Health = GameConstants.HeroMaxHealth;
             gameState.Hero.BirthYear = DateTime.Now.Year;
 
             gameState.LevelNumber = 1;
             gameState.World = new World();
-            gameState.World.InitializeLevel(1);
+            gameState.World.InitializeLevel(gameState.LevelNumber!.Value);
 
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
             gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
