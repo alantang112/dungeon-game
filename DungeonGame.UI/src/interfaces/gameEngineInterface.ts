@@ -99,7 +99,8 @@ const NextLevelUpgradeSkillEvent = (skillType: SkillType) : GameInputEvent => {
     const model: GameInputEvent = {
         EventType: "NextLevel",
         EventParameters: {
-            SkillType: skillType
+            SkillType: skillType,
+            ReplenishHealth: false
         }
     }
 

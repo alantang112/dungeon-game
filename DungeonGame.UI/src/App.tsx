@@ -54,8 +54,6 @@ function App() {
   if (heroInitialized) {
     if (state.GamePhase == "EnergyDiceAssignment")
     {
-      console.log("hero initialized, gamePhase EnergyDiceAssignment")
-
       heroEnergy = {
         "Movement": state.Hero!.Stats!["Movement"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Movement"),
         "Attack": state.Hero!.Stats!["Attack"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Attack"),
@@ -255,11 +253,8 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
 const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): number => {
   if (energyDice?.AssignedSkills?.includes(skill))
   {
-    console.log(`Energy dice includes ${skill}`)
     const index = energyDice!.AssignedSkills!.findIndex(x => x == skill);
-    const result =  energyDice!.Dice![index];
-    console.log(energyDice!.Dice!, index, result);
-    return result;
+    return energyDice!.Dice![index];
   }
 
   return 0;
