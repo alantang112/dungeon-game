@@ -95,6 +95,28 @@ const MonsterActionEndEvent = () : GameInputEvent => {
     return model;
 }
 
+const NextLevelUpgradeSkillEvent = (skillType: SkillType) : GameInputEvent => {
+    const model: GameInputEvent = {
+        EventType: "NextLevel",
+        EventParameters: {
+            SkillType: skillType
+        }
+    }
+
+    return model;
+}
+
+const NextLevelReplenishHealthEvent = () : GameInputEvent => {
+    const model: GameInputEvent = {
+        EventType: "NextLevel",
+        EventParameters: {
+            ReplenishHealth: true
+        }
+    }
+
+    return model;
+}
+
 const interfaceActions = { 
     NewGameEvent, 
     RollDiceEvent, 
@@ -106,6 +128,8 @@ const interfaceActions = {
     HeroActionResetEvent,
     HeroActionEndEvent,
     MonsterActionEndEvent,
+    NextLevelUpgradeSkillEvent,
+    NextLevelReplenishHealthEvent,
  }
 
  export default interfaceActions;

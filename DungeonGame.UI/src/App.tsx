@@ -225,6 +225,29 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
       gameEventOnClick: GameActions.MonsterActionEndEvent()
     });
   }
+  else if (state.GamePhase == "LevelEnd")
+  {
+    availableButtons.push({
+      text: "Upgrade Movement",
+      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Movement")
+    });
+    availableButtons.push({
+      text: "Upgrade Attack",
+      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Attack")
+    });
+    availableButtons.push({
+      text: "Upgrade Defence",
+      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Defence")
+    });
+    availableButtons.push({
+      text: "Upgrade Range",
+      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("AttackRange")
+    });
+    availableButtons.push({
+      text: "Replenish Health",
+      gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
+    });
+  }
 
   return availableButtons;
 }

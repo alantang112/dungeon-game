@@ -92,6 +92,10 @@ export class GameInputEventParameters {
     // HeroMove/HeroAttack
     X?: number;
     Y?: number;
+
+    // NextLevel
+    // SkillType
+    ReplenishHealth?: boolean;
 }
 
 export class GameInputEvent {

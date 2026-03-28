@@ -97,7 +97,7 @@ public class NextLevelTests
             EventType = InputEventType.NextLevel,
             EventParameters = new NextLevelEventParameters()
             {
-                LevelUpSkill = skillType,
+                SkillType = skillType,
                 ReplenishHealth = replenishHealth
             }
         });

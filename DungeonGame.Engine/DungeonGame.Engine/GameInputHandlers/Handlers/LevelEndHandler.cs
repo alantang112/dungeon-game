@@ -16,8 +16,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             if (nextLevelParameters == null)
                 throw new ArgumentNullException("NextLevelEventParameters required for NextLevel input");
 
-            if ((nextLevelParameters.LevelUpSkill.HasValue && nextLevelParameters.ReplenishHealth)
-                || (!nextLevelParameters.LevelUpSkill.HasValue && !nextLevelParameters.ReplenishHealth))
+            if ((nextLevelParameters.SkillType.HasValue && nextLevelParameters.ReplenishHealth)
+                || (!nextLevelParameters.SkillType.HasValue && !nextLevelParameters.ReplenishHealth))
             {
                 gameState.AddGameMessage(GameMessages.LevelUpError);
                 return gameState;
@@ -30,10 +30,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }    
             else
             {
-                gameState.Hero.Stats[nextLevelParameters.LevelUpSkill!.Value]++;
-                gameState.AddGameMessage(string.Format(GameMessages.LevelUpSkill, gameState.Hero.Name, nextLevelParameters.LevelUpSkill!.Value));
+                gameState.Hero.Stats[nextLevelParameters.SkillType!.Value]++;
+                gameState.AddGameMessage(string.Format(GameMessages.LevelUpSkill, gameState.Hero.Name, nextLevelParameters.SkillType!.Value));
             }
-            
+
             gameState.LevelNumber++;
             gameState.World.InitializeLevel(gameState.LevelNumber!.Value);
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
