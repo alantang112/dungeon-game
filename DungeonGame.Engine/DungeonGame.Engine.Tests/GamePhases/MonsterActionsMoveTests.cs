@@ -162,19 +162,26 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
     }
 
-    [Test]
-    public void GivenTwoMonsters_NoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight()
+    [TestCase(2, 1, 5, 5, 4, 5, null, null, 4, 3, 3, 3)]
+    [TestCase(1, 1, 3, 2, 5, 3, 1, 3, 2, 1, 3, 2)] // or 4, 1
+    public void GivenTwoMonsters_NoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight(int heroX, int heroY, int monsterX, int monsterY, 
+        int otherMonsterX, int otherMonsterY, int? extraWallX, int? extraWallY, int expectedMonsterX, int expectedMonsterY, int expectedOtherMonsterX, int expectedOtherMonsterY)
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.HeroPosition = new Position(2, 1);
-        initialGameState.World.Monsters[0].Position = new Position(5, 5);
+        initialGameState.World.HeroPosition = new Position(heroX, heroY);
+        initialGameState.World.Monsters[0].Position = new Position(monsterX, monsterY);
 
         initialGameState.World.Monsters.Add(new MonsterPosition()
         {
             Monster = initialGameState.World.Monsters[0].Monster,
-            Position = new Position(4, 5)
+            Position = new Position(otherMonsterX, otherMonsterY)
         });
+
+        if (extraWallX.HasValue)
+        {
+            initialGameState.World.Walls.Add(new Position(extraWallX.Value, extraWallY!.Value));
+        }
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 
@@ -184,8 +191,8 @@ public class MonsterActionsMoveTests
         });
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
-        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
-        Assert.That(newGameState.World.Monsters[1].Position, Is.EqualTo(new Position(3, 3)));
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
+        Assert.That(newGameState.World.Monsters[1].Position, Is.EqualTo(new Position(expectedOtherMonsterX, expectedOtherMonsterY)));
     }
 
     [Test]

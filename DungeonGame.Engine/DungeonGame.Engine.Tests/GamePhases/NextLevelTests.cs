@@ -57,7 +57,7 @@ public class NextLevelTests
             EventType = InputEventType.NextLevel,
             EventParameters = new NextLevelEventParameters()
             {
-                LevelUpSkill = null,
+                SkillType = null,
                 ReplenishHealth = false
             }
         });
@@ -74,7 +74,7 @@ public class NextLevelTests
             EventType = InputEventType.NextLevel,
             EventParameters = new NextLevelEventParameters()
             {
-                LevelUpSkill = SkillType.Movement,
+                SkillType = SkillType.Movement,
                 ReplenishHealth = true
             }
         });

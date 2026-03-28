@@ -127,22 +127,26 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     }
                 }
 
-                // Otherwise, try to get as close as possible to max attack range and in line of sight
-                var optimalPositions = new List<Position>();
-                optimalPositions.AddRange(GetBestPositionsInAttackRangeAndLineOfSightOfHero(monsterPosition, gameState));
+                CandidateMovementPosition? movementCandidate = null;
 
-                if (!optimalPositions.Any())
+                // Otherwise, try to get as close as possible to max attack range and in line of sight
+                var optimalPositions = GetBestPositionsInAttackRangeAndLineOfSightOfHero(monsterPosition, gameState);
+
+                if (optimalPositions.Any())
                 {
-                    // Otherwise, try to get as close as possible to hero
-                    optimalPositions.AddRange(GetClosestPositionsToHero(monsterPosition, gameState));
+                    movementCandidate = GetBestWalkableCandidateFromOptimalPositions(walkablePositions, monsterPosition, gameState, optimalPositions);
                 }
 
-                var bestWalkablePositionCandidate = GetBestWalkableCandidateFromOptimalPositions(walkablePositions, monsterPosition, gameState, optimalPositions);
+                if (movementCandidate == null || movementCandidate.DistanceFromTarget == int.MaxValue)
+                {
+                    // Otherwise, try to get as close as possible to hero
+                    movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, gameState);
+                }
 
-                if (bestWalkablePositionCandidate.Position != monsterPosition.Position)
+                if (movementCandidate.Position != monsterPosition.Position)
                 {
                     // TODO: figure out how monster walks there
-                    monsterPosition.Position = bestWalkablePositionCandidate.Position;
+                    monsterPosition.Position = movementCandidate.Position;
                     gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
                     continue;
                 }
@@ -256,25 +260,25 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return positionsInAttackRangeAndLineOfSight.Where(kv => kv.Value == maxAttackRange).Select(x => x.Key).ToList();
         }
 
-        private static List<Position> GetClosestPositionsToHero(MonsterPosition monsterPosition, GameState gameState)
+        private static CandidateMovementPosition GetBestWalkableCandidateClosestToHero(Dictionary<Position, int> walkablePositions, GameState gameState)
         {
-            var wallsMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
+            var candidates = new List<CandidateMovementPosition>();
 
-            Func<Dictionary<Position, int>, int?> floodUntilStep = (Dictionary<Position, int> floodValues) =>
+            foreach(var walkablePosition in walkablePositions)
             {
-                return floodValues.Where(x => x.Value > 0).Any(x => !wallsMonstersExcludingSelf.Contains(x.Key)) ? (int?)0 : null; // end on next step if there are any empty flood positions
-            };
+                candidates.Add(new CandidateMovementPosition()
+                {
+                    Position = walkablePosition.Key,
+                    MovementPointsRequired = walkablePosition.Value,
+                    DistanceFromTarget = GeometryUtility.CalculateDistanceBetween(walkablePosition.Key, gameState.World.HeroPosition)
+                });
+            }
 
-            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
-            {
-                var minValueWithEmptySpace = floodValues.Where(x => x.Value > 0 && !wallsMonstersExcludingSelf.Contains(x.Key)).Min(x => x.Value);
+            var minDistanceFromTarget = candidates.Min(x => x.DistanceFromTarget);
 
-                return value == minValueWithEmptySpace && value > 0 && !wallsMonstersExcludingSelf.Contains(position);
-            };
-
-            var closestPositionsToHero = GeometryUtility.PlotValuesByFloodSearch(gameState.World.HeroPosition, gameState.World.Walls.ToList(), FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);
-
-            return closestPositionsToHero.Select(x => x.Key).ToList();
+            return candidates.Where(x => x.DistanceFromTarget == minDistanceFromTarget)
+                             .OrderBy(x => x.MovementPointsRequired)
+                             .First();
         }
 
         private static CandidateMovementPosition GetBestWalkableCandidateFromOptimalPositions(Dictionary<Position, int> walkablePositions, MonsterPosition monsterPosition, GameState gameState, List<Position> optimalPositions)
