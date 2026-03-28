@@ -90,9 +90,9 @@ function App() {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[350px] grid grid-cols-12 p-5 gap-5 font-mono">
+      <div className="absolute top-0 left-0 w-full h-[350px] p-5 font-mono grid grid-cols-2 gap-5 lg:grid-cols-12">
         {/* LEFT SIDE: INPUT */}
-        <div className="col-span-3 flex flex-col gap-2">
+        <div className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2">
           <CharacterStats 
             name={heroInitialized ? state.Hero!.Name! : "Hero"}
             health={heroInitialized ? state.Hero!.Health! : 10}
@@ -103,9 +103,8 @@ function App() {
             isEnemy={false}
           />
         </div>
-        <div className="col-span-6 flex flex-col gap-2"></div>
         {/* RIGHT SIDE: OUTPUT */}
-        <div className="col-span-3 flex flex-col gap-2">
+        <div className="col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
           {monsterRows}
         </div>
       </div>
