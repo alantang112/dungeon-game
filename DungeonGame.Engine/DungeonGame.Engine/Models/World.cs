@@ -41,13 +41,7 @@ namespace DungeonGame.Engine.Models
                 Walls.Add(wallPosition);
             }
 
-            // init random walls
-            if (initRandomWalls)
-            {
-                var numberOfRandomWalls = RandomUtility.RandomInt(template.RandomWallsCountMin, template.RandomWallsCountMax);
-                InitializeRandomWalls(numberOfRandomWalls);
-            }
-
+            // init monsters
             Monsters = new List<MonsterPosition>();
             foreach(var monster in template.MonsterPositions)
             {
@@ -58,6 +52,13 @@ namespace DungeonGame.Engine.Models
                     Monster = MonsterSpawner.Spawn(monsterType), 
                     Position = monsterPosition
                 });
+            }
+
+            // init random walls
+            if (initRandomWalls)
+            {
+                var numberOfRandomWalls = RandomUtility.RandomInt(template.RandomWallsCountMin, template.RandomWallsCountMax);
+                InitializeRandomWalls(numberOfRandomWalls);
             }
         }
 
