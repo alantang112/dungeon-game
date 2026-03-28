@@ -140,7 +140,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (movementCandidate == null || movementCandidate.DistanceFromTarget == int.MaxValue)
                 {
                     // Otherwise, try to get as close as possible to hero
-                    movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, gameState);
+                    movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, monsterPosition.Position, gameState);
                 }
 
                 if (movementCandidate.Position != monsterPosition.Position)
@@ -260,9 +260,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return positionsInAttackRangeAndLineOfSight.Where(kv => kv.Value == maxAttackRange).Select(x => x.Key).ToList();
         }
 
-        private static CandidateMovementPosition GetBestWalkableCandidateClosestToHero(Dictionary<Position, int> walkablePositions, GameState gameState)
+        private static CandidateMovementPosition GetBestWalkableCandidateClosestToHero(Dictionary<Position, int> walkablePositions, Position currentPosition, GameState gameState)
         {
-            var candidates = new List<CandidateMovementPosition>();
+            var candidates = new List<CandidateMovementPosition>
+            {
+                new CandidateMovementPosition()
+                {
+                    Position = currentPosition,
+                    MovementPointsRequired = 0,
+                    DistanceFromTarget = GeometryUtility.CalculateDistanceBetween(currentPosition, gameState.World.HeroPosition)
+                }
+            };
 
             foreach(var walkablePosition in walkablePositions)
             {
