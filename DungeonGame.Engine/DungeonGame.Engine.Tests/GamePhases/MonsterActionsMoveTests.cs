@@ -115,14 +115,20 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
     }
 
-    [TestCase(2, 1, 5, 3, 3, 2)]
-    [TestCase(3, 4, 2, 4, 2, 3)] // (2,5) is also acceptable
-    public void GivenWalkableSquaresIsInAttackRangeAndInLineOfSight_AndIsBetterThanCurrentSquare_ThenMove(int heroX, int heroY, int monsterX, int monsterY, int expectedMonsterX, int expectedMonsterY)
+    [TestCase(2, 1, 5, 3, null, null, 3, 2)]
+    [TestCase(3, 4, 2, 4, null, null, 2, 3)] // (2,5) is also acceptable
+    [TestCase(1, 1, 3, 3, 3, 1, 1, 2)]
+    public void GivenWalkableSquaresIsInAttackRangeAndInLineOfSight_AndIsBetterThanCurrentSquare_ThenMove(int heroX, int heroY, int monsterX, int monsterY, int? extraWallX, int? extraWallY, int expectedMonsterX, int expectedMonsterY)
     {
         var initialGameState = _sut.GetCurrentState();
 
         initialGameState.World.HeroPosition = new Position(heroX, heroY);
         initialGameState.World.Monsters[0].Position = new Position(monsterX, monsterY);
+
+        if (extraWallX.HasValue)
+        {
+            initialGameState.World.Walls.Add(new Position(extraWallX.Value, extraWallY!.Value));
+        }
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
 

@@ -104,6 +104,10 @@ namespace DungeonGame.Engine.Utilities
                     {
                         var newPosition = position.Translate(xDelta, yDelta);
 
+                        // check it is not blocked
+                        if (blockers.Contains(new Position(position.X, newPosition.Y)) && blockers.Contains(new Position(newPosition.X, position.Y)))
+                            continue;
+
                         if (floodSearchResults.ContainsKey(newPosition))
                             continue;
 
