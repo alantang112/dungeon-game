@@ -23,7 +23,7 @@ jobs:
 
       # 2. Publish the Blazor WASM Engine
       - name: Publish WASM Engine
-        run: dotnet publish .\DungeonGame.Wasm\DungeonGame.Wasm.csproj -c Release -o release-output
+        run: dotnet publish DungeonGame.Wasm/DungeonGame.Wasm.csproj -c Release -o release-output
 
       # 3. Setup Node for React
       - name: Setup Node.js
