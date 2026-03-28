@@ -22,9 +22,9 @@ namespace DungeonGame.Engine.GameTemplates
                 LevelNumber = 2,
                 HeroPosition = new Position(1, 5),
                 WallPositions = new Position[] { new Position(1, 3), new Position(4, 2), new Position(4, 3) }, 
-                RandomWallsCountMin = 2,
-                RandomWallsCountMax = 2,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Skeleton, new Position(2, 3)), (MonsterType.Skeleton, new Position(5, 2)) }
+                RandomWallsCountMin = 1,
+                RandomWallsCountMax = 1,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Skeleton, new Position(2, 3)), (MonsterType.Skeleton, new Position(5, 2)), (MonsterType.Skeleton, new Position(1, 2)) }
             },
             new Level()
             {

@@ -28,10 +28,10 @@ namespace DungeonGame.Engine.GameTemplates
                 case MonsterType.Skeleton:
                     monster.Health = 3;
                     monster.MaxHealth = monster.Health;
-                    monster.Stats.Add(SkillType.Movement, 4);
-                    monster.Stats.Add(SkillType.Attack, 3); // 5 -> 3
-                    monster.Stats.Add(SkillType.Defence, 4);
-                    monster.Stats.Add(SkillType.AttackRange, 4);
+                    monster.Stats.Add(SkillType.Movement, 2);
+                    monster.Stats.Add(SkillType.Attack, 3);
+                    monster.Stats.Add(SkillType.Defence, 3);
+                    monster.Stats.Add(SkillType.AttackRange, 5);
                     break;
                 case MonsterType.Cyclops:
                     monster.Health = 5;
