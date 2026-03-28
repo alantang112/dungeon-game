@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DungeonGame.Engine.Models.Geometry;
 
 namespace DungeonGame.Engine.Models.Entities
@@ -6,5 +7,6 @@ namespace DungeonGame.Engine.Models.Entities
     {
         public Monster Monster { get; set; }
         public Position Position { get; set; }
+        public List<Position> LastMovementPath { get; set; } = new List<Position>();
     }
 }

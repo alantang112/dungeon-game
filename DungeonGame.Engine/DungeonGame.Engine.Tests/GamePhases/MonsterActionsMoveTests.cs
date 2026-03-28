@@ -71,6 +71,7 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 3)));
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Empty);
     }
 
     [Test]
@@ -91,6 +92,7 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Empty);
     }
 
     [Test]
@@ -113,6 +115,7 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(5, 5)));
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Empty);
     }
 
     [TestCase(2, 1, 5, 3, null, null, 3, 2)]
@@ -139,6 +142,7 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Not.Empty);
     }
 
     [TestCase(2, 1, 5, 5, 4, 3)]
@@ -160,6 +164,7 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Not.Empty);
     }
 
     [TestCase(2, 1, 5, 5, 4, 5, null, null, 4, 3, 3, 3)]
@@ -194,15 +199,21 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
         Assert.That(newGameState.World.Monsters[1].Position, Is.EqualTo(new Position(expectedOtherMonsterX, expectedOtherMonsterY)));
+        var expectPathIsNotEmpty = monsterX != expectedMonsterX || monsterY != expectedMonsterY;
+        Assert.That(newGameState.World.Monsters[0].LastMovementPath.Count() > 0, Is.EqualTo(expectPathIsNotEmpty));
+        var expectOtherPathIsNotEmpty = otherMonsterX != expectedOtherMonsterX || otherMonsterY != expectedOtherMonsterY;
+        Assert.That(newGameState.World.Monsters[1].LastMovementPath.Count() > 0, Is.EqualTo(expectOtherPathIsNotEmpty));
     }
 
     [Test]
     public void GivenNoWalkableSquaresInAttackRangeAndLineOfSight_AndNoEmptySquaresInAttackRangeAndLineOfSight_ThenMoveAsCloseAsPossibleToHero()
     {
+        var originalMonsterPosition = new Position(2, 5);
+
         var initialGameState = _sut.GetCurrentState();
 
         initialGameState.World.HeroPosition = new Position(1, 1);
-        initialGameState.World.Monsters[0].Position = new Position(2, 5);
+        initialGameState.World.Monsters[0].Position = originalMonsterPosition;
         initialGameState.World.Monsters.Add(new MonsterPosition()
         {
             Monster = new Monster()
@@ -241,5 +252,16 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(1, 3)));
+
+        var expectedPaths = new List<List<Position>>()
+        {
+            new List<Position>() { new Position(2, 4), new Position(1, 3) },
+            new List<Position>() { new Position(1, 4), new Position(1, 3) },
+        };
+        
+        var actual = newGameState.World.Monsters[0].LastMovementPath;
+        Assert.That(actual.Count, Is.EqualTo(3));
+        Assert.That(actual[0], Is.EqualTo(originalMonsterPosition));
+        Assert.That(expectedPaths.Any(e => e[0] == actual[1] && e[1] == actual[2]), Is.True);
     }
 }

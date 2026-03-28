@@ -78,6 +78,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             foreach(var monsterPosition in gameState.World.Monsters)
             {
+                monsterPosition.LastMovementPath.Clear();
                 var monsterOriginalPosition = monsterPosition.Position;
                 
                 if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
@@ -120,7 +121,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     }
                     else 
                     {
-                        // TODO: figure out how monster walks there
+                        monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, bestWalkablePositionInRangeAndLineOfSight.Position);
                         monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
                         gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
                         continue;
@@ -145,7 +146,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (movementCandidate.Position != monsterPosition.Position)
                 {
-                    // TODO: figure out how monster walks there
+                    monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, movementCandidate.Position);
                     monsterPosition.Position = movementCandidate.Position;
                     gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
                     continue;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DungeonGame.Engine.Models.Geometry;
 
@@ -155,9 +154,79 @@ namespace DungeonGame.Engine.Utilities
             return returnFloodSearchResults;
         }
 
-        #region Flood Search Helpers 
+        public static List<Position> FindWalkPath(Dictionary<Position, int> walkablePositions, Position start, Position end)
+        {
+            if (!walkablePositions.ContainsKey(end))
+                throw new ArgumentException("Walkable positions should contain the end position");
         
-        #endregion
+            var path = new List<Position>()
+            {
+                end
+            };
+
+            while (true)
+            {
+                var newStepFound = false;
+
+                // try walk diagonally first
+                foreach(var direction in DiagonalStepDirections)
+                {
+                    if (FindWalkPathTryWalk(direction, start, walkablePositions, path))
+                    {
+                        newStepFound = true;
+                        break;
+                    }
+                }
+
+                // try walk orthogonally
+                if (!newStepFound)
+                {
+                    foreach(var direction in OrthogonalStepDirections)
+                    {
+                        if (FindWalkPathTryWalk(direction, start, walkablePositions, path))
+                        {
+                            newStepFound = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (newStepFound)
+                {
+                    if (path.Last() == start)
+                    {
+                        path.Reverse();
+                        return path;
+                    }
+
+                    continue;
+                }
+
+                throw new InvalidOperationException("Could not find next step in FindWalkPath");
+            }
+        }
+
+        private static bool FindWalkPathTryWalk((int, int) direction, Position start, Dictionary<Position, int> walkablePositions, List<Position> path) 
+        {
+            var currentPosition = path.Last();
+            var currentValue = walkablePositions[currentPosition];
+
+            var newPosition = currentPosition.Translate(direction.Item1, direction.Item2);
+
+            if (newPosition != start && !walkablePositions.ContainsKey(newPosition))
+                return false;
+
+            var movementRequired = currentValue - (newPosition == start ? 0 : walkablePositions[newPosition]);
+
+            if (movementRequired == ((Math.Abs(direction.Item1) + Math.Abs(direction.Item2) == 2)  ? GameConstants.MovementPointsDiagonal : GameConstants.MovementPointsOrthogonal))
+            {
+                path.Add(newPosition);
+
+                return true;
+            }
+
+            return false;
+        }
 
         private static (int, int)[] DiagonalStepDirections => new (int, int)[] { (1, 1), (1, -1), (-1, -1), (-1, 1) };
         private static (int, int)[] OrthogonalStepDirections => new (int, int)[] { (1, 0), (0, -1), (-1, 0), (0, 1) }; 
