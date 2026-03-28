@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]  # Runs every time you push to main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. Setup .NET for the Game Engine
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x' # Or your specific version
+
+      # 2. Publish the Blazor WASM Engine
+      - name: Publish WASM Engine
+        run: dotnet publish .\DungeonGame.Wasm\DungeonGame.Wasm.csproj -c Release -o release-output
+
+      # 3. Setup Node for React
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: DungeonGame.UI/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: DungeonGame.UI
+        run: npm install
+
+      # 4. Move WASM bits into React Public folder
+      # This ensures Vite/Webpack bundles the framework files
+      - name: Sync WASM to React
+        run: |
+          mkdir -p DungeonGame.UI/public/_framework
+          cp -r release-output/wwwroot/_framework/* DungeonGame.UI/public/_framework/
+          touch DungeonGame.UI/public/.nojekyll
+
+      # 5. Build React App
+      - name: Build React
+        working-directory: DungeonGame.UI
+        run: npm run build
+
+      # 6. Deploy the 'dist' folder to gh-pages branch
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: DungeonGame.UI/dist
+          branch: gh-pages # The branch the action should deploy to

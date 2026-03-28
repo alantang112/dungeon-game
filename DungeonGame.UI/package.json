@@ -2,6 +2,7 @@
   "name": "dungeongame-ui",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://alantang112.github.io/dungeon-game/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -28,6 +29,7 @@
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "gh-pages": "^6.3.0",
     "globals": "^17.4.0",
     "postcss": "^8.5.8",
     "typescript": "~5.9.3",
