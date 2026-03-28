@@ -29,7 +29,7 @@ public class StartPhaseTests
 
         Assert.That(gameState.LevelNumber, Is.EqualTo(1));
         Assert.That(gameState.World.HeroPosition, Is.EqualTo(new Position(1, 1)));
-        Assert.That(gameState.World.Walls.Count(), Is.EqualTo(27));
+        Assert.That(gameState.World.Walls.Count(), Is.EqualTo(29));
         Assert.That(gameState.World.Monsters.Count(), Is.EqualTo(2));
 
         // Hero stats initialized

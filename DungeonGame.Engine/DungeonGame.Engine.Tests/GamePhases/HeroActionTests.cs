@@ -39,7 +39,7 @@ public class HeroActionTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1);
+        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
 
         var initialGameStateJson = JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions);
 

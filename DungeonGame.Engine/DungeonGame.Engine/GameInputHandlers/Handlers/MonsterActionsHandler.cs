@@ -167,7 +167,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 return value <= monsterPosition.Monster.Stats[SkillType.Movement] && value > 0 && !gameState.World.Monsters.Any(mp => mp.Position == position);
             };
 
-            var walkablePositions = GeometryUtility.PlotValuesByFloodSearch(monsterPosition.Position, walkBlockers, WalkValueFunction, floodUntilStep, returnPositionsFilter);
+            var walkablePositions = GeometryUtility.PlotValuesByFloodSearch(monsterPosition.Position, walkBlockers, FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);
 
             return walkablePositions;
         }
@@ -233,7 +233,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (!GeometryUtility.HasLineOfSightOf(position, gameState.World.HeroPosition, wallsMonstersExcludingSelf))
                     return int.MaxValue;
 
-                return WalkValueFunction(position, stepNumber, isDiagonalStep, previousValue);
+                return FloodSearchHelpers.WalkValueFunction(position, stepNumber, isDiagonalStep, previousValue);
             };
 
             Func<Dictionary<Position, int>, int?> floodUntilStep = (Dictionary<Position, int> floodValues) =>
@@ -272,7 +272,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 return value == minValueWithEmptySpace && value > 0 && !wallsMonstersExcludingSelf.Contains(position);
             };
 
-            var closestPositionsToHero = GeometryUtility.PlotValuesByFloodSearch(gameState.World.HeroPosition, gameState.World.Walls.ToList(), WalkValueFunction, floodUntilStep, returnPositionsFilter);
+            var closestPositionsToHero = GeometryUtility.PlotValuesByFloodSearch(gameState.World.HeroPosition, gameState.World.Walls.ToList(), FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);
 
             return closestPositionsToHero.Select(x => x.Key).ToList();
         }
@@ -308,7 +308,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             foreach(var optimalPosition in optimalPositions)
             {
-                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(optimalPosition, walkBlockers, WalkValueFunction, floodUntilStep, returnPositionsFilter);
+                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(optimalPosition, walkBlockers, FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);
 
                 foreach(var distanceToOptimalPosition in distanceToOptimalPositions)
                 {
@@ -329,10 +329,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return bestWalkablePositionCandidate;
         }
 
-        private static int WalkValueFunction(Position position, int stepNumber, bool isDiagonalStep, int previousValue)
-        {
-            return previousValue + (isDiagonalStep ? GameConstants.MovementPointsDiagonal : GameConstants.MovementPointsOrthogonal);
-        }
+        
         #endregion
     }
 }

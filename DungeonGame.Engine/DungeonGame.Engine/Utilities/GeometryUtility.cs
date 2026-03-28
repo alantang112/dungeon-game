@@ -87,9 +87,15 @@ namespace DungeonGame.Engine.Utilities
             
             int? finalStepNumber = null;
             var stepNumber = 0;
+
             while(true)
             {
                 var positionsToFloodFrom = floodSearchResults.Where(x => x.Value == stepNumber).ToList();
+
+                if (!positionsToFloodFrom.Any() && stepNumber > floodSearchResults.Where(x => x.Value != int.MaxValue).Max(x => x.Value))
+                {
+                    break;
+                }
 
                 foreach((Position position, int value) in positionsToFloodFrom)
                 {
@@ -125,14 +131,6 @@ namespace DungeonGame.Engine.Utilities
                 }
 
                 // evaluate positions
-                var floodUntilStepNumberResult = floodUntilStepNumber(floodSearchResults);
-
-                if (floodUntilStepNumberResult.HasValue)
-                    finalStepNumber = floodUntilStepNumberResult;            
-
-                if (floodSearchResults.Count == floodSearchResultsPreviousCount)
-                    break;
-
                 if (finalStepNumber.HasValue && stepNumber >= finalStepNumber.Value)
                     break;
 
@@ -152,6 +150,10 @@ namespace DungeonGame.Engine.Utilities
 
             return returnFloodSearchResults;
         }
+
+        #region Flood Search Helpers 
+        
+        #endregion
 
         private static (int, int)[] DiagonalStepDirections => new (int, int)[] { (1, 1), (1, -1), (-1, -1), (-1, 1) };
         private static (int, int)[] OrthogonalStepDirections => new (int, int)[] { (1, 0), (0, -1), (-1, 0), (0, 1) }; 

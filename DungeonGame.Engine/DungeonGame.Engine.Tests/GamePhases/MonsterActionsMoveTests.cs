@@ -39,7 +39,7 @@ public class MonsterActionsMoveTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1);
+        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
 
         initialGameState.World.Monsters.RemoveAt(1);
 
