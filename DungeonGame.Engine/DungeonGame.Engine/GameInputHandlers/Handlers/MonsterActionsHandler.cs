@@ -76,7 +76,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         #region MovementHelpers
         private static GameState PerformMonsterMove(GameState gameState)
         {
-            foreach(var monsterPosition in gameState.World.Monsters)
+            foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => GeometryUtility.CalculateDistanceBetween(x.Position, gameState.World.HeroPosition)))
             {
                 monsterPosition.LastMovementPath.Clear();
                 var monsterOriginalPosition = monsterPosition.Position;
