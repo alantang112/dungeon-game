@@ -4,6 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
+import { HeroMaxHealth, LevelSize } from './constants/gameConstants';
 import './App.css'
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
     }
   }
 
-  const gridSize : number = 5;
+  const gridSize : number = LevelSize;
   const gridRows = [];
 
   for (let y = gridSize; y >= 1; y--) {
@@ -95,8 +96,8 @@ function App() {
         <div className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2">
           <CharacterStats 
             name={heroInitialized ? state.Hero!.Name! : "Hero"}
-            health={heroInitialized ? state.Hero!.Health! : 10}
-            maxHealth={10}
+            health={heroInitialized ? state.Hero!.Health! : HeroMaxHealth}
+            maxHealth={HeroMaxHealth}
             stats={heroInitialized ? state.Hero!.Stats : undefined}
             energy={heroEnergy} 
             displayEnergy={true}

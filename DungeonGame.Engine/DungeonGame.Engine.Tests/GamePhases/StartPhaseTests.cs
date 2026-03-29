@@ -38,7 +38,7 @@ public class StartPhaseTests
         Assert.That(gameState.Hero.Stats[SkillType.Defence], Is.EqualTo(1));
         Assert.That(gameState.Hero.Stats[SkillType.AttackRange], Is.EqualTo(2));
 
-        Assert.That(gameState.Hero.Health, Is.EqualTo(10));
+        Assert.That(gameState.Hero.Health, Is.EqualTo(GameConstants.HeroMaxHealth));
 
         Assert.That(gameState.World.HeroActionPoints, Is.Empty);
     }

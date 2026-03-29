@@ -139,7 +139,7 @@ namespace DungeonGame.Engine.Utilities
 
                 stepNumber++;
 
-                if (stepNumber >= 100)
+                if (stepNumber >= GameConstants.LoopIterationLimit)
                     throw new InvalidOperationException("Potential infinite loop in PlotValuesByFloodSearch");
             }
 

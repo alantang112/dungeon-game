@@ -96,8 +96,8 @@ namespace DungeonGame.Engine.Models
                 }
 
                 iterations++;
-                if (iterations >= 100)
-                    throw new InvalidOperationException("Could not successfully add random walls after 100 iterations");
+                if (iterations >= GameConstants.LoopIterationLimit)
+                    throw new InvalidOperationException("Could not successfully add random walls");
             }
         }
     }

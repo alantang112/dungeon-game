@@ -16,6 +16,8 @@ namespace DungeonGame.Engine
 
         public static int GameMessageLogLimit = 20;
 
-        public static int HeroMaxHealth = 10;
+        public static int HeroMaxHealth = 6;
+
+        public static int LoopIterationLimit = 100;
     }
 }
