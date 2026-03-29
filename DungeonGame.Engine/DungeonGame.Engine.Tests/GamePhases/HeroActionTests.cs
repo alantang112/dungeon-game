@@ -515,6 +515,7 @@ public class HeroActionTests
             EventType = InputEventType.HeroActionReset
         });
 
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.EnergyDiceAssignment));
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(10));
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(11));
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(12));

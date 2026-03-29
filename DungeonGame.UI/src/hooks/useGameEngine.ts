@@ -40,7 +40,10 @@ export function useGameEngine() {
     }, []);
 
     const dispatch = async (payload: GameInputEvent) => {
-        const newStateJson : string = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'ProcessInput', JSON.stringify(payload));
+        const jsonPayload = JSON.stringify(payload);
+        console.log(jsonPayload);
+        const newStateJson : string = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'ProcessInput', jsonPayload);
+        console.log(newStateJson);
         const newState = JSON.parse(newStateJson) as GameState;
         setState(newState);
     };

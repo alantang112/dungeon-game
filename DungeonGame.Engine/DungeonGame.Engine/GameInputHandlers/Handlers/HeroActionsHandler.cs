@@ -124,6 +124,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             {
                 gameState.World = gameState.WorldSnapshot.DeepClone();
                 gameState.EnergyDice = gameState.EnergyDiceSnapshot.DeepClone();
+                gameState.GamePhase = GamePhase.EnergyDiceAssignment;
                 
                 gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
                 return gameState;
