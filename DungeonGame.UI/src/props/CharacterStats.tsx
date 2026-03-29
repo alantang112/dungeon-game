@@ -1,4 +1,5 @@
 import { type SkillType } from '../models/GameEngineModels'; 
+import { statColor, statText, colorEnergy } from '../constants/gameConstants';
 
 interface CharacterStatsProps {
     name: string,
@@ -58,10 +59,10 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
         
         {/* Header Row: Labels */}
         <div className="bg-slate-900/80 p-2 text-[10px] text-slate-500 font-bold uppercase flex items-center">Type</div>
-        <div className="bg-slate-800 p-2 text-center text-blue-400 font-bold">Move</div>
-        <div className="bg-slate-800 p-2 text-center text-red-400 font-bold">Atk</div>
-        <div className="bg-slate-800 p-2 text-center text-emerald-400 font-bold">Def</div>
-        <div className="bg-slate-800 p-2 text-center text-purple-400 font-bold">Range</div>
+        <div className={`bg-slate-800 p-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
+        <div className={`bg-slate-800 p-2 text-center ${statColor["Attack"]} font-bold`}>{statText["Attack"]}</div>
+        <div className={`bg-slate-800 p-2 text-center ${statColor["Defence"]} font-bold`}>{statText["Defence"]}</div>
+        <div className={`bg-slate-800 p-2 text-center ${statColor["AttackRange"]} font-bold`}>{statText["AttackRange"]}</div>
 
         {/* Row 1: Base Values */}
         <div className="bg-slate-900/50 p-2 text-xs text-slate-400 border-t border-slate-700">Base</div>
@@ -73,11 +74,11 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
         {/* Row 2: Energy */}
         {displayEnergy 
           ? <>
-          <div className="bg-slate-900/50 p-2 text-xs text-yellow-500/80 border-t border-slate-700">Energy</div>
-          <div className="bg-slate-900/40 p-2 text-center text-yellow-400 font-bold">⚡{energy["Movement"] ?? 0}</div>
-          <div className="bg-slate-900/40 p-2 text-center text-yellow-400 font-bold">⚡{energy["Attack"] ?? 0}</div>
-          <div className="bg-slate-900/40 p-2 text-center text-yellow-400 font-bold">⚡{energy["Defence"] ?? 0}</div>
-          <div className="bg-slate-900/40 p-2 text-center text-slate-600">—</div>
+          <div className={`bg-slate-900/50 p-2 text-xs ${colorEnergy}-500/80 border-t border-slate-700`}>Energy</div>
+          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Movement"] ?? 0}</div>
+          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Attack"] ?? 0}</div>
+          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Defence"] ?? 0}</div>
+          <div className={`bg-slate-900/40 p-2 text-center text-slate-600`}>—</div>
           </> 
           : <></>}
       </div>

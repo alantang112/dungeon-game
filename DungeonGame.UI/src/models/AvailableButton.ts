@@ -1,6 +1,7 @@
+import type { ReactNode } from "react";
 import type { GameInputEvent } from "./GameEngineModels";
 
 export interface AvailableButton {
-  text: string;
+  textNode: ReactNode;
   gameEventOnClick: GameInputEvent;
 }

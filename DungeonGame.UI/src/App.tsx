@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -12,6 +12,7 @@ import type { Arrow } from './models/Arrow';
 import type { TileType } from './models/TileType';
 import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
+import type { ReactNode } from "react";
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -78,7 +79,7 @@ function App() {
     }
   }
 
-  const monsterRows = [];
+  const monsterRows: ReactNode[] = [];
   const monsterPaths: Arrow[] = [];
   const monsterCount: number = state.World?.Monsters?.length ?? 0;
 
@@ -143,7 +144,7 @@ function App() {
       </div>
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
-        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
+        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1 mt-40">
           {/* The Grid */}
           <div 
             className="grid gap-1 aspect-square"
@@ -184,33 +185,35 @@ function App() {
             } )}
           </svg>
         </div>
-        {
-          state.GamePhase == "EnergyDicePreRoll" 
-          && <div className="flex gap-3 mt-10 h-12 items-center justify-center">
-              <ShufflingDice />
-              <ShufflingDice />
-              <ShufflingDice />
-            </div>
-        }
-        {
-          state.GamePhase == "EnergyDiceAssignment" 
-          && <div className="flex gap-3 mt-10 h-12 items-center justify-center">
-              {state.EnergyDice!.Dice!.map((diceNumber, index) => {
-                return (
-                  <div key={`dice-to-assign-${index}`}>
-                    <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
-                  </div>
-                )
-              })}
-            </div>
-        }
-        <div className="flex gap-6 mt-10 h-12 items-center justify-center">
+        <div className="flex gap-3 mt-8 h-12 items-center justify-center">
+          {
+            state.GamePhase == "EnergyDicePreRoll" 
+              && <>
+                  <ShufflingDice />
+                  <ShufflingDice />
+                  <ShufflingDice />
+                </>
+          }
+          {
+            state.GamePhase == "EnergyDiceAssignment" 
+              && <>
+                  {state.EnergyDice!.Dice!.map((diceNumber, index) => {
+                        return (
+                          <div key={`dice-to-assign-${index}`}>
+                            <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
+                          </div>
+                        )
+                      })}
+                  </>
+          }
+        </div>
+        <div className="flex gap-6 mt-8 h-12 items-center justify-center">
             <ButtonsRow
               buttons={GetAvailableButtons(state)}
               eventDispatcher={dispatch}
             />
         </div>
-        <div className="flex gap-6 mt-10 h-12 items-center justify-center">
+        <div className="flex gap-6 mt-8 h-12 items-center justify-center">
           <ButtonsRow
             buttons={GetAvailableButtonsRow2(state)}
             eventDispatcher={dispatch}
@@ -236,14 +239,14 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   if (state.GamePhase == "Start")
   {
     availableButtons.push({
-      text: "New Game",
+      textNode: <>New Game</>,
       gameEventOnClick: GameActions.NewGameEvent()
     });
   } 
   else if (state.GamePhase == "EnergyDicePreRoll")
   {
     availableButtons.push({
-      text: "Roll Energy Dice",
+      textNode: <>Roll Energy Dice</>,
       gameEventOnClick: GameActions.RollDiceEvent()
     });
   } 
@@ -260,7 +263,7 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
         if (!state.EnergyDice?.AssignedSkills?.includes(skillType))
         {
           availableButtons.push({
-            text: `Assign +${currentDiceValue}⚡ to ${skillType}`,
+            textNode: <>⚡{currentDiceValue} ⟶ <span className={`${statColor[skillType]}`}>{statText[skillType]}</span></>,
             gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
           });
         }
@@ -270,30 +273,30 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   else if (state.GamePhase == "MonsterActions")
   {
     availableButtons.push({
-      text: "Continue",
+      textNode: <>Continue</>,
       gameEventOnClick: GameActions.MonsterActionEndEvent()
     });
   }
   else if (state.GamePhase == "LevelEnd")
   {
     availableButtons.push({
-      text: "+1 Movement",
+      textNode: <>{`+1 <span className='${statColor["Movement"]}'>${statText["Movement"]}</span>`}</>,
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Movement")
     });
     availableButtons.push({
-      text: "+1 Attack",
+      textNode: <>{`+1 <span className='${statColor["Attack"]}'>${statText["Attack"]}</span>`}</>,
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Attack")
     });
     availableButtons.push({
-      text: "+1 Defence",
+      textNode: <>{`+1 <span className='${statColor["Defence"]}'>${statText["Defence"]}</span>`}</>,
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Defence")
     });
     availableButtons.push({
-      text: "+1 Range",
+      textNode: <>{`+1 <span className='${statColor["AttackRange"]}'>${statText["AttackRange"]}</span>`}</>,
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("AttackRange")
     });
     availableButtons.push({
-      text: "Replenish Health",
+      textNode: <>Replenish Health</>,
       gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
     });
   }
@@ -307,19 +310,19 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   if (state.GamePhase == "EnergyDiceAssignment")
   {
     availableButtons.push({
-      text: "Reset Dice Assignment",
+      textNode: <>Reset Dice Assignment</>,
       gameEventOnClick: GameActions.ResetDiceEvent()
     });
   } 
   else if (state.GamePhase == "HeroActions")
   {
     availableButtons.push({
-      text: "Reset Turn",
+      textNode: <>Reset Turn</>,
       gameEventOnClick: GameActions.HeroActionResetEvent()
     });
 
     availableButtons.push({
-      text: "End Turn",
+      textNode: <>End Turn</>,
       gameEventOnClick: GameActions.HeroActionEndEvent()
     });
   }
@@ -336,14 +339,5 @@ const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): n
 
   return 0;
 }
-
-const monsterPathColors: string[] = [
-  "#efc93d",
-  "#ef7e3d",
-  "#e24fe5",
-  "#44b9d3",
-];
-
-const getMonsterPathColor = (index: number) => monsterPathColors[index];
 
 export default App

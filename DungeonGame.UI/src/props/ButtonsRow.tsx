@@ -23,7 +23,7 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
             border border-indigo-400/30
         "
         >
-            {button.text}
+            {button.textNode}
         </button>
         ))}
     </>
