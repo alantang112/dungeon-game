@@ -34,7 +34,52 @@ namespace DungeonGame.Engine.GameTemplates
                 RandomWallsCountMin = 3,
                 RandomWallsCountMax = 3,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Cyclops, new Position(1, 1)) }
-            }
+            },
+            new Level()
+            {
+                LevelNumber = 4,
+                HeroPosition = new Position(3, 3),
+                WallPositions = new Position[] { new Position(2, 4), new Position(2, 3), new Position(5, 3 ) },
+                RandomWallsCountMin = 2,
+                RandomWallsCountMax = 3,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(2, 5)) }
+            },
+            new Level()
+            {
+                LevelNumber = 5,
+                HeroPosition = new Position(1, 1),
+                WallPositions = new Position[] { new Position(2, 2), new Position(4, 2), new Position(3, 4) },
+                RandomWallsCountMin = 1,
+                RandomWallsCountMax = 1,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Spider, new Position(2, 5)), (MonsterType.Spider, new Position(5, 4)), (MonsterType.Spider, new Position(5, 2)) }
+            },
+            new Level()
+            {
+                LevelNumber = 6,
+                HeroPosition = new Position(1, 5),
+                WallPositions = new Position[] { new Position(2, 3), new Position(4, 2), new Position(4, 3) },
+                RandomWallsCountMin = 2,
+                RandomWallsCountMax = 2,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Skeleton, new Position(4, 5)), (MonsterType.Skeleton, new Position(5, 4)), (MonsterType.Skeleton, new Position(1, 1)), (MonsterType.Spider, new Position(5, 5)) }
+            },
+            new Level()
+            {
+                LevelNumber = 7,
+                HeroPosition = new Position(5, 2),
+                WallPositions = new Position[] { new Position(2, 3), new Position(3, 3), new Position(4, 3 ) },
+                RandomWallsCountMin = 1,
+                RandomWallsCountMax = 2,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Cyclops, new Position(1, 1)), (MonsterType.Cyclops, new Position(3, 5)) }
+            },
+            new Level()
+            {
+                LevelNumber = 8,
+                HeroPosition = new Position(1, 5),
+                WallPositions = new Position[] { new Position(2, 3), new Position(2, 1), new Position(4, 2) },
+                RandomWallsCountMin = 3,
+                RandomWallsCountMax = 3,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(4, 5)), (MonsterType.Hellspawn, new Position(5, 2)) }
+            },
         };
     }
 }
