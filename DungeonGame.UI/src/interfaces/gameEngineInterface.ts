@@ -1,11 +1,8 @@
 import { GameInputEvent, type SkillType } from "../models/GameEngineModels";
 
-const NewGameEvent = (name : string) : GameInputEvent => {
+const NewGameEvent = () : GameInputEvent => {
     const model: GameInputEvent = {
-        EventType: "NewGame",
-        EventParameters: {
-            HeroName: name
-        } 
+        EventType: "NewGame"
     };
 
     return model;

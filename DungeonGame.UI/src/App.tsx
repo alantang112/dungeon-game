@@ -6,6 +6,8 @@ import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
 import { HeroMaxHealth, LevelSize } from './constants/gameConstants';
 import './App.css'
+import type { AvailableButton } from './models/AvailableButton';
+import { ButtonsRow } from './props/ButtonsRow';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -117,26 +119,14 @@ function App() {
         >
           {gridRows}
         </div>
-        <div className="flex gap-6 mt-15 h-12 items-center justify-center">
-          {GetAvailableButtons(state)?.map((button: AvailableButton, index: number) => (
-            <button
-              key={index}
-              onClick={async () => await dispatch(button.gameEventOnClick)}
-              className="
-          
-              inline-block
-              px-7 py-3
-              bg-indigo-600 hover:bg-indigo-500 
-              text-white font-bold tracking-wide
-              rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 
-              transform transition-all active:scale-95
-              border border-indigo-400/30
-            "
-            >
-              {button.text}
-            </button>
-          ))}
-      </div>
+        <ButtonsRow
+          buttons={GetAvailableButtons(state)}
+          eventDispatcher={dispatch}
+          />
+        <ButtonsRow
+          buttons={GetAvailableButtonsRow2(state)}
+          eventDispatcher={dispatch}
+          />
       </div>
       <GameLog messages={state.GameMessageLog ?? []}/>
     </>
@@ -150,11 +140,6 @@ const getTileBackgroundColor = (state: GameState, x: number, y: number) : string
     return "";
 };
 
-interface AvailableButton {
-  text: string;
-  gameEventOnClick: GameInputEvent;
-}
-
 const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   const availableButtons: AvailableButton[] = [];
 
@@ -162,7 +147,7 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   {
     availableButtons.push({
       text: "New Game",
-      gameEventOnClick: GameActions.NewGameEvent("Lil Timmy") // todo: user to enter name
+      gameEventOnClick: GameActions.NewGameEvent()
     });
   } 
   else if (state.GamePhase == "EnergyDicePreRoll")
@@ -185,30 +170,13 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
         if (!state.EnergyDice?.AssignedSkills?.includes(skillType))
         {
           availableButtons.push({
-            text: `Assign +${currentDiceValue} energy to ${skillType}`,
+            text: `Assign +${currentDiceValue} ⚡ to ${skillType}`,
             gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
           });
         }
       });
     }
-
-    availableButtons.push({
-      text: "Reset Dice Assignment",
-      gameEventOnClick: GameActions.ResetDiceEvent()
-    });
   } 
-  else if (state.GamePhase == "HeroActions")
-  {
-    availableButtons.push({
-      text: "Reset Actions",
-      gameEventOnClick: GameActions.HeroActionResetEvent()
-    });
-
-    availableButtons.push({
-      text: "End Actions",
-      gameEventOnClick: GameActions.HeroActionEndEvent()
-    });
-  }
   else if (state.GamePhase == "MonsterActions")
   {
     availableButtons.push({
@@ -219,24 +187,50 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   else if (state.GamePhase == "LevelEnd")
   {
     availableButtons.push({
-      text: "Upgrade Movement",
+      text: "+1 Movement",
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Movement")
     });
     availableButtons.push({
-      text: "Upgrade Attack",
+      text: "+1 Attack",
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Attack")
     });
     availableButtons.push({
-      text: "Upgrade Defence",
+      text: "+1 Defence",
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Defence")
     });
     availableButtons.push({
-      text: "Upgrade Range",
+      text: "+1 Range",
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("AttackRange")
     });
     availableButtons.push({
       text: "Replenish Health",
       gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
+    });
+  }
+
+  return availableButtons;
+}
+
+const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
+  const availableButtons: AvailableButton[] = [];
+
+  if (state.GamePhase == "EnergyDiceAssignment")
+  {
+    availableButtons.push({
+      text: "Reset Dice Assignment",
+      gameEventOnClick: GameActions.ResetDiceEvent()
+    });
+  } 
+  else if (state.GamePhase == "HeroActions")
+  {
+    availableButtons.push({
+      text: "Reset Turn",
+      gameEventOnClick: GameActions.HeroActionResetEvent()
+    });
+
+    availableButtons.push({
+      text: "End Turn",
+      gameEventOnClick: GameActions.HeroActionEndEvent()
     });
   }
 
