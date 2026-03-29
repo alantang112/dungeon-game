@@ -9,10 +9,12 @@ namespace DungeonGame.Engine.GameTemplates
     {
         public static Monster Spawn(MonsterType type)
         {
+            var (name, _) = CharacterNameUtility.GetRandomName();
+
             var monster = new Monster
             {
                 Type = type,
-                Name = CharacterNameUtility.GetRandomName()
+                Name = name
             };
 
             switch (type)

@@ -13,7 +13,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
-            gameState.Hero.Name = $"Lil {CharacterNameUtility.GetRandomName()}";
+            var (name, isMale) = CharacterNameUtility.GetRandomName();
+
+            gameState.Hero.Name = $"Lil {name}";
+            gameState.Hero.isMaleName = isMale;
             gameState.Hero.Stats.Add(SkillType.Movement, 1);
             gameState.Hero.Stats.Add(SkillType.Attack, 1);
             gameState.Hero.Stats.Add(SkillType.Defence, 1);

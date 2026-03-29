@@ -7,6 +7,7 @@ namespace DungeonGame.Engine.Models.Entities
     {
         public string Name { get; set; }
         public int BirthYear { get; set; }
+        public bool isMaleName { get; set; }
         public int Health { get; set; }
         public Dictionary<SkillType, int> Stats { get; set; } = new Dictionary<SkillType, int>();
     }

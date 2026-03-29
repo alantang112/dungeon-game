@@ -20,7 +20,7 @@ namespace DungeonGame.Engine
         public static string MonsterNotInLineOfSightToAttack = "{0} {1} not in line of sight to attack";
         public static string MonsterDefeated = "{0} {1} has been slain!";
         public static string AllMonstersDefeated = "All monsters on this level has been defeated!";
-        public static string HeroReset = "{0} rethinks his life choices...";
+        public static string HeroReset = "{0} rethinks {1} life choices...";
         public static string MonsterMoves = "{0} {5} at ({1},{2}) moves to ({3},{4})";
         public static string MonsterStays = "{0} {3} at ({1},{2}) stands ready";
         public static string MonstersAttack = "The monsters attack {0} with {1} attack point(s) against your {2} point(s) of defence, dealing {3} point(s) of damage!";

@@ -123,7 +123,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             else if (inputEvent.EventType == InputEventType.HeroActionReset)
             {
                 gameState.World = gameState.WorldSnapshot.DeepClone();
-                gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name));
+                gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.HeroActionEnd)
