@@ -170,9 +170,7 @@ function App() {
                 stroke={getMonsterPathColor(path.setNumber)}
                 strokeWidth="0.05"
                 strokeOpacity="0.3"
-                //strokeLinecap="round"
                 markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
-
                 pathLength="1"
                 strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
               />
@@ -313,9 +311,8 @@ const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): n
 const monsterPathColors: string[] = [
   "#efc93d",
   "#ef7e3d",
-  "#8cdd45",
-  "#44b9d3",
   "#e24fe5",
+  "#44b9d3",
 ];
 
 const getMonsterPathColor = (index: number) => monsterPathColors[index];

@@ -1,4 +1,5 @@
 import type { TileType } from "../models/TileType";
+import { assetPath } from "../constants/assetConstants";
 
 interface TileProps {
     x: number;
@@ -12,7 +13,7 @@ export const Tile = ({ x, y, tileType }: TileProps) => {
             <span className="absolute top-1 left-1 opacity-80">{x},{y}</span>
             {tileType != "Empty" && (
                 <img
-                    src={`assets/${tileType.toLowerCase()}.png`}
+                    src={`${assetPath}${tileType.toLowerCase()}.png`}
                     alt={`Tile ${x}-${y}`}
                     className="w-full h-full object-contain p-1 z-10"
                 />
