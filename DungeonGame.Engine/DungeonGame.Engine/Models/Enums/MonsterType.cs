@@ -4,7 +4,7 @@ namespace DungeonGame.Engine.Models.Enums
     {
         Spider,
         Skeleton,
-        Cyclops,
+        Minotaur,
         Hellspawn,
     }
 }

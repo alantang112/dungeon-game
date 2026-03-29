@@ -9,6 +9,7 @@ import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
 import type { Arrow } from './models/Arrow';
+import type { TileType } from './models/TileType';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -39,7 +40,7 @@ function App() {
           <Tile
           x={x}
           y={y}
-          backgroundColor={`${getTileBackgroundColor(state, x, y)}`}
+          tileType={`${getTileType(state, x, y)}`}
           />
         </div>
       );
@@ -150,10 +151,11 @@ function App() {
             className="absolute inset-0 pointer-events-none" 
             viewBox={`0 0 ${gridSize} ${gridSize}`}
             preserveAspectRatio="none"
+            style={{ zIndex: 20 }}
           >
             <defs>
               <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
-                <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fill-opacity="0.5" />
+                <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fillOpacity="0.3" />
               </marker>
             </defs>
 
@@ -167,12 +169,12 @@ function App() {
                 y2={gridSize - path.endY + 0.5}
                 stroke={getMonsterPathColor(path.setNumber)}
                 strokeWidth="0.05"
-                strokeOpacity="0.5"
+                strokeOpacity="0.3"
                 //strokeLinecap="round"
                 markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
 
                 pathLength="1"
-                strokeDasharray={`${path.hasArrowHead ? "0.9" : "1"} 1`}
+                strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
               />
             );
             } )}
@@ -193,11 +195,12 @@ function App() {
   )
 }
 
-const getTileBackgroundColor = (state: GameState, x: number, y: number) : string => {
-    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return "green";
-    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return "darkgrey";
-    if (state?.World?.Monsters?.some((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y)) return "darkred";
-    return "";
+const getTileType = (state: GameState, x: number, y: number) : TileType => {
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return "Hero";
+    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return "Wall";
+    const monster = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
+    if (monster) return monster.Monster.Type;
+    return "Empty";
 };
 
 const GetAvailableButtons = (state: GameState) : AvailableButton[] => {

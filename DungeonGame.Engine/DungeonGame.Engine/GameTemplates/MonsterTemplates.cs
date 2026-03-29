@@ -35,13 +35,21 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.Stats.Add(SkillType.Defence, 3);
                     monster.Stats.Add(SkillType.AttackRange, 5);
                     break;
-                case MonsterType.Cyclops:
+                case MonsterType.Minotaur:
                     monster.Health = 5;
                     monster.MaxHealth = monster.Health;
                     monster.Stats.Add(SkillType.Movement, 3);
                     monster.Stats.Add(SkillType.Attack, 7);
                     monster.Stats.Add(SkillType.Defence, 7);
                     monster.Stats.Add(SkillType.AttackRange, 2);
+                    break;
+                case MonsterType.Hellspawn:
+                    monster.Health = 5;
+                    monster.MaxHealth = monster.Health;
+                    monster.Stats.Add(SkillType.Movement, 5);
+                    monster.Stats.Add(SkillType.Attack, 5);
+                    monster.Stats.Add(SkillType.Defence, 5);
+                    monster.Stats.Add(SkillType.AttackRange, 5);
                     break;
                 default:
                     throw new NotImplementedException();

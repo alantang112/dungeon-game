@@ -33,7 +33,7 @@ namespace DungeonGame.Engine.GameTemplates
                 WallPositions = new Position[] { new Position(2, 2), new Position(2, 4), new Position(4, 4) }, 
                 RandomWallsCountMin = 3,
                 RandomWallsCountMax = 3,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Cyclops, new Position(1, 1)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Minotaur, new Position(1, 1)) }
             },
             new Level()
             {
@@ -69,7 +69,7 @@ namespace DungeonGame.Engine.GameTemplates
                 WallPositions = new Position[] { new Position(2, 3), new Position(3, 3), new Position(4, 3 ) },
                 RandomWallsCountMin = 1,
                 RandomWallsCountMax = 2,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Cyclops, new Position(1, 1)), (MonsterType.Cyclops, new Position(3, 5)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Minotaur, new Position(1, 1)), (MonsterType.Minotaur, new Position(3, 5)) }
             },
             new Level()
             {
