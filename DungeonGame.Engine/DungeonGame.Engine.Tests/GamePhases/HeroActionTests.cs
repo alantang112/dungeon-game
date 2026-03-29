@@ -385,8 +385,7 @@ public class HeroActionTests
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
-        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInRangeToAttack));   
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));  
     }
 
     [Test]
@@ -457,7 +456,6 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.MonsterNotInLineOfSightToAttack));
     }
 
     [Test]

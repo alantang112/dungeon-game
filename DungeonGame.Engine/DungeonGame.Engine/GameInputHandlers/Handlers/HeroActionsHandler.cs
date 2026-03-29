@@ -82,7 +82,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, monsterPosition.Position) > gameState.Hero.Stats[SkillType.AttackRange])
                 {
-                    gameState.AddGameMessage(GameMessages.MonsterNotInRangeToAttack);
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterNotInRangeToAttack, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     return gameState;
                 }
 
@@ -91,24 +91,24 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
                 if (!GeometryUtility.HasLineOfSightOf(gameState.World.HeroPosition, monsterPosition.Position, blockers))
                 {
-                    gameState.AddGameMessage(GameMessages.MonsterNotInLineOfSightToAttack);
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterNotInLineOfSightToAttack, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     return gameState;
                 }
 
                 if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.NotEnoughAttackToAttackMonster, gameState.Hero.Name));
+                    gameState.AddGameMessage(string.Format(GameMessages.NotEnoughAttackToAttackMonster, gameState.Hero.Name, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     return gameState;
                 }
 
                 monsterPosition.Monster.Health -= 1;
                 gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
-                gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type.ToString(), 
-                    monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Health));
+                gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type, 
+                    monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Health, monsterPosition.Monster.Name));
 
                 if (monsterPosition.Monster.Health <= 0)
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterDefeated, monsterPosition.Monster.Type.ToString()));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterDefeated, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     gameState.World.Monsters.Remove(monsterPosition);
                     
                     if (!gameState.World.Monsters.Any())

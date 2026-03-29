@@ -35,7 +35,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 gameState.EnergyDice.AssignDice(parameters.DiceIndex, parameters.SkillType);
-                gameState.AddGameMessage(string.Format(GameMessages.DiceAssignedToSkill, parameters.DiceIndex + 1, parameters.SkillType.ToString()));
+                gameState.AddGameMessage(string.Format(GameMessages.DiceAssignedToSkill, parameters.DiceIndex + 1, parameters.SkillType));
                 return gameState;
             } 
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)

@@ -83,7 +83,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 
                 if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                     continue;
                 }
                     
@@ -95,7 +95,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 // If monster already at max attack range from hero and in line of sight of hero, continue
                 if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                     continue;
                 }
 
@@ -104,7 +104,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (!walkablePositions.Any())
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                     continue;
                 }
 
@@ -116,14 +116,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     // check if current position is better
                     if (currentlyHasLineOfSight && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
                     {
-                        gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                        gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                         continue;
                     }
                     else 
                     {
                         monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, bestWalkablePositionInRangeAndLineOfSight.Position);
                         monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
-                        gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
+                        gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
+                            monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                         continue;
                     }
                 }
@@ -148,11 +149,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, movementCandidate.Position);
                     monsterPosition.Position = movementCandidate.Position;
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type.ToString(), monsterOriginalPosition.X, monsterOriginalPosition.Y, monsterPosition.Position.X, monsterPosition.Position.Y));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
+                            monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                     continue;
                 }
 
-                gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type.ToString(), monsterPosition.Position.X, monsterPosition.Position.Y));
+                gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
             }
 
             return gameState;
