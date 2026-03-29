@@ -10,6 +10,8 @@ import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
 import type { Arrow } from './models/Arrow';
 import type { TileType } from './models/TileType';
+import { Dice } from './props/Dice';
+import { ShufflingDice } from './props/ShufflingDice';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -56,6 +58,8 @@ function App() {
     "AttackRange": 0
   };
 
+  var currentDiceToAssignIndex: number = 0;
+
   if (heroInitialized) {
     if (state.GamePhase == "EnergyDiceAssignment")
     {
@@ -64,7 +68,9 @@ function App() {
         "Attack": state.Hero!.Stats!["Attack"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Attack"),
         "Defence": state.Hero!.Stats!["Defence"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Defence"),
         "AttackRange": 0
-      }
+      };
+
+      currentDiceToAssignIndex = state.EnergyDice!.AssignedSkills!.findIndex(x => x == null);
     }
     else if (state.World?.HeroActionPoints)
     {
@@ -178,15 +184,38 @@ function App() {
             } )}
           </svg>
         </div>
-        
-        <ButtonsRow
-          buttons={GetAvailableButtons(state)}
-          eventDispatcher={dispatch}
-          />
-        <ButtonsRow
-          buttons={GetAvailableButtonsRow2(state)}
-          eventDispatcher={dispatch}
-          />
+        {
+          state.GamePhase == "EnergyDicePreRoll" 
+          && <div className="flex gap-3 mt-10 h-12 items-center justify-center">
+              <ShufflingDice />
+              <ShufflingDice />
+              <ShufflingDice />
+            </div>
+        }
+        {
+          state.GamePhase == "EnergyDiceAssignment" 
+          && <div className="flex gap-3 mt-10 h-12 items-center justify-center">
+              {state.EnergyDice!.Dice!.map((diceNumber, index) => {
+                return (
+                  <div key={`dice-to-assign-${index}`}>
+                    <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
+                  </div>
+                )
+              })}
+            </div>
+        }
+        <div className="flex gap-6 mt-10 h-12 items-center justify-center">
+            <ButtonsRow
+              buttons={GetAvailableButtons(state)}
+              eventDispatcher={dispatch}
+            />
+        </div>
+        <div className="flex gap-6 mt-10 h-12 items-center justify-center">
+          <ButtonsRow
+            buttons={GetAvailableButtonsRow2(state)}
+            eventDispatcher={dispatch}
+            />
+        </div>
       </div>
       <GameLog messages={state.GameMessageLog ?? []}/>
     </>
