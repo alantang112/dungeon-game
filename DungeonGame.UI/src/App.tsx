@@ -1,5 +1,5 @@
 import { useGameEngine } from './hooks/useGameEngine';
-import { GameInputEvent, MonsterPosition, Position, GameState, type SkillType, EnergyDice } from './models/GameEngineModels'
+import { MonsterPosition, Position, GameState, type SkillType, EnergyDice } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
