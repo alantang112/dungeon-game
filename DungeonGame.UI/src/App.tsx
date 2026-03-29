@@ -92,21 +92,24 @@ function App() {
       </div>
     )
 
-    const lastMovementPath = state.World!.Monsters![monsterIndex].LastMovementPath;
-
-    if (lastMovementPath)
+    // only display monster movement path during MonsterActions phase
+    if (state.GamePhase == "MonsterActions")
     {
-      const lastMovementPathLength: number = lastMovementPath.length;
-      for (let j = 1; j < lastMovementPathLength; j++)
+      const lastMovementPath = state.World!.Monsters![monsterIndex].LastMovementPath;
+      if (lastMovementPath)
       {
-        monsterPaths.push({
-          startX: lastMovementPath[j - 1].X,
-          startY: lastMovementPath[j - 1].Y,
-          endX: lastMovementPath[j].X,
-          endY: lastMovementPath[j].Y,
-          setNumber: monsterIndex,
-          hasArrowHead: j == (lastMovementPath.length - 1)
-        })
+        const lastMovementPathLength: number = lastMovementPath.length;
+        for (let j = 1; j < lastMovementPathLength; j++)
+        {
+          monsterPaths.push({
+            startX: lastMovementPath[j - 1].X,
+            startY: lastMovementPath[j - 1].Y,
+            endX: lastMovementPath[j].X,
+            endY: lastMovementPath[j].Y,
+            setNumber: monsterIndex,
+            hasArrowHead: j == (lastMovementPath.length - 1)
+          })
+        }
       }
     }
   }
