@@ -9,7 +9,6 @@ namespace DungeonGame.Engine.Models.Enums
         EnergyDiceRoll,
         EnergyDiceAssign,
         EnergyDiceResetAssignment,
-        EnergyDiceConfirmAssignment,
 
         // Game actions - Hero
         HeroActionMove,

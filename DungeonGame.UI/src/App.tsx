@@ -196,13 +196,6 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
       text: "Reset Dice Assignment",
       gameEventOnClick: GameActions.ResetDiceEvent()
     });
-    if (!state.EnergyDice?.AssignedSkills?.some(x => x == null))
-    {
-      availableButtons.push({
-        text: "Confirm Dice Assignment",
-        gameEventOnClick: GameActions.ConfirmDiceAssignmentEvent()
-      });
-    }
   } 
   else if (state.GamePhase == "HeroActions")
   {

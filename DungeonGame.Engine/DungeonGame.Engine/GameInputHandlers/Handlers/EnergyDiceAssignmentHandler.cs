@@ -12,7 +12,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         protected override GamePhase HandledGamePhase => GamePhase.EnergyDiceAssignment;
 
         protected override InputEventType[] HandledInputEventTypes => 
-            new InputEventType[] { InputEventType.EnergyDiceAssign, InputEventType.EnergyDiceResetAssignment,InputEventType.EnergyDiceConfirmAssignment };
+            new InputEventType[] { InputEventType.EnergyDiceAssign, InputEventType.EnergyDiceResetAssignment };
 
         private SkillType[] ValidSkillTypeForEnergyDiceAssignment = new SkillType[] { SkillType.Movement, SkillType.Attack, SkillType.Defence }; 
 
@@ -36,6 +36,13 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 gameState.EnergyDice.AssignDice(parameters.DiceIndex, parameters.SkillType);
                 gameState.AddGameMessage(string.Format(GameMessages.DiceAssignedToSkill, parameters.DiceIndex + 1, parameters.SkillType));
+
+                // if all dice assigned, proceed to HeroActions
+                if (gameState.EnergyDice.AssignedSkills.All(x => x != null))
+                {
+                    SetActionPointsAndProceedToHeroActions(gameState);
+                }
+
                 return gameState;
             } 
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)
@@ -44,30 +51,23 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
                 return gameState;
             }
-            else if (inputEvent.EventType == InputEventType.EnergyDiceConfirmAssignment)
-            {
-                if (gameState.EnergyDice.AssignedSkills.Any(x => x == null))
-                {
-                    gameState.AddGameMessage(GameMessages.AssignAllEnergyDiceBeforeProceeding);
-                    return gameState;
-                }
-
-                gameState.World.HeroActionPoints.Clear();
-                for (var i = 0; i < gameState.EnergyDice.AssignedSkills.Count(); i++)
-                {
-                    var skillType = (SkillType) gameState.EnergyDice.AssignedSkills[i];
-                    var diceValue = gameState.EnergyDice.Dice[i];
-
-                    gameState.World.HeroActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
-                }
-
-                gameState.AddGameMessage(GameMessages.DiceAssignmentConfirmed);
-                gameState.WorldSnapshot = gameState.World.DeepClone();
-                gameState.GamePhase = GamePhase.HeroActions;
-                return gameState;
-            } 
 
             throw new NotImplementedException();
+        }
+
+        private static void SetActionPointsAndProceedToHeroActions(GameState gameState)
+        {
+            gameState.World.HeroActionPoints.Clear();
+
+            for (var i = 0; i < gameState.EnergyDice.AssignedSkills.Count(); i++)
+            {
+                var skillType = (SkillType) gameState.EnergyDice.AssignedSkills[i];
+                var diceValue = gameState.EnergyDice.Dice[i];
+
+                gameState.World.HeroActionPoints.Add(skillType, gameState.Hero.Stats[skillType] + diceValue);
+            }
+
+            gameState.GamePhase = GamePhase.HeroActions;   
         }
     }
 }

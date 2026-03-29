@@ -9,6 +9,7 @@ namespace DungeonGame.Engine.Models
     {
         public GamePhase GamePhase { get; set; } = GamePhase.Start;
         public EnergyDice EnergyDice { get; set; } = new EnergyDice();
+        public EnergyDice? EnergyDiceSnapshot { get; set; }
         public Hero Hero { get; set; } = new Hero();
         public World World { get; set; } = new World();
         public World? WorldSnapshot { get; set; }

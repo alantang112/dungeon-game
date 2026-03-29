@@ -17,6 +17,16 @@ public class EnergyDiceAssignmentTests
         
         var initialGameState = JsonSerializer.Serialize(new GameState()
         {
+            Hero = new Engine.Models.Entities.Hero()
+            {
+                Stats = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 1 },
+                    { SkillType.Attack, 2 },
+                    { SkillType.Defence, 4 },
+                    { SkillType.AttackRange, 8 }
+                }
+            },
             GamePhase = GamePhase.EnergyDiceAssignment,
             EnergyDice = new EnergyDice()
             {
@@ -44,6 +54,51 @@ public class EnergyDiceAssignmentTests
         });
 
         Assert.That(gameState.EnergyDice.AssignedSkills[index], Is.EqualTo(skillType));
+    }
+
+    [Test]
+    public void WhenAssignLastDice_ThenProceedToHeroActions()
+    {
+        var gameState1 = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceAssign,
+            EventParameters = new EnergyDiceAssignEventParameters()
+            {
+                DiceIndex = 0,
+                SkillType = SkillType.Movement
+            }
+        });
+
+        Assert.That(gameState1.GamePhase, Is.EqualTo(GamePhase.EnergyDiceAssignment));
+
+        var gameState2 = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceAssign,
+            EventParameters = new EnergyDiceAssignEventParameters()
+            {
+                DiceIndex = 1,
+                SkillType = SkillType.Attack
+            }
+        });
+
+        Assert.That(gameState2.GamePhase, Is.EqualTo(GamePhase.EnergyDiceAssignment));
+
+        var gameState3 = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceAssign,
+            EventParameters = new EnergyDiceAssignEventParameters()
+            {
+                DiceIndex = 2,
+                SkillType = SkillType.Defence
+            }
+        });
+
+        Assert.That(gameState3.GamePhase, Is.EqualTo(GamePhase.HeroActions));
+
+        Assert.That(gameState3.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(1 + 1));
+        Assert.That(gameState3.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(2 + 4));
+        Assert.That(gameState3.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(4 + 6));
+        Assert.That(gameState3.World.HeroActionPoints.Count(), Is.EqualTo(3));
     }
 
     [TestCase(0)]
@@ -113,92 +168,5 @@ public class EnergyDiceAssignmentTests
         });
 
         Assert.That(gameState.EnergyDice.AssignedSkills.All(x => x == null), Is.True);
-    }
-
-    [TestCase(0)]
-    [TestCase(1)]
-    [TestCase(2)]
-    public void GivenNotAllAssigned_WhenConfirm_ThenReturnInvalid(int assignedCount)
-    {
-        var energyDice = new EnergyDice()
-        {
-            Dice = new int[3] { 1, 4, 6 },
-            AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
-        };
-
-        switch (assignedCount)
-        {
-            case 0:
-                energyDice.AssignedSkills = new SkillType?[3];
-                break;
-            case 1:
-                energyDice.AssignedSkills[1] = null;
-                energyDice.AssignedSkills[2] = null;
-                break;
-            case 2:
-                energyDice.AssignedSkills[1] = null;
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-
-        var initialGameState = JsonSerializer.Serialize(new GameState()
-        {
-            GamePhase = GamePhase.EnergyDiceAssignment,
-            EnergyDice = energyDice
-        }, SerializationUtility.JsonSerializerOptions);
-
-        _sut.LoadGameStateSnapshot(initialGameState);
-
-        var gameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.EnergyDiceConfirmAssignment
-        });
-        
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.AssignAllEnergyDiceBeforeProceeding));
-    }
-
-    [Test]
-    public void GivenAllAssigned_WhenConfirm_ThenMoveToNextGamePhase()
-    {
-        var initialGameState = JsonSerializer.Serialize(new GameState()
-        {
-            GamePhase = GamePhase.EnergyDiceAssignment,
-            EnergyDice = new EnergyDice()
-            {
-                Dice = new int[3] { 1, 4, 6 },
-                AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
-            },
-            Hero = new Engine.Models.Entities.Hero()
-            {
-                Stats = new Dictionary<SkillType, int>()
-                {
-                    { SkillType.Movement, 1 },
-                    { SkillType.Attack, 2 },
-                    { SkillType.Defence, 3 },
-                    { SkillType.AttackRange, 4 }
-                }
-            }
-        }, SerializationUtility.JsonSerializerOptions);
-
-        _sut.LoadGameStateSnapshot(initialGameState);
-
-        var gameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.EnergyDiceConfirmAssignment
-        });
-        
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
-
-        Assert.That(gameState.World.HeroActionPoints[SkillType.Movement], Is.EqualTo(2));
-        Assert.That(gameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(8));
-        Assert.That(gameState.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(7));
-        Assert.That(gameState.World.HeroActionPoints.Count(), Is.EqualTo(3));
-
-        Assert.That(gameState.WorldSnapshot, Is.Not.Null);
-        Assert.That(gameState.WorldSnapshot.HeroActionPoints[SkillType.Movement], Is.EqualTo(2));
-        Assert.That(gameState.WorldSnapshot.HeroActionPoints[SkillType.Attack], Is.EqualTo(8));
-        Assert.That(gameState.WorldSnapshot.HeroActionPoints[SkillType.Defence], Is.EqualTo(7));
-        Assert.That(gameState.WorldSnapshot.HeroActionPoints.Count(), Is.EqualTo(3));
     }
 }

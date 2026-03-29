@@ -5,7 +5,6 @@ namespace DungeonGame.Engine
         public static string YouHaveEnteredLevel = "{0} has entered level {1}";
         public static string DiceRolled = "Energy dice rolled: {0}, {1}, {2}";
         public static string DiceAssignedToSkill = "Energy dice {0} assigned to {1}";
-        public static string DiceAssignmentConfirmed = "Energy dice assignment confirmed";
         public static string SkillAlreadyAssignedEnergyDice = "This skill type is already assigned an energy dice";
         public static string InvalidSkillForEnergyDiceAssignment = "This skill type cannot be assigned an energy dice";
         public static string AssignAllEnergyDiceBeforeProceeding = "Please assign all energy dice before proceeding";

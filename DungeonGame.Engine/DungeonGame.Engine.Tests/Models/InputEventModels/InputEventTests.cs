@@ -8,19 +8,6 @@ namespace DungeonGame.Engine.Tests.Models.InputEventModels;
 public class InputEventTests
 {
     [Test]
-    public void CanDeserializeEnergyDiceConfirmEvent()
-    {
-        var json = @"{
-            ""EventType"": ""EnergyDiceConfirmAssignment""
-        }";
-
-        var parsed = JsonSerializer.Deserialize<InputEvent>(json, SerializationUtility.JsonSerializerOptions);
-
-        Assert.That(parsed.EventType, Is.EqualTo(InputEventType.EnergyDiceConfirmAssignment));
-        Assert.That(parsed.EventParameters, Is.Null);
-    }
-
-    [Test]
     public void CanDeserializeEvent()
     {
         var json = @"{
