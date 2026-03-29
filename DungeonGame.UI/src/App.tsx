@@ -170,7 +170,7 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
         if (!state.EnergyDice?.AssignedSkills?.includes(skillType))
         {
           availableButtons.push({
-            text: `Assign +${currentDiceValue} ⚡ to ${skillType}`,
+            text: `Assign +${currentDiceValue}⚡ to ${skillType}`,
             gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
           });
         }
