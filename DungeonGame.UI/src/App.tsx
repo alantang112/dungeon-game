@@ -8,6 +8,7 @@ import { HeroMaxHealth, LevelSize } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
+import type { Arrow } from './models/Arrow';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -71,13 +72,14 @@ function App() {
   }
 
   const monsterRows = [];
-  
-  const monsterCount = state.World?.Monsters?.length ?? 0;
-  for (let i = 0; i < monsterCount; i++)
+  const monsterPaths: Arrow[] = [];
+  const monsterCount: number = state.World?.Monsters?.length ?? 0;
+
+  for (let monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++)
   {
-    const monster = state.World!.Monsters![i].Monster;
+    const monster = state.World!.Monsters![monsterIndex].Monster;
     monsterRows.push(
-      <div key={`monster-${i}`}>
+      <div key={`monster-${monsterIndex}`}>
         <CharacterStats 
               name={`${monster.Type} ${monster.Name}`}
               health={monster.Health}
@@ -89,6 +91,24 @@ function App() {
             />
       </div>
     )
+
+    const lastMovementPath = state.World!.Monsters![monsterIndex].LastMovementPath;
+
+    if (lastMovementPath)
+    {
+      const lastMovementPathLength: number = lastMovementPath.length;
+      for (let j = 1; j < lastMovementPathLength; j++)
+      {
+        monsterPaths.push({
+          startX: lastMovementPath[j - 1].X,
+          startY: lastMovementPath[j - 1].Y,
+          endX: lastMovementPath[j].X,
+          endY: lastMovementPath[j].Y,
+          setNumber: monsterIndex,
+          hasArrowHead: j == (lastMovementPath.length - 1)
+        })
+      }
+    }
   }
 
   return (
@@ -113,12 +133,49 @@ function App() {
       </div>
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
-        <div 
-          className="grid grid-cols-5 gap-1 aspect-square border-2 border-slate-600 bg-slate-700 p-1"
-          style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
-        >
-          {gridRows}
+        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
+          {/* The Grid */}
+          <div 
+            className="grid gap-1 aspect-square"
+            style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`, display: 'grid' }}
+          >
+            {gridRows}
+          </div>
+
+          {/* The Overlay Layer */}
+          <svg 
+            className="absolute inset-0 pointer-events-none" 
+            viewBox={`0 0 ${gridSize} ${gridSize}`}
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
+                <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fill-opacity="0.5" />
+              </marker>
+            </defs>
+
+            {monsterPaths.map((path, i) => {
+              return (
+              <line
+                key={i}
+                x1={path.startX - 0.5} 
+                y1={gridSize - path.startY + 0.5}
+                x2={path.endX - 0.5}
+                y2={gridSize - path.endY + 0.5}
+                stroke={getMonsterPathColor(path.setNumber)}
+                strokeWidth="0.05"
+                strokeOpacity="0.5"
+                //strokeLinecap="round"
+                markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
+
+                pathLength="1"
+                strokeDasharray={`${path.hasArrowHead ? "0.9" : "1"} 1`}
+              />
+            );
+            } )}
+          </svg>
         </div>
+        
         <ButtonsRow
           buttons={GetAvailableButtons(state)}
           eventDispatcher={dispatch}
@@ -246,5 +303,15 @@ const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): n
 
   return 0;
 }
+
+const monsterPathColors: string[] = [
+  "#efc93d",
+  "#ef7e3d",
+  "#8cdd45",
+  "#44b9d3",
+  "#e24fe5",
+];
+
+const getMonsterPathColor = (index: number) => monsterPathColors[index];
 
 export default App

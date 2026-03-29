@@ -63,11 +63,13 @@ export class Monster {
     Health!: number;
     MaxHealth!: number;
     Stats!: Record<SkillType, number>;
+
 }
 
 export class MonsterPosition {
     Monster!: Monster;
     Position!: Position;
+    LastMovementPath?: Position[];
 }
 
 export class GameState {
