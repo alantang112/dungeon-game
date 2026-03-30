@@ -1,5 +1,7 @@
 import type { SkillType } from "../models/GameEngineModels";
 
+export const DebugMode: boolean = true; 
+
 export const HeroMaxHealth: number = 6;
 export const LevelSize: number = 5;
 export const diceShuffleSpeed: number = 30;

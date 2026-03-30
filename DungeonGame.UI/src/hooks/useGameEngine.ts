@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GameState, GameInputEvent } from '../models/GameEngineModels';
+import { DebugMode } from '../constants/gameConstants';
 
 export function useGameEngine() {
     const [state, setState] = useState<GameState>(new GameState());
@@ -40,10 +41,13 @@ export function useGameEngine() {
     }, []);
 
     const dispatch = async (payload: GameInputEvent) => {
+        if (DebugMode)
+        {
+            navigator.clipboard.writeText(JSON.stringify(payload));
+            console.log('payload copied to clipboard');
+        }
         const jsonPayload = JSON.stringify(payload);
-        console.log(jsonPayload);
         const newStateJson : string = await window.DotNet.invokeMethodAsync('DungeonGame.Wasm', 'ProcessInput', jsonPayload);
-        console.log(newStateJson);
         const newState = JSON.parse(newStateJson) as GameState;
         setState(newState);
     };

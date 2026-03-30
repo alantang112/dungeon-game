@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -129,7 +129,10 @@ function App() {
     <>
       <div className="absolute top-0 left-0 w-full h-[350px] p-5 font-mono grid grid-cols-2 gap-5 lg:grid-cols-12">
         {/* LEFT SIDE: INPUT */}
-        <div className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2">
+        <div 
+          className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
+          onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
+          >
           <CharacterStats 
             name={heroInitialized ? state.Hero!.Name! : "Hero"}
             health={heroInitialized ? state.Hero!.Health! : HeroMaxHealth}
