@@ -20,6 +20,9 @@ function App() {
   if (!isReady) return <div>Loading game engine...</div>;
 
   const handleTileClick = async (state: GameState, x: number, y: number) => {
+    if (state.GamePhase != "HeroActions")
+      return;
+
     try {
       if (state.World?.Monsters?.some(mp => mp.Position.X == x && mp.Position.Y == y))
       {
