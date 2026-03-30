@@ -17,7 +17,7 @@ Error generating stack: `+e.message+`
             border border-indigo-400/30
         `,children:e.textNode},t),t[3]=r,t[4]=e),i=n.map(e),t[0]=n,t[1]=r,t[2]=i}else i=t[2];let a;return t[5]===i?a=t[6]:(a=(0,S.jsx)(S.Fragment,{children:i}),t[5]=i,t[6]=a),a},ae=e=>{let t=(0,d.c)(4),{number:n,active:r,disabled:i}=e,a=`${x}dice${n}.png`,o=`Dice ${n}`,s=`
                     w-full h-full object-contain p-1 transition-all duration-200
-                    ${r?`drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] scale-110`:``}
+                    ${r?`animate-glow-pulse scale-110`:``}
                     ${i?`brightness-50 grayscale-[0.2]`:``}
                 `,c;return t[0]!==a||t[1]!==o||t[2]!==s?(c=(0,S.jsx)(`div`,{className:`flex items-center justify-center w-full h-12 aspect-square relative`,children:(0,S.jsx)(`img`,{src:a,alt:o,className:s})}),t[0]=a,t[1]=o,t[2]=s,t[3]=c):c=t[3],c},oe=()=>{let e=(0,d.c)(3),[t,n]=(0,l.useState)(1),r;e[0]===Symbol.for(`react.memo_cache_sentinel`)?(r=()=>{let e=setInterval(()=>{n(se)},30);return()=>clearInterval(e)},e[0]=r):r=e[0],(0,l.useEffect)(r);let i=`${x}dice${t}.png`,a;return e[1]===i?a=e[2]:(a=(0,S.jsx)(`div`,{className:`flex items-center justify-center w-full h-12 aspect-square relative`,children:(0,S.jsx)(`img`,{src:i,alt:`Shuffling Dice`,className:`
                     w-full h-full object-contain p-1
