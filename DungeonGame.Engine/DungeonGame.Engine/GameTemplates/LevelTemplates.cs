@@ -43,6 +43,7 @@ namespace DungeonGame.Engine.GameTemplates
                 WallPositions = new Position[] { new Position(2, 4), new Position(2, 3), new Position(5, 3 ) },
                 RandomWallsCountMin = 2,
                 RandomWallsCountMax = 3,
+                EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(2, 5)) }
             },
             new Level()
@@ -80,6 +81,7 @@ namespace DungeonGame.Engine.GameTemplates
                 WallPositions = new Position[] { new Position(2, 3), new Position(2, 1), new Position(4, 2) },
                 RandomWallsCountMin = 3,
                 RandomWallsCountMax = 3,
+                EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(4, 5)), (MonsterType.Hellspawn, new Position(5, 2)) }
             },
         };

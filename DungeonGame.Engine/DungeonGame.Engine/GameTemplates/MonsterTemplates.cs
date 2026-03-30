@@ -48,7 +48,7 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.MaxHealth = monster.Health;
                     monster.Stats.Add(SkillType.Movement, 4);
                     monster.Stats.Add(SkillType.Attack, 5);
-                    monster.Stats.Add(SkillType.Defence, 4);
+                    monster.Stats.Add(SkillType.Defence, 5);
                     monster.Stats.Add(SkillType.AttackRange, 4);
                     break;
                 default:
