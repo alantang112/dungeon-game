@@ -173,7 +173,7 @@ public class HeroActionTests
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints)); 
     }
 
-    [TestCase]
+    [Test]
     public void Movement_WhenMoveHeroDiagonallyThroughWall_ThenDoNotMove()
     {
         var heroInitialX = 4;
@@ -207,6 +207,44 @@ public class HeroActionTests
 
         var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
         Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints)); 
+    }
+
+    [Test]
+    public void Movement_WhenMoveHeroDiagonallyThroughMonsters_ThenCanMove()
+    {
+        var heroInitialX = 4;
+        var heroInitialY = 3;
+        var initialMovementPoints = 3;
+        
+        // set hero position to center of level
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
+        // set hero movement points
+        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        // put a monster
+        gameState.World.Monsters[0].Position = new Position(3, 3);
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
+
+        var newPosition = new Position(3, 4);
+
+        var inputEventParameters = new HeroActionMoveEventParameters()
+        {
+            X = newPosition.X,
+            Y = newPosition.Y
+        };
+
+        var newGameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionMove,
+            EventParameters = inputEventParameters
+        });
+
+        Assert.That(newGameState.World.HeroPosition.X, Is.EqualTo(newPosition.X));
+        Assert.That(newGameState.World.HeroPosition.Y, Is.EqualTo(newPosition.Y));
+
+        var actualHeroMovementPoints = newGameState.World.HeroActionPoints[SkillType.Movement];
+        Assert.That(actualHeroMovementPoints, Is.EqualTo(initialMovementPoints - GameConstants.MovementPointsDiagonal)); 
     }
 
     [TestCase(0, -1)]

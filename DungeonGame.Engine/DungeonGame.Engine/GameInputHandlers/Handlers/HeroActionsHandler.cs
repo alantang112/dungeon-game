@@ -39,7 +39,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     var blockers = new List<Position>();
                     blockers.AddRange(gameState.World.Walls);
-                    blockers.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
 
                     if (blockers.Contains(new Position(gameState.World.HeroPosition.X, newPosition.Y))
                         && blockers.Contains(new Position(newPosition.X, gameState.World.HeroPosition.Y)))
@@ -125,7 +124,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.World = gameState.WorldSnapshot.DeepClone();
                 gameState.EnergyDice = gameState.EnergyDiceSnapshot.DeepClone();
                 gameState.GamePhase = GamePhase.EnergyDiceAssignment;
-                
+
                 gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
                 return gameState;
             }
