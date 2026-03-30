@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@keyframes flash-yellow {
+  0% { background-color: rgba(250, 204, 21, 0.6); } 
+  100% { background-color: rgba(250, 204, 21, 0); } /* Explicitly fade to 0 opacity yellow */
+}
+
+.animate-flash {
+  /* 'forwards' prevents the snap-back */
+  animation: flash-yellow 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

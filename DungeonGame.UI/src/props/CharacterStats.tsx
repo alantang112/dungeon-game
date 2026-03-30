@@ -75,13 +75,32 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
         {displayEnergy 
           ? <>
           <div className={`bg-slate-900/50 p-2 text-xs ${colorEnergy}-500/80 border-t border-slate-700`}>Energy</div>
-          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Movement"] ?? 0}</div>
-          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Attack"] ?? 0}</div>
-          <div className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold`}>⚡{energy["Defence"] ?? 0}</div>
+          {(["Movement", "Attack", "Defence"] as SkillType[]).map((type) => (
+            <FlashCell
+              key={type}
+              value={energy[type] ?? 0}
+              className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold border-t border-slate-700`}
+            >⚡{energy[type] ?? 0}</FlashCell>
+          ))}
           <div className={`bg-slate-900/40 p-2 text-center text-slate-600`}>—</div>
           </> 
           : <></>}
       </div>
+    </div>
+  );
+};
+
+const FlashCell = ({ value, className, children }: { value: number; className: string; children: React.ReactNode }) => {
+  return (
+    <div className={`${className} relative overflow-hidden`}>
+      {/* The Flash Layer */}
+      <div 
+        key={value} 
+        className="absolute inset-0 pointer-events-none animate-flash"
+      />
+      
+      {/* The Actual Content */}
+      <span className="relative z-10">{children}</span>
     </div>
   );
 };
