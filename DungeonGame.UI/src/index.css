@@ -9,3 +9,13 @@
   /* 'forwards' prevents the snap-back */
   animation: flash-yellow 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
+@keyframes glow-pulse {
+  0% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6)); }
+  50% { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9)); }
+  100% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6)); }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s infinite ease-in-out;
+}

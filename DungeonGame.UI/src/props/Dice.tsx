@@ -14,7 +14,7 @@ export const Dice = ({ number, active, disabled }: DiceProps) => {
             alt={`Dice ${number}`}
             className={`
                     w-full h-full object-contain p-1 transition-all duration-200
-                    ${active ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] scale-110" : ""}
+                    ${active ? "animate-glow-pulse scale-110" : ""}
                     ${disabled ? "brightness-50 grayscale-[0.2]" : ""}
                 `}
             />
