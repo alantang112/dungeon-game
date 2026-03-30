@@ -58,26 +58,28 @@ namespace DungeonGame.Engine.Models
             if (initRandomWalls)
             {
                 var numberOfRandomWalls = RandomUtility.RandomInt(template.RandomWallsCountMin, template.RandomWallsCountMax);
-                InitializeRandomWalls(numberOfRandomWalls);
+                InitializeRandomWalls(numberOfRandomWalls, template.EnforceWallIslands);
             }
         }
 
-        private void InitializeRandomWalls(int numberOfRandomWalls)
+        private void InitializeRandomWalls(int numberOfRandomWalls, bool enforceWallIslands)
         {
             var addedWallsCount = 0;
             var iterations = 0;
 
+            var candidates = Enumerable.Range(1, GameConstants.LevelSize).SelectMany(x => Enumerable.Range(1, GameConstants.LevelSize), (x, y) => new Position(x, y)).ToList();
+
             while (addedWallsCount < numberOfRandomWalls)
             {
-                var randomPosition = new Position(RandomUtility.RandomInt(1, GameConstants.LevelSize), RandomUtility.RandomInt(1, GameConstants.LevelSize));
+                var candidate = candidates.OrderBy(_ => Guid.NewGuid()).First();
 
-                if (!Walls.Contains(randomPosition) 
-                    && HeroPosition != randomPosition 
-                    && !Monsters.Any(mp => mp.Position == randomPosition))
+                if (!Walls.Contains(candidate) 
+                    && HeroPosition != candidate 
+                    && !Monsters.Any(mp => mp.Position == candidate))
                 {
                     var testWalls = new List<Position>(Walls)
                     {
-                        randomPosition
+                        candidate
                     };
 
                     var walkableSquares = GeometryUtility.PlotValuesByFloodSearch(HeroPosition, testWalls, FloodSearchHelpers.WalkValueFunction, 
@@ -87,13 +89,15 @@ namespace DungeonGame.Engine.Models
                                         - Walls.Count() // walls and borders
                                         - 1; // subtract 1 for the added wall
 
-                    // check all empty squares can be walked to
-                    if (walkableSquares.Count() == expectedEmptySquares)
+                    // check all empty squares can be walked to. If needs wall islands, check there are wall islands
+                    if (walkableSquares.Count() == expectedEmptySquares && (!enforceWallIslands || GeometryUtility.HasWallIsland(testWalls)))
                     {
-                        Walls.Add(randomPosition);
+                        Walls.Add(candidate);
                         addedWallsCount++;
                     }
                 }
+
+                candidates.Remove(candidate);
 
                 iterations++;
                 if (iterations >= GameConstants.LoopIterationLimit)

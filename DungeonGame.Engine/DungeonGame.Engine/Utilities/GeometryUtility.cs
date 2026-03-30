@@ -228,6 +228,44 @@ namespace DungeonGame.Engine.Utilities
             return false;
         }
 
+        public static bool HasWallIsland(List<Position> walls)
+        {
+            return walls.Any(wall => IsIsland(walls, wall));
+        }
+
+        private static bool IsIsland(List<Position> walls, Position start)
+        {
+            var queue = new Queue<Position>();
+            queue.Enqueue(start);
+
+            var visited = new HashSet<Position>
+            {
+                start
+            };
+
+            while (queue.Count > 0)
+            {
+                var position = queue.Dequeue();
+
+                foreach(var stepDirection in OrthogonalStepDirections.Concat(DiagonalStepDirections))
+                {
+                    var newPosition = position.Translate(stepDirection.Item1, stepDirection.Item2);
+
+                    if (newPosition.X == 0 || newPosition.X == (GameConstants.LevelSize + 1) || newPosition.Y == 0 || newPosition.Y == (GameConstants.LevelSize + 1))
+                        return false;
+
+                    if (walls.Contains(newPosition) && !visited.Contains(newPosition))
+                    {
+                        queue.Enqueue(newPosition);
+                        visited.Add(newPosition);
+                    }
+                }
+
+            }
+
+            return true;
+        }
+
         private static (int, int)[] DiagonalStepDirections => new (int, int)[] { (1, 1), (1, -1), (-1, -1), (-1, 1) };
         private static (int, int)[] OrthogonalStepDirections => new (int, int)[] { (1, 0), (0, -1), (-1, 0), (0, 1) }; 
     }

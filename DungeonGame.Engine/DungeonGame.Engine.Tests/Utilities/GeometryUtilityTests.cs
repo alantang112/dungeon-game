@@ -204,4 +204,45 @@ public class GeometryUtilityTests
         Assert.That(GeometryUtility.Snap(value), Is.EqualTo(expected));
     }
     #endregion
+
+    #region HasWallIsland
+    [TestCase("3,3")]
+    [TestCase("3,3|1,1")]
+    [TestCase("3,3|2,2")]
+    [TestCase("1,3|2,3|4,3")]
+    [TestCase("3,4|4,4|3,3|4,3")]
+    [TestCase("2,2|3,2|4,2|2,3|2,4")]
+    public void HasWallIsland_PositiveScenarios(string wallPositions)
+    {
+        var walls = new List<Position>();
+        foreach(var wallPosition in wallPositions.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var wallPositionSplit = wallPosition.Split(",");
+            walls.Add(new Position(int.Parse(wallPositionSplit[0]), int.Parse(wallPositionSplit[1])));
+        }
+
+        var actual = GeometryUtility.HasWallIsland(walls);
+
+        Assert.That(actual, Is.True);
+    }
+
+    [TestCase("")]
+    [TestCase("1,1")]
+    [TestCase("1,1|2,2")]
+    [TestCase("1,1|5,5")]
+    [TestCase("1,3|2,3|4,3|5,3")]
+    public void HasWallIsland_NegativeScenarios(string wallPositions)
+    {
+        var walls = new List<Position>();
+        foreach(var wallPosition in wallPositions.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var wallPositionSplit = wallPosition.Split(",");
+            walls.Add(new Position(int.Parse(wallPositionSplit[0]), int.Parse(wallPositionSplit[1])));
+        }
+
+        var actual = GeometryUtility.HasWallIsland(walls);
+
+        Assert.That(actual, Is.False);
+    }
+    #endregion
 }

@@ -10,6 +10,7 @@ namespace DungeonGame.Engine.Models
         public Position[] WallPositions { get; set; }
         public int RandomWallsCountMin { get; set; } = 0;
         public int RandomWallsCountMax { get; set; } = 0;
+        public bool EnforceWallIslands { get; set; } = false;
         public (MonsterType, Position)[] MonsterPositions { get; set; }
     }
 }
