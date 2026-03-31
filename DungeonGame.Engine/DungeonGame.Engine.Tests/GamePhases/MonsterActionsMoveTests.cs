@@ -180,6 +180,7 @@ public class MonsterActionsMoveTests
     [TestCase(1, 1, 2, 3, 1, 3, 2, 1,  null, null, 1, 3, 1, 2)]
     [TestCase(2, 1, 3, 1, 3, 3, 3, 2,  null, null, 3, 1, 1, 2)]
     [TestCase(1, 1, 4, 5, 5, 4, 3, 3, 5, 2, 2, 4, 3, 5)]
+    [TestCase(3, 1, 2, 1, 4, 3, 3, 2, 4, 1, 2, 1, 2, 3)] // move as close as possible to hero
     public void GivenTwoMonsters_NoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight(int heroX, int heroY, int monsterX, int monsterY, 
         int otherMonsterX, int otherMonsterY, int? extraWallX, int? extraWallY, int? extraWall2X, int? extraWall2Y, int expectedMonsterX, int expectedMonsterY, int expectedOtherMonsterX, int expectedOtherMonsterY)
     {

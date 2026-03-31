@@ -76,8 +76,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         #region MovementHelpers
         private static GameState PerformMonsterMove(GameState gameState)
         {
-            // todo: distance from hero should be calculated by flood fill
-            foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => GeometryUtility.CalculateDistanceBetween(x.Position, gameState.World.HeroPosition)))
+            var walkDistanceFromHeroMap = GeometryUtility.PlotValuesByFloodSearch(
+                gameState.World.HeroPosition,
+                gameState.World.Walls.ToList(),
+                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.FloodUntilAllSquaresWalked,
+                FloodSearchHelpers.ReturnAllPositions
+            );
+
+            foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => walkDistanceFromHeroMap[x.Position]))
             {
                 monsterPosition.LastMovementPath.Clear();
                 var monsterOriginalPosition = monsterPosition.Position;
@@ -146,7 +153,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (movementCandidate == null || movementCandidate.DistanceFromTarget == int.MaxValue)
                 {
                     // Otherwise, try to get as close as possible to hero
-                    movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, monsterPosition.Position, gameState);
+                    movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, monsterPosition.Position, walkDistanceFromHeroMap);
                 }
 
                 // If moving would put monster out of attack range of hero, do not move
@@ -276,7 +283,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return positionsInAttackRangeAndLineOfSight.Where(kv => kv.Value == maxAttackRange).Select(x => x.Key).ToList();
         }
 
-        private static CandidateMovementPosition GetBestWalkableCandidateClosestToHero(Dictionary<Position, int> walkablePositions, Position currentPosition, GameState gameState)
+        private static CandidateMovementPosition GetBestWalkableCandidateClosestToHero(Dictionary<Position, int> walkablePositions, Position currentPosition, Dictionary<Position, int> walkDistanceFromHeroMap)
         {
             var candidates = new List<CandidateMovementPosition>
             {
@@ -284,7 +291,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     Position = currentPosition,
                     MovementPointsRequired = 0,
-                    DistanceFromTarget = GeometryUtility.CalculateDistanceBetween(currentPosition, gameState.World.HeroPosition)
+                    DistanceFromTarget = walkDistanceFromHeroMap[currentPosition]
                 }
             };
 
@@ -294,7 +301,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     Position = walkablePosition.Key,
                     MovementPointsRequired = walkablePosition.Value,
-                    DistanceFromTarget = GeometryUtility.CalculateDistanceBetween(walkablePosition.Key, gameState.World.HeroPosition)
+                    DistanceFromTarget = walkDistanceFromHeroMap[walkablePosition.Key]
                 });
             }
 

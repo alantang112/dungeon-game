@@ -82,10 +82,9 @@ public class MonsterActionsAttackTests
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.Monsters[0].Position = new Position(1, 3);
-        initialGameState.World.Monsters[1].Position = new Position(3, 1);
+        initialGameState.World.Monsters[0].Position = new Position(3, 1);
+        initialGameState.World.Monsters[1].Position = new Position(3, 2);
 
-        initialGameState.World.Walls.Add(new Position(1, 2));
         initialGameState.World.Walls.Add(new Position(2, 1));
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
