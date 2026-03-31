@@ -19,3 +19,13 @@
 .animate-glow-pulse {
   animation: glow-pulse 2s infinite ease-in-out;
 }
+
+@keyframes rapid-pulse {
+  0% { background-color: rgb(30 41 59); } /* slate-800 */
+  50% { background-color: rgb(232, 76, 76); } /* red-600 */
+  100% { background-color: rgb(30 41 59); }
+}
+
+.animate-damage {
+  animation: rapid-pulse 0.25s infinite;
+}

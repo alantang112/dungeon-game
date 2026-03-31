@@ -13,6 +13,7 @@ import type { TileType } from './models/TileType';
 import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
 import type { ReactNode } from "react";
+import type { TileData } from './models/TileData';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -41,14 +42,17 @@ function App() {
 
   for (let y = gridSize; y >= 1; y--) {
     for (let x = 1; x <= gridSize; x++) {
+      const tileData = getTileData(state, x, y);
+
       gridRows.push(
         <div key={`${x}-${y}`} onClick={() => handleTileClick(state, x, y)}>
           <Tile
           x={x}
           y={y}
-          tileType={`${getTileType(state, x, y)}`}
+          tileType={tileData.tileType}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
+          health={tileData.health}
           />
         </div>
       );
@@ -237,12 +241,12 @@ function App() {
   )
 }
 
-const getTileType = (state: GameState, x: number, y: number) : TileType => {
-    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return "Hero";
-    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return "Wall";
+const getTileData = (state: GameState, x: number, y: number) : TileData => {
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health  };
+    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall" };
     const monster = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
-    if (monster) return monster.Monster.Type;
-    return "Empty";
+    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health };
+    return { tileType: "Empty" };
 };
 
 const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
