@@ -47,6 +47,8 @@ function App() {
           x={x}
           y={y}
           tileType={`${getTileType(state, x, y)}`}
+          heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
+          heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           />
         </div>
       );

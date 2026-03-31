@@ -72,6 +72,11 @@ export class MonsterPosition {
     LastMovementPath?: Position[];
 }
 
+export class ViewData {
+    HeroCanWalkPositions?: Position[];
+    HeroCanAttackPositions?: Position[];
+}
+
 export class GameState {
     GamePhase!: GamePhase;
     EnergyDice?: EnergyDice;
@@ -80,6 +85,7 @@ export class GameState {
     LevelNumber?: number;
     GameMessage?: string;
     GameMessageLog?: string[];
+    ViewData?: ViewData;
 }
 
 export class GameInputEventParameters {
