@@ -67,7 +67,7 @@ function App() {
   var currentDiceToAssignIndex: number = 0;
 
   if (heroInitialized) {
-    if (state.GamePhase == "EnergyDiceAssignment")
+    if (state.GamePhase == "EnergyDicePreRoll" || state.GamePhase == "EnergyDiceAssignment")
     {
       heroEnergy = {
         "Movement": state.Hero!.Stats!["Movement"] + GetAssignedEnergyDiceValue(state.EnergyDice!, "Movement"),
