@@ -279,6 +279,12 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
             gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
           });
         }
+        else {
+          availableButtons.push({
+            textNode: <>⚡{GetAssignedEnergyDiceValue(state.EnergyDice, skillType)} ⟶ <span className={`${statColor[skillType]}`}>{statText[skillType]}</span></>,
+            disabled: true
+          });
+        }
       });
     }
   } 

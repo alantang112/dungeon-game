@@ -22,16 +22,16 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
                     await eventDispatcher(button.gameEventOnClick);
                 }
             }}
-            className="
+            className={`
         
             inline-block
             px-7 py-3
-            bg-indigo-600 hover:bg-indigo-500 
-            text-white font-bold tracking-wide
+            text-white bg-indigo-600
+            font-bold tracking-wide
             rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 
             transform transition-all active:scale-95
-            border border-indigo-400/30
-        "
+            border border-indigo-400/30 
+        ` + (button.disabled === true ? 'opacity-60 ' : 'hover:bg-indigo-500  ')}
         >
             {button.textNode}
         </button>
