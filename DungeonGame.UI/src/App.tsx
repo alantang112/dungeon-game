@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl, levelNameColor } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -150,7 +150,9 @@ function App() {
       </div>
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
+        
         <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1 mt-40">
+          <div className={`${levelNameColor(state.LevelNumber ?? 1)} p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
           {/* The Grid */}
           <div 
             className="grid gap-1 aspect-square"
