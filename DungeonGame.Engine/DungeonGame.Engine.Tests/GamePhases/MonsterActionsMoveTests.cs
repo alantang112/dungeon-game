@@ -167,12 +167,13 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.World.Monsters[0].LastMovementPath, Is.Not.Empty);
     }
 
-    [TestCase(2, 1, 5, 5, 4, 5, null, null, 4, 3, 3, 3)]
-    [TestCase(1, 1, 3, 2, 5, 3, 1, 3, 2, 1, 3, 2)] // or 4, 1
-    [TestCase(1, 1, 2, 3, 1, 3, 2, 1, 1, 3, 1, 2)]
-    [TestCase(2, 1, 3, 1, 3, 3, 3, 2, 3, 1, 1, 2)]
+    [TestCase(2, 1, 5, 5, 4, 5, null, null, null, null, 4, 3, 3, 3)]
+    [TestCase(1, 1, 3, 2, 5, 3, 1, 3,  null, null, 2, 1, 3, 2)] // or 4, 1
+    [TestCase(1, 1, 2, 3, 1, 3, 2, 1,  null, null, 1, 3, 1, 2)]
+    [TestCase(2, 1, 3, 1, 3, 3, 3, 2,  null, null, 3, 1, 1, 2)]
+    [TestCase(1, 1, 4, 5, 5, 4, 3, 3, 5, 2, 2, 4, 3, 5)]
     public void GivenTwoMonsters_NoWalkableSquaresInAttackRangeAndLineOfSight_ThenMoveToClosestSquareAtMaxAttackRangeAndLineSight(int heroX, int heroY, int monsterX, int monsterY, 
-        int otherMonsterX, int otherMonsterY, int? extraWallX, int? extraWallY, int expectedMonsterX, int expectedMonsterY, int expectedOtherMonsterX, int expectedOtherMonsterY)
+        int otherMonsterX, int otherMonsterY, int? extraWallX, int? extraWallY, int? extraWall2X, int? extraWall2Y, int expectedMonsterX, int expectedMonsterY, int expectedOtherMonsterX, int expectedOtherMonsterY)
     {
         var initialGameState = _sut.GetCurrentState();
 
@@ -188,6 +189,11 @@ public class MonsterActionsMoveTests
         if (extraWallX.HasValue)
         {
             initialGameState.World.Walls.Add(new Position(extraWallX.Value, extraWallY!.Value));
+        }
+
+        if (extraWall2X.HasValue)
+        {
+            initialGameState.World.Walls.Add(new Position(extraWall2X.Value, extraWall2Y!.Value));
         }
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
