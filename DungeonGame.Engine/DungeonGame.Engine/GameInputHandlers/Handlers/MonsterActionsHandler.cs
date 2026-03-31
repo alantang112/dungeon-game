@@ -82,9 +82,11 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 monsterPosition.LastMovementPath.Clear();
                 var monsterOriginalPosition = monsterPosition.Position;
                 
+                var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name);
+
                 if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
                 }
                     
@@ -96,7 +98,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 // If monster already at max attack range from hero and in line of sight of hero, continue
                 if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
                 }
 
@@ -106,7 +108,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (!walkablePositions.Any())
                 {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
                 }
 
@@ -118,7 +120,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     // check if current position is better
                     if (currentlyHasLineOfSight && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
                     {
-                        gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                        gameState.AddGameMessage(monsterDoesNotMoveMessage);
                         continue;
                     }
                     else 
@@ -147,6 +149,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     movementCandidate = GetBestWalkableCandidateClosestToHero(walkablePositions, monsterPosition.Position, gameState);
                 }
 
+                // If moving would put monster out of attack range of hero, do not move
+                if (currentlyHasLineOfSight 
+                    && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] 
+                    && (!GeometryUtility.HasLineOfSightOf(movementCandidate.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf) || movementCandidate.DistanceFromTarget > monsterPosition.Monster.Stats[SkillType.AttackRange]))
+                {
+                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                    continue;
+                }
+
                 if (movementCandidate.Position != monsterPosition.Position)
                 {
                     monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositionsIncludingMonsters, monsterPosition.Position, movementCandidate.Position);
@@ -156,7 +167,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     continue;
                 }
 
-                gameState.AddGameMessage(string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
             }
 
             return gameState;
