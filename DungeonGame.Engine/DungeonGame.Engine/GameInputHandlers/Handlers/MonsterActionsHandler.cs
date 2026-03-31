@@ -76,6 +76,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         #region MovementHelpers
         private static GameState PerformMonsterMove(GameState gameState)
         {
+            // todo: distance from hero should be calculated by flood fill
             foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => GeometryUtility.CalculateDistanceBetween(x.Position, gameState.World.HeroPosition)))
             {
                 monsterPosition.LastMovementPath.Clear();
@@ -100,7 +101,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 // Find all possible positions that can be walked to
-                var walkablePositions = GetWalkablePositions(monsterPosition, gameState);
+                var walkablePositionsIncludingMonsters = GetWalkablePositions(monsterPosition, gameState);
+                var walkablePositions = walkablePositionsIncludingMonsters.Where(x => !gameState.World.Monsters.Any(mp => mp.Position == x.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
 
                 if (!walkablePositions.Any())
                 {
@@ -121,7 +123,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     }
                     else 
                     {
-                        monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, bestWalkablePositionInRangeAndLineOfSight.Position);
+                        monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositionsIncludingMonsters, monsterPosition.Position, bestWalkablePositionInRangeAndLineOfSight.Position);
                         monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
                         gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
                             monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
@@ -147,7 +149,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (movementCandidate.Position != monsterPosition.Position)
                 {
-                    monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositions, monsterPosition.Position, movementCandidate.Position);
+                    monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositionsIncludingMonsters, monsterPosition.Position, movementCandidate.Position);
                     monsterPosition.Position = movementCandidate.Position;
                     gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
                             monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
@@ -171,7 +173,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
             {
-                return value <= monsterPosition.Monster.Stats[SkillType.Movement] && value > 0 && !gameState.World.Monsters.Any(mp => mp.Position == position);
+                return value <= monsterPosition.Monster.Stats[SkillType.Movement] && value > 0;
             };
 
             var walkablePositions = GeometryUtility.PlotValuesByFloodSearch(monsterPosition.Position, walkBlockers, FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);

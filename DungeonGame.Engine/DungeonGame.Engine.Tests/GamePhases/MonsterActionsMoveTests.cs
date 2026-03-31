@@ -264,4 +264,19 @@ public class MonsterActionsMoveTests
         Assert.That(actual[0], Is.EqualTo(originalMonsterPosition));
         Assert.That(expectedPaths.Any(e => e[0] == actual[1] && e[1] == actual[2]), Is.True);
     }
+
+    [Test]
+    public void GivenWalkPathGoesThroughMonster_ThenReturnMovementPath()
+    {
+        var gameStateJson = """{"GamePhase":"HeroActions","EnergyDice":{"Dice":[2,4,1],"AssignedSkills":["Attack","Defence","Movement"]},"EnergyDiceSnapshot":{"Dice":[2,4,1],"AssignedSkills":[null,null,null]},"Hero":{"Name":"Lil Pete","BirthYear":2026,"isMaleName":true,"Health":5,"Stats":{"Movement":1,"Attack":1,"Defence":1,"AttackRange":2}},"World":{"HeroPosition":{"X":3,"Y":1},"HeroActionPoints":{"Attack":3,"Defence":5,"Movement":0},"Borders":[{"X":0,"Y":0},{"X":6,"Y":0},{"X":0,"Y":6},{"X":1,"Y":0},{"X":0,"Y":1},{"X":6,"Y":1},{"X":1,"Y":6},{"X":2,"Y":0},{"X":0,"Y":2},{"X":6,"Y":2},{"X":2,"Y":6},{"X":3,"Y":0},{"X":0,"Y":3},{"X":6,"Y":3},{"X":3,"Y":6},{"X":4,"Y":0},{"X":0,"Y":4},{"X":6,"Y":4},{"X":4,"Y":6},{"X":5,"Y":0},{"X":0,"Y":5},{"X":6,"Y":5},{"X":5,"Y":6},{"X":6,"Y":6}],"Walls":[{"X":0,"Y":0},{"X":6,"Y":0},{"X":0,"Y":6},{"X":1,"Y":0},{"X":0,"Y":1},{"X":6,"Y":1},{"X":1,"Y":6},{"X":2,"Y":0},{"X":0,"Y":2},{"X":6,"Y":2},{"X":2,"Y":6},{"X":3,"Y":0},{"X":0,"Y":3},{"X":6,"Y":3},{"X":3,"Y":6},{"X":4,"Y":0},{"X":0,"Y":4},{"X":6,"Y":4},{"X":4,"Y":6},{"X":5,"Y":0},{"X":0,"Y":5},{"X":6,"Y":5},{"X":5,"Y":6},{"X":6,"Y":6},{"X":2,"Y":2},{"X":4,"Y":2},{"X":4,"Y":4},{"X":3,"Y":3},{"X":4,"Y":1}],"Monsters":[{"Monster":{"Type":"Spider","Name":"Moe","Health":2,"MaxHealth":2,"Stats":{"Movement":5,"Attack":4,"Defence":4,"AttackRange":3}},"Position":{"X":2,"Y":3},"LastMovementPath":[{"X":3,"Y":5},{"X":3,"Y":4},{"X":2,"Y":3}]},{"Monster":{"Type":"Spider","Name":"Zack","Health":2,"MaxHealth":2,"Stats":{"Movement":5,"Attack":4,"Defence":4,"AttackRange":3}},"Position":{"X":1,"Y":2},"LastMovementPath":[{"X":2,"Y":4},{"X":2,"Y":3},{"X":1,"Y":2}]}]},"WorldSnapshot":{"HeroPosition":{"X":2,"Y":1},"HeroActionPoints":{},"Borders":[{"X":0,"Y":0},{"X":6,"Y":0},{"X":0,"Y":6},{"X":1,"Y":0},{"X":0,"Y":1},{"X":6,"Y":1},{"X":1,"Y":6},{"X":2,"Y":0},{"X":0,"Y":2},{"X":6,"Y":2},{"X":2,"Y":6},{"X":3,"Y":0},{"X":0,"Y":3},{"X":6,"Y":3},{"X":3,"Y":6},{"X":4,"Y":0},{"X":0,"Y":4},{"X":6,"Y":4},{"X":4,"Y":6},{"X":5,"Y":0},{"X":0,"Y":5},{"X":6,"Y":5},{"X":5,"Y":6},{"X":6,"Y":6}],"Walls":[{"X":0,"Y":0},{"X":6,"Y":0},{"X":0,"Y":6},{"X":1,"Y":0},{"X":0,"Y":1},{"X":6,"Y":1},{"X":1,"Y":6},{"X":2,"Y":0},{"X":0,"Y":2},{"X":6,"Y":2},{"X":2,"Y":6},{"X":3,"Y":0},{"X":0,"Y":3},{"X":6,"Y":3},{"X":3,"Y":6},{"X":4,"Y":0},{"X":0,"Y":4},{"X":6,"Y":4},{"X":4,"Y":6},{"X":5,"Y":0},{"X":0,"Y":5},{"X":6,"Y":5},{"X":5,"Y":6},{"X":6,"Y":6},{"X":2,"Y":2},{"X":4,"Y":2},{"X":4,"Y":4},{"X":3,"Y":3},{"X":4,"Y":1}],"Monsters":[{"Monster":{"Type":"Spider","Name":"Moe","Health":2,"MaxHealth":2,"Stats":{"Movement":5,"Attack":4,"Defence":4,"AttackRange":3}},"Position":{"X":2,"Y":3},"LastMovementPath":[{"X":3,"Y":5},{"X":3,"Y":4},{"X":2,"Y":3}]},{"Monster":{"Type":"Spider","Name":"Zack","Health":2,"MaxHealth":2,"Stats":{"Movement":5,"Attack":4,"Defence":4,"AttackRange":3}},"Position":{"X":1,"Y":2},"LastMovementPath":[{"X":2,"Y":4},{"X":2,"Y":3},{"X":1,"Y":2}]}]},"LevelNumber":1,"GameMessage":"","ScheduledEvents":[],"GameMessageLog":[]}""";
+
+        _sut.LoadGameStateSnapshot(gameStateJson);
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = InputEventType.HeroActionEnd
+        });
+
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
+    }
 }
