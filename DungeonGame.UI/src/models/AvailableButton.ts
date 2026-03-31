@@ -3,5 +3,6 @@ import type { GameInputEvent } from "./GameEngineModels";
 
 export interface AvailableButton {
   textNode: ReactNode;
-  gameEventOnClick: GameInputEvent;
+  gameEventOnClick?: GameInputEvent;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }

@@ -11,7 +11,17 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
         {buttons.map((button: AvailableButton, index: number) => (
         <button
             key={index}
-            onClick={async () => await eventDispatcher(button.gameEventOnClick)}
+            onClick={async (e) => {
+                if (button.onClick)
+                {
+                    await button.onClick(e);
+                }
+
+                if (button.gameEventOnClick)
+                {
+                    await eventDispatcher(button.gameEventOnClick);
+                }
+            }}
             className="
         
             inline-block

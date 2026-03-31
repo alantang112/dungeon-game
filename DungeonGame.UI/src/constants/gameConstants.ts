@@ -30,3 +30,5 @@ const monsterPathColors: string[] = [
 ];
 
 export const getMonsterPathColor = (index: number): string => monsterPathColors[index];
+
+export const howToPlayUrl = 'https://www.google.com/search?q=one+card+dungeon+rulebook';

@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -313,7 +313,21 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
 const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   const availableButtons: AvailableButton[] = [];
 
-  if (state.GamePhase == "EnergyDiceAssignment")
+  if (state.GamePhase == "Start")
+  {
+    availableButtons.push({
+      textNode: <>How to play</>,
+      onClick: () => { 
+          const newTab = window.open(howToPlayUrl, '_blank');
+          if (newTab)
+            newTab.focus();
+          else {
+            alert('Google "one card dungeon rulebook"');
+          }
+       }
+    });
+  } 
+  else if (state.GamePhase == "EnergyDiceAssignment")
   {
     availableButtons.push({
       textNode: <>Reset Dice Assignment</>,
