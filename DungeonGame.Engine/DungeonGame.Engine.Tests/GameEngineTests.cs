@@ -28,12 +28,12 @@ public class GameEngineTests
     {
         var expected = new GameState()
         {
-            GamePhase = GamePhase.HeroActions
+            GamePhase = GamePhase.LevelEnd
         };
 
         var currentState = _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(expected, SerializationUtility.JsonSerializerOptions));
 
-        Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.HeroActions));
+        Assert.That(currentState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
     }
 
     [Test]

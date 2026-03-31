@@ -20,6 +20,40 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             InputEventType.HeroActionEnd
         };
 
+        public static (bool, string?) HeroCanWalkTo(World world, Position newPosition, string? heroName = null)
+        {
+            var movementPointsRequired = GeometryUtility.CalculateDistanceBetween(world.HeroPosition, newPosition);
+
+            if (movementPointsRequired > GameConstants.MovementPointsDiagonal || movementPointsRequired == 0)
+            {
+                return (false, string.Format(GameMessages.CanOnlyMoveAdjacently, heroName));
+            }
+
+            if (movementPointsRequired == GameConstants.MovementPointsDiagonal)
+            {
+                var blockers = new List<Position>();
+                blockers.AddRange(world.Walls);
+
+                if (blockers.Contains(new Position(world.HeroPosition.X, newPosition.Y))
+                    && blockers.Contains(new Position(newPosition.X, world.HeroPosition.Y)))
+                {
+                    return (false, string.Format(GameMessages.CannotMoveToThatSpace, heroName));
+                }
+            }
+
+            if (world.HeroActionPoints[SkillType.Movement] < movementPointsRequired)
+            {
+                return (false, string.Format(GameMessages.NotEnoughMovementActionPoints, heroName));
+            }
+
+            if (world.Walls.Contains(newPosition) || world.Monsters.Any(x => x.Position == newPosition))
+            {
+                return (false, string.Format(GameMessages.CannotMoveToThatSpace, heroName));
+            }
+
+            return (true, null);
+        }
+
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
             if (inputEvent.EventType == InputEventType.HeroActionMove)
@@ -27,41 +61,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var parameters = (HeroActionMoveEventParameters) inputEvent.EventParameters!;
                 
                 var newPosition = new Position(parameters.X, parameters.Y);
-                var movementPointsRequired = GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, newPosition);
 
-                if (movementPointsRequired > GameConstants.MovementPointsDiagonal || movementPointsRequired == 0)
-                {
+                var (canWalk, gameMessage) = HeroCanWalkTo(gameState.World, newPosition, gameState.Hero.Name);
+
+                if (!string.IsNullOrEmpty(gameMessage))
                     gameState.AddGameMessage(string.Format(GameMessages.CanOnlyMoveAdjacently, gameState.Hero.Name));
+
+                if (!canWalk)
                     return gameState;
-                }
-
-                if (movementPointsRequired == GameConstants.MovementPointsDiagonal)
-                {
-                    var blockers = new List<Position>();
-                    blockers.AddRange(gameState.World.Walls);
-
-                    if (blockers.Contains(new Position(gameState.World.HeroPosition.X, newPosition.Y))
-                        && blockers.Contains(new Position(newPosition.X, gameState.World.HeroPosition.Y)))
-                    {
-                        gameState.AddGameMessage(string.Format(GameMessages.CannotMoveToThatSpace, gameState.Hero.Name));
-                        return gameState;
-                    }
-                }
-
-                if (gameState.World.HeroActionPoints[SkillType.Movement] < movementPointsRequired)
-                {
-                    gameState.AddGameMessage(string.Format(GameMessages.NotEnoughMovementActionPoints, gameState.Hero.Name));
-                    return gameState;
-                }
-
-                if (gameState.World.Walls.Contains(newPosition) || gameState.World.Monsters.Any(x => x.Position == newPosition))
-                {
-                    gameState.AddGameMessage(string.Format(GameMessages.CannotMoveToThatSpace, gameState.Hero.Name));
-                    return gameState;
-                }
-
-                gameState.World.HeroPosition = newPosition; 
-                gameState.World.HeroActionPoints[SkillType.Movement] -= movementPointsRequired;
+                
+                gameState.World.HeroActionPoints[SkillType.Movement] -= GeometryUtility.CalculateDistanceBetween(gameState.World.HeroPosition, newPosition);
+                gameState.World.HeroPosition = newPosition;
                 gameState.AddGameMessage(string.Format(GameMessages.HeroMovedTo, gameState.Hero.Name, newPosition.X, newPosition.Y));
 
                 return gameState;

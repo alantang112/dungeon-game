@@ -25,7 +25,15 @@ public class MonsterActionsMoveTests
                 AssignedSkills = new SkillType?[3] { null, null, null }
             },
             LevelNumber = 1,
-            World = new World(),
+            World = new World()
+            {
+                HeroActionPoints = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 1 },
+                    { SkillType.Attack, 1 },
+                    { SkillType.Defence, 1 }
+                }
+            },
             Hero = new Hero()
             {
                 Health = 10,
@@ -230,6 +238,7 @@ public class MonsterActionsMoveTests
                 {
                     { SkillType.Movement, 0 },
                     { SkillType.Attack, 2 },
+                    { SkillType.Defence, 2 },
                     { SkillType.AttackRange, 2 }
                 }
             },
@@ -244,6 +253,7 @@ public class MonsterActionsMoveTests
                 {
                     { SkillType.Movement, 0 },
                     { SkillType.Attack, 2 },
+                    { SkillType.Defence, 2 },
                     { SkillType.AttackRange, 2 }
                 }
             },

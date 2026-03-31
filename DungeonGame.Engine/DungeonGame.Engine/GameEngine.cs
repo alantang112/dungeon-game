@@ -40,7 +40,23 @@ namespace DungeonGame.Engine
             return firstHandler;
         }
 
-        public GameState GetCurrentState() => CurrentState.DeepClone();
+        public GameState GetCurrentState()
+        {
+            var gameState = CurrentState.DeepClone();
+            
+            // Refresh ViewData whenever we are returning game state
+            if (gameState.GamePhase == GamePhase.HeroActions)
+            {
+                gameState.ViewData.HeroCanWalkPositions = gameState.World.CalculateHeroCanWalkPositions();
+                gameState.ViewData.HeroCanAttackPositions = gameState.World.CalculateHeroCanAttackPositions(gameState.Hero.Stats[SkillType.AttackRange]);
+            }
+            else
+            {
+                gameState.ViewData = new ViewData();
+            }
+
+            return gameState;
+        }
 
         public GameState ProcessInput(InputEvent inputEvent)
         {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonGame.Engine.GameInputHandlers.Handlers;
 using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -16,7 +17,6 @@ namespace DungeonGame.Engine.Models
         public HashSet<Position> Borders { get; set; } = new HashSet<Position>();
         public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
         public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
-
         public void InitializeLevel(int levelNumber, bool initRandomWalls = true)
         {
             // init border
@@ -103,6 +103,46 @@ namespace DungeonGame.Engine.Models
                 if (iterations >= GameConstants.LoopIterationLimit)
                     throw new InvalidOperationException("Could not successfully add random walls");
             }
+        }
+    
+        public List<Position> CalculateHeroCanWalkPositions()
+        {
+            var result = new List<Position>();
+
+            foreach(var checkPosition in GeometryUtility.GetNeighbouringPositions(HeroPosition))
+            {
+                var (caWalk, _) = HeroActionsHandler.HeroCanWalkTo(this, checkPosition);
+
+                if (caWalk)
+                    result.Add(checkPosition);
+            }
+            
+            return result;
+        }
+
+        public List<Position> CalculateHeroCanAttackPositions(int heroAttackRange)
+        {
+            var result = new List<Position>();
+
+            var wallsAndMonsters = new List<Position>();
+            wallsAndMonsters.AddRange(Walls);
+            wallsAndMonsters.AddRange(Monsters.Select(mp => mp.Position));
+
+            foreach(var monsterPosition in Monsters)
+            {
+                if (HeroActionPoints[SkillType.Attack] < monsterPosition.Monster.Stats[SkillType.Defence])
+                    continue;
+
+                if (heroAttackRange < GeometryUtility.CalculateDistanceBetween(HeroPosition, monsterPosition.Position))
+                    continue;
+
+                if (!GeometryUtility.HasLineOfSightOf(HeroPosition, monsterPosition.Position, wallsAndMonsters))
+                    continue;
+
+                result.Add(monsterPosition.Position);
+            }
+
+            return result;
         }
     }
 }

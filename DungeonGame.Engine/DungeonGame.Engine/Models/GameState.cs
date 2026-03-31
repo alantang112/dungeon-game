@@ -17,6 +17,7 @@ namespace DungeonGame.Engine.Models
         public string? GameMessage { get; set; }
         public List<InputEvent> ScheduledEvents { get; set;} = new List<InputEvent>();
         public List<string> GameMessageLog { get; set; } = new List<string>();
+        public ViewData ViewData { get; set; } = new ViewData();
 
         public void AddGameMessage(string message)
         {

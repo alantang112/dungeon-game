@@ -39,38 +39,38 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         private static GameState PerformMonsterAttack(GameState gameState)
         {
             var wallsAndMonsters = new List<Position>();
-                wallsAndMonsters.AddRange(gameState.World.Walls);
-                wallsAndMonsters.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
+            wallsAndMonsters.AddRange(gameState.World.Walls);
+            wallsAndMonsters.AddRange(gameState.World.Monsters.Select(mp => mp.Position));
 
-                // Find all monsters in line of sight and in range, add up monster attack, divide by hero defence points, decrease hero health
-                var totalMonsterAttack = 0;
-                foreach(var monsterPosition in gameState.World.Monsters)
+            // Find all monsters in line of sight and in range, add up monster attack, divide by hero defence points, decrease hero health
+            var totalMonsterAttack = 0;
+            foreach(var monsterPosition in gameState.World.Monsters)
+            {
+                if (GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition) <= monsterPosition.Monster.Stats[SkillType.AttackRange]
+                        && GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonsters))
                 {
-                    if (GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition) <= monsterPosition.Monster.Stats[SkillType.AttackRange]
-                            && GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonsters))
-                    {
-                        totalMonsterAttack += monsterPosition.Monster.Stats[SkillType.Attack];
-                    }
+                    totalMonsterAttack += monsterPosition.Monster.Stats[SkillType.Attack];
                 }
+            }
 
-                if (totalMonsterAttack > 0)
+            if (totalMonsterAttack > 0)
+            {
+                var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
+
+                gameState.Hero.Health -= damageDealt;
+                gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, gameState.Hero.Name, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
+                if (gameState.Hero.Health <= 0)
                 {
-                    var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
-
-                    gameState.Hero.Health -= damageDealt;
-                    gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, gameState.Hero.Name, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
-                    if (gameState.Hero.Health <= 0)
-                    {
-                        gameState.GamePhase = GamePhase.GameEnd;
-                        gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.BirthYear, DateTime.Now.Year));
-                    }
+                    gameState.GamePhase = GamePhase.GameEnd;
+                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.BirthYear, DateTime.Now.Year));
                 }
-                else
-                {
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterAttackAvoided, gameState.Hero.Name));
-                }
+            }
+            else
+            {
+                gameState.AddGameMessage(string.Format(GameMessages.MonsterAttackAvoided, gameState.Hero.Name));
+            }
 
-                return gameState;
+            return gameState;
         }
 
         #region MovementHelpers

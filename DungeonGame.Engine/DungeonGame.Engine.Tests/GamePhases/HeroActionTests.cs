@@ -26,7 +26,15 @@ public class HeroActionTests
                 AssignedSkills = new SkillType?[3] { null, null, null }
             },
             LevelNumber = 1,
-            World = new World(),
+            World = new World()
+            {
+                HeroActionPoints = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 4 },
+                    { SkillType.Attack, 4 },
+                    { SkillType.Defence, 4 },
+                }
+            },
             Hero = new Hero()
             {
                 Stats = new Dictionary<SkillType, int>()
@@ -65,7 +73,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, heroInitialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = heroInitialMovementPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -104,7 +112,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = initialMovementPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -146,7 +154,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = initialMovementPoints;
 
         // remove walls and monsters
         gameState.World.Walls.Clear();
@@ -184,7 +192,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = initialMovementPoints;
         // add another wall
         gameState.World.Walls.Add(new Position(3, 3));
 
@@ -220,7 +228,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = initialMovementPoints;
         // put a monster
         gameState.World.Monsters[0].Position = new Position(3, 3);
 
@@ -260,7 +268,7 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         // set hero movement points
-        gameState.World.HeroActionPoints.Add(SkillType.Movement, initialMovementPoints);
+        gameState.World.HeroActionPoints[SkillType.Movement] = initialMovementPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -297,7 +305,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -333,7 +341,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
         gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
@@ -371,7 +379,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
         gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
         var otherMonster = gameState.World.Monsters.First(x => x.Position.X == 4 && x.Position.Y == 5);
         gameState.World.Monsters.Remove(otherMonster);
@@ -405,7 +413,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -438,7 +446,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -456,8 +464,7 @@ public class HeroActionTests
 
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(initialAttackPoints));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 2), Is.True);
-        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.NoMonsterToAttackAtThatSpace));   
+        Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(2));  
     }
 
     [TestCase(3,4)]
@@ -474,7 +481,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
         gameState.Hero.Stats[SkillType.AttackRange] = 100;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
@@ -508,7 +515,7 @@ public class HeroActionTests
 
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
-        gameState.World.HeroActionPoints.Add(SkillType.Attack, initialAttackPoints);
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 

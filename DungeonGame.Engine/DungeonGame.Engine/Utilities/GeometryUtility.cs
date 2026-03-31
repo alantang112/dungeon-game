@@ -266,6 +266,18 @@ namespace DungeonGame.Engine.Utilities
             return true;
         }
 
+        public static List<Position> GetNeighbouringPositions(Position position)
+        {
+            var result = new List<Position>();
+
+            foreach(var stepDirection in OrthogonalStepDirections.Concat(DiagonalStepDirections))
+            {
+                result.Add(position.Translate(stepDirection.Item1, stepDirection.Item2));
+            }
+
+            return result;
+        }
+
         private static (int, int)[] DiagonalStepDirections => new (int, int)[] { (1, 1), (1, -1), (-1, -1), (-1, 1) };
         private static (int, int)[] OrthogonalStepDirections => new (int, int)[] { (1, 0), (0, -1), (-1, 0), (0, 1) }; 
     }
