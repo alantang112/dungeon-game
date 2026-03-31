@@ -153,45 +153,47 @@ function App() {
         
         <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1 mt-40">
           <div className={`${levelNameColor(state.LevelNumber ?? 1)} p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
-          {/* The Grid */}
-          <div 
-            className="grid gap-1 aspect-square"
-            style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`, display: 'grid' }}
-          >
-            {gridRows}
+          <div className="relative">
+            {/* The Grid */}
+            <div 
+              className="grid gap-1 aspect-square"
+              style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`, display: 'grid' }}
+            >
+              {gridRows}
+            </div>
+
+            {/* The Overlay Layer */}
+            <svg 
+              className="absolute inset-0 pointer-events-none" 
+              viewBox={`0 0 ${gridSize} ${gridSize}`}
+              preserveAspectRatio="none"
+              style={{ zIndex: 20 }}
+            >
+              <defs>
+                <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
+                  <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fillOpacity="0.3" />
+                </marker>
+              </defs>
+
+              {monsterPaths.map((path, i) => {
+                return (
+                <line
+                  key={i}
+                  x1={path.startX - 0.5} 
+                  y1={gridSize - path.startY + 0.5}
+                  x2={path.endX - 0.5}
+                  y2={gridSize - path.endY + 0.5}
+                  stroke={getMonsterPathColor(path.setNumber)}
+                  strokeWidth="0.05"
+                  strokeOpacity="0.3"
+                  markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
+                  pathLength="1"
+                  strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
+                />
+              );
+              } )}
+            </svg>
           </div>
-
-          {/* The Overlay Layer */}
-          <svg 
-            className="absolute inset-0 pointer-events-none" 
-            viewBox={`0 0 ${gridSize} ${gridSize}`}
-            preserveAspectRatio="none"
-            style={{ zIndex: 20 }}
-          >
-            <defs>
-              <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
-                <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fillOpacity="0.3" />
-              </marker>
-            </defs>
-
-            {monsterPaths.map((path, i) => {
-              return (
-              <line
-                key={i}
-                x1={path.startX - 0.5} 
-                y1={gridSize - path.startY + 0.5}
-                x2={path.endX - 0.5}
-                y2={gridSize - path.endY + 0.5}
-                stroke={getMonsterPathColor(path.setNumber)}
-                strokeWidth="0.05"
-                strokeOpacity="0.3"
-                markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
-                pathLength="1"
-                strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
-              />
-            );
-            } )}
-          </svg>
         </div>
         <div className="flex gap-3 mt-8 h-12 items-center justify-center">
           {
