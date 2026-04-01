@@ -36,6 +36,14 @@ const ResetDiceEvent = () : GameInputEvent => {
     return model;
 }
 
+const RerollDiceEvent = () : GameInputEvent => {
+    const model: GameInputEvent = {
+        EventType: "EnergyDiceReroll"
+    };
+
+    return model;
+}
+
 const HeroMoveEvent = (x: number, y: number) : GameInputEvent => {
     const model: GameInputEvent = {
         EventType: "HeroActionMove",
@@ -112,6 +120,7 @@ const interfaceActions = {
     RollDiceEvent, 
     AssignDiceEvent, 
     ResetDiceEvent, 
+    RerollDiceEvent,
     HeroMoveEvent,
     HeroAttackEvent,
     HeroActionResetEvent,

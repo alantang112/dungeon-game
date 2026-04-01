@@ -28,5 +28,6 @@ namespace DungeonGame.Engine
         public static string LevelUpError = "You must choose to level up a skill or replenish health but not both";
         public static string LevelUpReplenishHealth = "{0} takes a long rest and is filled with newfound ENERGY";
         public static string LevelUpSkill = "{0} has improved {1}";
+        public static string NoRerollsAvailable = "No rerolls available";
     }
 }

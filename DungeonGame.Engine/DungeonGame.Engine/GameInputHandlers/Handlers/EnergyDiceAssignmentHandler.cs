@@ -3,7 +3,6 @@ using System.Linq;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
-using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.GameInputHandlers.Handlers
 {
@@ -12,7 +11,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         protected override GamePhase HandledGamePhase => GamePhase.EnergyDiceAssignment;
 
         protected override InputEventType[] HandledInputEventTypes => 
-            new InputEventType[] { InputEventType.EnergyDiceAssign, InputEventType.EnergyDiceResetAssignment };
+            new InputEventType[] { InputEventType.EnergyDiceAssign, InputEventType.EnergyDiceResetAssignment, InputEventType.EnergyDiceReroll };
 
         private SkillType[] ValidSkillTypeForEnergyDiceAssignment = new SkillType[] { SkillType.Movement, SkillType.Attack, SkillType.Defence }; 
 
@@ -49,6 +48,20 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             {
                 gameState.EnergyDice.ResetAssignment();
                 gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
+                return gameState;
+            }
+            else if (inputEvent.EventType == InputEventType.EnergyDiceReroll)
+            {
+                if (gameState.World.RerollsAvailable <= 0)
+                {
+                    gameState.AddGameMessage(GameMessages.NoRerollsAvailable);
+                    return gameState;
+                }
+
+                gameState.World.RerollsAvailable--;
+                gameState.EnergyDice.ResetAssignment();
+                gameState.GamePhase = GamePhase.EnergyDicePreRoll;
+
                 return gameState;
             }
 

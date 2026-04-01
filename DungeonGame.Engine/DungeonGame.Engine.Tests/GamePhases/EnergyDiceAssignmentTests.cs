@@ -169,4 +169,65 @@ public class EnergyDiceAssignmentTests
 
         Assert.That(gameState.EnergyDice.AssignedSkills.All(x => x == null), Is.True);
     }
+
+    [Test]
+    public void GivenNoRerollsAvailable_WhenReroll_ThenNoChanges()
+    {
+        var initialGameState = JsonSerializer.Serialize(new GameState()
+        {
+            GamePhase = GamePhase.EnergyDiceAssignment,
+            EnergyDice = new EnergyDice()
+            {
+                Dice = new int[3] { 1, 4, 6 },
+                AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
+            },
+            World = new World()
+            {
+                RerollsAvailable = 0
+            }
+        }, SerializationUtility.JsonSerializerOptions);
+
+        _sut.LoadGameStateSnapshot(initialGameState);
+
+        var gameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceReroll
+        });
+
+        Assert.That(gameState.EnergyDice.Dice[0], Is.EqualTo(1));
+        Assert.That(gameState.EnergyDice.Dice[1], Is.EqualTo(4));
+        Assert.That(gameState.EnergyDice.Dice[2], Is.EqualTo(6));
+        Assert.That(gameState.EnergyDice.AssignedSkills[0], Is.EqualTo(SkillType.Movement));
+        Assert.That(gameState.EnergyDice.AssignedSkills[1], Is.EqualTo(SkillType.Defence));
+        Assert.That(gameState.EnergyDice.AssignedSkills[2], Is.EqualTo(SkillType.Attack));
+    }
+
+    [Test]
+    public void GivenRerollAvailable_WhenReroll_ThenRerollAndGetNewSnapshot()
+    {
+        var initialGameState = JsonSerializer.Serialize(new GameState()
+        {
+            GamePhase = GamePhase.EnergyDiceAssignment,
+            EnergyDice = new EnergyDice()
+            {
+                Dice = new int[3] { 7, 8, 9 },
+                AssignedSkills = new SkillType?[3] { SkillType.Movement, SkillType.Defence, SkillType.Attack }
+            },
+            World = new World()
+            {
+                RerollsAvailable = 1
+            }
+        }, SerializationUtility.JsonSerializerOptions);
+
+        _sut.LoadGameStateSnapshot(initialGameState);
+
+        var gameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.EnergyDiceReroll
+        });
+
+        Assert.That(gameState.World.RerollsAvailable, Is.EqualTo(0));
+        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
+        Assert.That(gameState.EnergyDice.AssignedSkills.All(x => x == null), Is.True);
+    }   
 }

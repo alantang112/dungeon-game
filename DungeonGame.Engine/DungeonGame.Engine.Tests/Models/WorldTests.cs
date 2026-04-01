@@ -22,6 +22,8 @@ public class WorldTests
         var world = new World();
 
         world.InitializeLevel(levelNumber);
+
+        Assert.That(world.RerollsAvailable, Is.EqualTo(1));
     }
 
     private static HashSet<Position> ParsePositionsString(string s)

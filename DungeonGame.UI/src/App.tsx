@@ -254,14 +254,14 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   if (state.GamePhase == "Start")
   {
     availableButtons.push({
-      textNode: <>New Game</>,
+      textNode: <>New game</>,
       gameEventOnClick: GameActions.NewGameEvent()
     });
   } 
   else if (state.GamePhase == "EnergyDicePreRoll")
   {
     availableButtons.push({
-      textNode: <>Roll Energy Dice</>,
+      textNode: <>Roll energy dice</>,
       gameEventOnClick: GameActions.RollDiceEvent()
     });
   } 
@@ -337,19 +337,25 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   else if (state.GamePhase == "EnergyDiceAssignment")
   {
     availableButtons.push({
-      textNode: <>Reset Dice Assignment</>,
+      textNode: <>Reset dice assignment</>,
       gameEventOnClick: GameActions.ResetDiceEvent()
     });
+
+    availableButtons.push({
+      textNode: <>Reroll (once per level)</>,
+      gameEventOnClick: GameActions.RerollDiceEvent(),
+      disabled: (state.World?.RerollsAvailable ?? 0) <= 0
+    })
   } 
   else if (state.GamePhase == "HeroActions")
   {
     availableButtons.push({
-      textNode: <>Reset Turn</>,
+      textNode: <>Reset turn</>,
       gameEventOnClick: GameActions.HeroActionResetEvent()
     });
 
     availableButtons.push({
-      textNode: <>End Turn</>,
+      textNode: <>End turn</>,
       gameEventOnClick: GameActions.HeroActionEndEvent()
     });
   }

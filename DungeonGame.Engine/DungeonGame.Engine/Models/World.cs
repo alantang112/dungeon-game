@@ -14,6 +14,7 @@ namespace DungeonGame.Engine.Models
     {
         public Position HeroPosition { get; set; }
         public Dictionary<SkillType, int> HeroActionPoints { get; set; } = new Dictionary<SkillType, int>();
+        public int RerollsAvailable { get; set; } = 0;
         public HashSet<Position> Borders { get; set; } = new HashSet<Position>();
         public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
         public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
@@ -52,6 +53,8 @@ namespace DungeonGame.Engine.Models
                 var numberOfRandomWalls = RandomUtility.RandomInt(template.RandomWallsCountMin, template.RandomWallsCountMax);
                 InitializeRandomWalls(numberOfRandomWalls, template.EnforceWallIslands);
             }
+
+            RerollsAvailable = 1;
         }
 
         private static HashSet<Position> GenerateBorders()

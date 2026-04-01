@@ -13,6 +13,7 @@ export type GameInputEventType =
     | "EnergyDiceRoll"              
     | "EnergyDiceAssign"
     | "EnergyDiceResetAssignment"
+    | "EnergyDiceReroll"
     | "HeroActionMove"
     | "HeroActionAttack"
     | "HeroActionReset"  
@@ -47,6 +48,7 @@ export class Position {
 export class World {
     HeroPosition!: Position;
     HeroActionPoints?: Record<SkillType, number>;
+    RerollsAvailable?: number;
     Walls?: Position[];
     Monsters?: MonsterPosition[];
 }
