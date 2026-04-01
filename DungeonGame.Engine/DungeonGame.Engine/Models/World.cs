@@ -22,24 +22,16 @@ namespace DungeonGame.Engine.Models
             // init border
             Walls = new HashSet<Position>();
 
-            for (int i = 0; i < GameConstants.LevelSize + 2; i++)
-            {
-                Walls.Add(new Position(i, 0));
-                Walls.Add(new Position(0, i));
-                Walls.Add(new Position(GameConstants.LevelSize + 1, i));
-                Walls.Add(new Position(i, GameConstants.LevelSize + 1));
-            }
+            if (!Borders.Any())
+                Borders = GenerateBorders();
 
-            Borders = new HashSet<Position>(Walls);
+            Walls.UnionWith(Borders);
 
             // init level
             var template = LevelTemplates.Levels.Single(x => x.LevelNumber == levelNumber);
             HeroPosition = template.HeroPosition;
 
-            foreach(var wallPosition in template.WallPositions)
-            {
-                Walls.Add(wallPosition);
-            }
+            Walls.UnionWith(template.WallPositions);
 
             // init monsters
             Monsters = new List<MonsterPosition>();
@@ -62,45 +54,55 @@ namespace DungeonGame.Engine.Models
             }
         }
 
+        private static HashSet<Position> GenerateBorders()
+        {
+            var borders = new HashSet<Position>();
+
+            for (int i = 0; i < GameConstants.LevelSize + 2; i++)
+            {
+                borders.Add(new Position(i, 0));
+                borders.Add(new Position(0, i));
+                borders.Add(new Position(GameConstants.LevelSize + 1, i));
+                borders.Add(new Position(i, GameConstants.LevelSize + 1));
+            }
+
+            return borders;
+        }
+
         private void InitializeRandomWalls(int numberOfRandomWalls, bool enforceWallIslands)
         {
             var addedWallsCount = 0;
-            var iterations = 0;
 
-            var candidates = Enumerable.Range(1, GameConstants.LevelSize).SelectMany(x => Enumerable.Range(1, GameConstants.LevelSize), (x, y) => new Position(x, y)).ToList();
+            var candidates = Enumerable.Range(1, GameConstants.LevelSize).SelectMany(x => Enumerable.Range(1, GameConstants.LevelSize), (x, y) => new Position(x, y))
+                .Where(x => !Walls.Contains(x) && HeroPosition != x && !Monsters.Any(mp => mp.Position == x))
+                .ToList();
 
             while (addedWallsCount < numberOfRandomWalls)
             {
                 var candidate = candidates.OrderBy(_ => Guid.NewGuid()).First();
 
-                if (!Walls.Contains(candidate) 
-                    && HeroPosition != candidate 
-                    && !Monsters.Any(mp => mp.Position == candidate))
+                var testWalls = new List<Position>(Walls)
                 {
-                    var testWalls = new List<Position>(Walls)
-                    {
-                        candidate
-                    };
+                    candidate
+                };
 
-                    var walkableSquares = GeometryUtility.PlotValuesByFloodSearch(HeroPosition, testWalls, FloodSearchHelpers.WalkValueFunction, 
-                            FloodSearchHelpers.FloodUntilAllSquaresWalked, FloodSearchHelpers.ReturnAllPositions);
+                var walkableSquares = GeometryUtility.PlotValuesByFloodSearch(HeroPosition, testWalls, FloodSearchHelpers.WalkValueFunction, 
+                        FloodSearchHelpers.FloodUntilAllSquaresWalked, FloodSearchHelpers.ReturnAllPositions);
 
-                    var expectedEmptySquares = (GameConstants.LevelSize + 2) * (GameConstants.LevelSize + 2) // level squares including border
-                                        - Walls.Count() // walls and borders
-                                        - 1; // subtract 1 for the added wall
+                var expectedEmptySquares = (GameConstants.LevelSize + 2) * (GameConstants.LevelSize + 2) // level squares including border
+                                    - Walls.Count() // walls and borders
+                                    - 1; // subtract 1 for the added wall
 
-                    // check all empty squares can be walked to. If needs wall islands, check there are wall islands
-                    if (walkableSquares.Count() == expectedEmptySquares && (!enforceWallIslands || GeometryUtility.HasWallIsland(testWalls)))
-                    {
-                        Walls.Add(candidate);
-                        addedWallsCount++;
-                    }
+                // check all empty squares can be walked to. If needs wall islands, check there are wall islands
+                if (walkableSquares.Count() == expectedEmptySquares && (!enforceWallIslands || GeometryUtility.HasWallIsland(testWalls)))
+                {
+                    Walls.Add(candidate);
+                    addedWallsCount++;
                 }
 
                 candidates.Remove(candidate);
 
-                iterations++;
-                if (iterations >= GameConstants.LoopIterationLimit)
+                if (!candidates.Any())
                     throw new InvalidOperationException("Could not successfully add random walls");
             }
         }

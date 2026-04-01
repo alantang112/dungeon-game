@@ -10,5 +10,10 @@ namespace DungeonGame.Engine.Models.Geometry
             Above = above;
             Below = below;
         }
+
+        public override string ToString()
+        {
+            return $"({Above}, {Below})";
+        }
     }
 }

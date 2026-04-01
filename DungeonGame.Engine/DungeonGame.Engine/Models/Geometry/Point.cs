@@ -39,6 +39,11 @@ namespace DungeonGame.Engine.Models.Geometry
             return !(point == other);
         }
 
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
+
         public double DistanceFrom(Point point)
         {
             return (double) Math.Sqrt(Math.Pow((double)(point.X - X), 2) + Math.Pow((double)(point.Y - Y), 2));

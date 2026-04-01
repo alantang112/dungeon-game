@@ -13,6 +13,11 @@ namespace DungeonGame.Engine.Models.Geometry
             YIntercept = pointA.Y - Gradient * pointA.X;
         }
 
+        public override string ToString()
+        {
+            return $"({PointA}, {PointB}, Gradient={Gradient}, YIntercept={YIntercept})";
+        }
+
         public double Gradient { get; }
         public double YIntercept { get; }
 

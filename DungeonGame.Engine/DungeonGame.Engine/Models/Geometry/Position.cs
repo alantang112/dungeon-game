@@ -28,6 +28,11 @@ namespace DungeonGame.Engine.Models.Geometry
             return Tuple.Create(X, Y).GetHashCode();
         }
 
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
+
         public static bool operator ==(Position position, Position other)
         {
             return position.X == other.X && position.Y == other.Y;
