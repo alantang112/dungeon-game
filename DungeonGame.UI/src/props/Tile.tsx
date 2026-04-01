@@ -43,7 +43,7 @@ export const Tile = ({ x, y, tileType, heroCanWalk, heroCanAttack, health }: Til
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')
             + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')}>
-            <span className="absolute top-1 left-1 opacity-80">{x},{y} ({health})</span>
+            <span className="absolute top-1 left-1 opacity-80">{x},{y}</span>
             {tileType != "Empty" && (
                 <img
                     src={`${assetPath}${tileType.toLowerCase()}.png`}

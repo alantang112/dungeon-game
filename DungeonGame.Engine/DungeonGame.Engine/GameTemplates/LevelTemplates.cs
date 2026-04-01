@@ -1,3 +1,4 @@
+using System;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
@@ -83,6 +84,16 @@ namespace DungeonGame.Engine.GameTemplates
                 RandomWallsCountMax = 3,
                 EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(4, 5)), (MonsterType.Hellspawn, new Position(5, 2)) }
+            },
+            // Test levels
+            new Level()
+            {
+                LevelNumber = -1,  
+                HeroPosition = new Position(1, 1),
+                WallPositions = Array.Empty<Position>(), 
+                RandomWallsCountMin = 0,
+                RandomWallsCountMax = 0,
+                MonsterPositions = Array.Empty<(MonsterType, Position)>()
             },
         };
     }

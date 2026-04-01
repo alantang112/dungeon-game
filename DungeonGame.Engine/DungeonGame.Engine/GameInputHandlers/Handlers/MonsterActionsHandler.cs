@@ -89,7 +89,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 monsterPosition.LastMovementPath.Clear();
                 var monsterOriginalPosition = monsterPosition.Position;
                 
-                var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name);
+                var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
 
                 if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
                 {
@@ -134,8 +134,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     {
                         monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositionsIncludingMonsters, monsterPosition.Position, bestWalkablePositionInRangeAndLineOfSight.Position);
                         monsterPosition.Position = bestWalkablePositionInRangeAndLineOfSight.Position;
-                        gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
-                            monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                        gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                         continue;
                     }
                 }
@@ -169,8 +168,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 {
                     monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(walkablePositionsIncludingMonsters, monsterPosition.Position, movementCandidate.Position);
                     monsterPosition.Position = movementCandidate.Position;
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterOriginalPosition.X, monsterOriginalPosition.Y, 
-                            monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                     continue;
                 }
 
