@@ -9,7 +9,6 @@ import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
 import type { Arrow } from './models/Arrow';
-import type { TileType } from './models/TileType';
 import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
 import type { ReactNode } from "react";
