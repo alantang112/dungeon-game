@@ -6,18 +6,22 @@ interface TileProps {
     x: number;
     y: number;
     tileType: TileType;
+    name: string;
     heroCanWalk: boolean;
     heroCanAttack: boolean;
     health?: number;
 }
 
-export const Tile = ({ x, y, tileType, heroCanWalk, heroCanAttack, health }: TileProps) => {
+export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health }: TileProps) => {
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
+    const identity = tileType + name;
+    const prevIdentity = useRef<string | undefined>(identity);
     const prevHealthRef = useRef<number | undefined>(health);
 
     useEffect(() => {
-        // Only trigger if health actually decreased
-        if (prevHealthRef.current !== undefined && health !== undefined && health < prevHealthRef.current) {
+        // Only trigger if health actually decreased, and same entity on the tile
+        if (prevHealthRef.current !== undefined && health !== undefined && health < prevHealthRef.current
+            && prevIdentity.current !== undefined && identity !== undefined && prevIdentity.current === identity) {
             const damageTaken = prevHealthRef.current - health;
             
             // Start the rapid pulse
@@ -35,6 +39,7 @@ export const Tile = ({ x, y, tileType, heroCanWalk, heroCanAttack, health }: Til
 
         // Always update the ref so the next change is compared correctly
         prevHealthRef.current = health;
+        prevIdentity.current = identity;
     }, [health]);
 
     return (

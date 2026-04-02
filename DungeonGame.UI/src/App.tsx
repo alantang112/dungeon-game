@@ -49,6 +49,7 @@ function App() {
           x={x}
           y={y}
           tileType={tileData.tileType}
+          name={tileData.name ?? ''}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
@@ -247,10 +248,10 @@ function App() {
 }
 
 const getTileData = (state: GameState, x: number, y: number) : TileData => {
-    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health  };
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health, name: state!.Hero!.Name  };
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall" };
     const monster = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
-    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health };
+    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health, name: monster.Monster.Name };
     return { tileType: "Empty" };
 };
 
