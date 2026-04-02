@@ -50,7 +50,7 @@ function App() {
           x={x}
           y={y}
           tileType={tileData.tileType}
-          name={tileData.name ?? ''}
+          name={tileData.name}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
