@@ -131,11 +131,11 @@ function App() {
   }
 
   return (
-    <>
-      <div className="flex flex-col items-center flex-start gap-5 sm:justify-between h-screen bg-slate-900 p-4">
+    <div className="bg-slate-950">
+      <div className="flex flex-col items-center flex-start gap-5 sm:justify-between h-screen bg-slate-900 p-4 sm:max-w-400 mx-auto">
         {/* Character stats */}
-        <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12">
-          {/* LEFT SIDE: INPUT */}
+        <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full">
+          {/* Hero stats */}
           <div 
             className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
             onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
@@ -150,7 +150,7 @@ function App() {
               isEnemy={false}
             />
           </div>
-          {/* RIGHT SIDE: OUTPUT */}
+          {/* Monster stats */}
           <div className="hidden sm:grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
             {monsterRows}
           </div>
@@ -201,7 +201,7 @@ function App() {
           </div>
         </div>
         {/* Dice and Buttons */}
-        <div className="flex flex-col gap-8 justify-around">
+        <div className="flex flex-col gap-8 justify-around sm:h-50">
           <div className="flex gap-3 items-center justify-center">
             {
               state.GamePhase == "EnergyDicePreRoll" 
@@ -238,11 +238,11 @@ function App() {
           </div>
         </div>  
         {/* Game Log */}
-        <div className="hidden sm:block">
+        <div className="hidden sm:block w-full">
             <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -297,6 +297,18 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
       });
     }
   } 
+  else if (state.GamePhase == "HeroActions")
+  {
+    availableButtons.push({
+      textNode: <>Reset turn</>,
+      gameEventOnClick: GameActions.HeroActionResetEvent()
+    });
+
+    availableButtons.push({
+      textNode: <>End turn</>,
+      gameEventOnClick: GameActions.HeroActionEndEvent()
+    });
+  }
   else if (state.GamePhase == "MonsterActions")
   {
     availableButtons.push({
@@ -353,18 +365,6 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
       disabled: (state.World?.RerollsAvailable ?? 0) <= 0
     })
   } 
-  else if (state.GamePhase == "HeroActions")
-  {
-    availableButtons.push({
-      textNode: <>Reset turn</>,
-      gameEventOnClick: GameActions.HeroActionResetEvent()
-    });
-
-    availableButtons.push({
-      textNode: <>End turn</>,
-      gameEventOnClick: GameActions.HeroActionEndEvent()
-    });
-  }
   else if (state.GamePhase == "LevelEnd")
   {
     availableButtons.push({
