@@ -24,7 +24,7 @@ export type GameInputEventType =
 ;
 
 export type SkillType =
-    | "Movement"
+    "Movement"
     | "Attack"
     | "Defence"
     | "AttackRange"
@@ -32,6 +32,10 @@ export type SkillType =
 
 export type MonsterType =
     "Spider"
+    | "Skeleton"
+    | "Minotaur"
+    | "Hellspawn"
+    | "Colossus"
 ;
 
 

@@ -51,6 +51,14 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.Stats.Add(SkillType.Defence, 5);
                     monster.Stats.Add(SkillType.AttackRange, 4);
                     break;
+                case MonsterType.Colossus:
+                    monster.Health = 8;
+                    monster.MaxHealth = monster.Health;
+                    monster.Stats.Add(SkillType.Movement, 3);
+                    monster.Stats.Add(SkillType.Attack, 6);
+                    monster.Stats.Add(SkillType.Defence, 8);
+                    monster.Stats.Add(SkillType.AttackRange, 3);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

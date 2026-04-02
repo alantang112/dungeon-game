@@ -6,5 +6,6 @@ namespace DungeonGame.Engine.Models.Enums
         Skeleton,
         Minotaur,
         Hellspawn,
+        Colossus
     }
 }

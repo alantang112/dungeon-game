@@ -85,6 +85,16 @@ namespace DungeonGame.Engine.GameTemplates
                 EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(4, 5)), (MonsterType.Hellspawn, new Position(5, 2)) }
             },
+            new Level()
+            {
+                LevelNumber = 9,
+                HeroPosition = new Position(1, 3),
+                WallPositions = new Position[] { new Position(2, 2), new Position(2, 4), new Position(2, 4), new Position(4, 4) },
+                RandomWallsCountMin = 2,
+                RandomWallsCountMax = 2,
+                EnforceWallIslands = true,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(5, 3)), (MonsterType.Skeleton, new Position(5, 1)), (MonsterType.Skeleton, new Position(5, 5)) }
+            },
             // Test levels
             new Level()
             {
