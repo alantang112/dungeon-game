@@ -15,7 +15,7 @@ interface TileProps {
 
 export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth }: TileProps) => {
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
-    const identity = tileType + name;
+    const identity = name ? (tileType + name) : undefined;
     const prevIdentity = useRef<string | undefined>(identity);
     const prevHealthRef = useRef<number | undefined>(health);
 
