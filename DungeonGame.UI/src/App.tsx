@@ -333,6 +333,14 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
       gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Defence")
     });
   }
+  else if (state.GamePhase == "GameEnd")
+  {
+    availableButtons.push(
+      {
+        textNode: <span>{`   Game over   `}</span>,
+      }
+    )
+  }
 
   return availableButtons;
 }
