@@ -35,24 +35,26 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
 
   return (
     <div className={`${containerBg} p-4 rounded border border-slate-600 mb-4 font-mono text-sm text-slate-200`}>
-      <div className={`mb-2 font-bold text-lg ${headerColor} border-b border-slate-700 pb-1`}>
-        {name}
-      </div>
-
-      {/* Health Bar Row */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className="w-16">Health:</span>
-        <div className="flex gap-1 h-4 flex-1">
-          {[...Array(maxHealth)].map((_, i) => (
-            <div
-              key={i}
-              className={`h-full flex-1 rounded-sm transition-colors duration-500 ${
-                i < greenBarsCount ? 'bg-green-500' : 'bg-red-600'
-              }`}
-            />
-          ))}
+      <div className="flex pb-3">
+        <div className={`font-bold text-lg w-40 mt-auto ${headerColor}`}>
+          {name}
         </div>
-        <span className="text-xs w-8 text-right">{health}/{maxHealth}</span>
+        {/* Health Bar Row */}
+        <div className="flex-auto flex flex-col">
+          <span className="text-xs w-full text-right">Health: {health}/{maxHealth}</span>
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1 h-4 flex-1">
+              {[...Array(maxHealth)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-full flex-1 rounded-sm transition-colors duration-500 ${
+                    i < greenBarsCount ? 'bg-green-500' : 'bg-red-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className={`grid grid-cols-5 gap-px ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden`}>
