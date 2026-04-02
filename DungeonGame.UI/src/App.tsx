@@ -139,7 +139,7 @@ function App() {
   }
 
   return (
-    <div className="bg-slate-950">
+    <div className="min-h-screen bg-slate-900 sm:bg-slate-950">
       <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
         {/* Stats */}
         <div className="flex-auto">
