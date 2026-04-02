@@ -3,15 +3,13 @@ import { statColor, statText, colorEnergy } from '../constants/gameConstants';
 
 interface CharacterStatsProps {
     name: string,
-    health: number,
-    maxHealth: number,
     stats?: Record<SkillType, number>,
     energy?: Record<SkillType, number>,
     displayEnergy: boolean,
     isEnemy: boolean
 }
 
-export const CharacterStats = ({ name, health, maxHealth, stats, energy, displayEnergy, isEnemy }: CharacterStatsProps) => {
+export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: CharacterStatsProps) => {
   stats ??= {
     "Movement": 0,
     "Attack": 0,
@@ -25,45 +23,47 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
     "AttackRange": 0
   };
 
-  const greenBarsCount = health;
-
   const containerBg = isEnemy
-    ? "bg-red-950/20 border-red-900/50" // Darker, subtle red for enemies"
-    : "bg-slate-800 border-slate-600";  // Your original slate for heroes
+    ? "bg-red-950/40" // Darker, subtle red for enemies"
+    : "bg-sky-950/40";  // Your original slate for heroes
 
   const headerColor = isEnemy ? "text-red-400" : "text-white";
 
   return (
-    <div className={`${containerBg} p-4 rounded border border-slate-600 mb-4 font-mono text-sm text-slate-200`}>
-      <div className="flex pb-3">
-        <div className={`font-bold text-lg mt-auto ${headerColor}`}>
+    <div className={`${containerBg} p-2 mx-2 mb-2 rounded font-mono text-sm text-slate-200 flex gap-5 justify-between`}>
+      <div className="flex items-start">
+        <div className={`font-bold text-lg ml-3 mb-auto mx-auto ${headerColor}`}>
           {name}
         </div>
       </div>
 
-      <div className={`grid grid-cols-5 gap-px ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden`}>
+      <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2`}>
         
         {/* Header Row: Labels */}
-        <div className="bg-slate-900/80 p-2 text-[10px] text-slate-500 font-bold uppercase flex items-center">Type</div>
-        <div className={`bg-slate-800 p-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
-        <div className={`bg-slate-800 p-2 text-center ${statColor["Attack"]} font-bold`}>{statText["Attack"]}</div>
-        <div className={`bg-slate-800 p-2 text-center ${statColor["Defence"]} font-bold`}>{statText["Defence"]}</div>
-        <div className={`bg-slate-800 p-2 text-center ${statColor["AttackRange"]} font-bold`}>{statText["AttackRange"]}</div>
+        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
+        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Attack"]} font-bold`}>{statText["Attack"]}</div>
+        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Defence"]} font-bold`}>{statText["Defence"]}</div>
+        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["AttackRange"]} font-bold`}>{statText["AttackRange"]}</div>
 
         {/* Row 1: Base Values */}
-        <div className="bg-slate-900/50 p-2 text-xs text-slate-400 border-t border-slate-700">Base</div>
-        <div className="bg-slate-900/20 p-2 text-center font-bold text-base">{stats["Movement"] ?? 0}</div>
-        <div className="bg-slate-900/20 p-2 text-center font-bold text-base">{stats["Attack"] ?? 0}</div>
-        <div className="bg-slate-900/20 p-2 text-center font-bold text-base">{stats["Defence"] ?? 0}</div>
-        <div className="bg-slate-900/20 p-2 text-center font-bold text-base">{stats["AttackRange"] ?? 0}</div>
+        {
+          <>
+            {(["Movement", "Attack", "Defence", "AttackRange"] as SkillType[]).map((type) => (
+              <FlashCell
+                key={`base-${type}`}
+                value={stats[type] ?? 0}
+                className="bg-slate-900/20 p-1 text-center font-bold text-base"
+                >{stats["Movement"] ?? 0}</FlashCell>
+            ))}
+          </>
+        }
 
         {/* Row 2: Energy */}
         {displayEnergy 
           ? <>
-          <div className={`bg-slate-900/50 p-2 text-xs ${colorEnergy}-500/80 border-t border-slate-700`}>Energy</div>
           {(["Movement", "Attack", "Defence"] as SkillType[]).map((type) => (
             <FlashCell
-              key={type}
+              key={`energy-${type}`}
               value={energy[type] ?? 0}
               className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold border-t border-slate-700`}
             >⚡{energy[type] ?? 0}</FlashCell>

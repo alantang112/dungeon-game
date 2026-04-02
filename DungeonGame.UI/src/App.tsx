@@ -13,6 +13,7 @@ import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
 import type { ReactNode } from "react";
 import type { TileData } from './models/TileData';
+import type { TileType } from './models/TileType';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -90,26 +91,31 @@ function App() {
   }
 
   const monsterRows: ReactNode[] = [];
+  var monsterRowTypes: TileType[] = [];
   const monsterPaths: Arrow[] = [];
   const monsterCount: number = state.World?.Monsters?.length ?? 0;
 
   for (let monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++)
   {
     const monster = state.World!.Monsters![monsterIndex].Monster;
-    monsterRows.push(
-      <div key={`monster-${monsterIndex}`}>
-        <CharacterStats 
-              name={`${monster.Type} ${monster.Name}`}
-              health={monster.Health}
-              maxHealth={monster.MaxHealth}
-              stats={monster.Stats}
-              energy={undefined} 
-              displayEnergy={false}
-              isEnemy={true}
-            />
-      </div>
-    )
 
+    if (!monsterRowTypes.some(x => x == monster.Type))
+    {
+        monsterRows.push(
+        <div key={`monster-${monsterIndex}`}>
+          <CharacterStats 
+                name={monster.Type}
+                stats={monster.Stats}
+                energy={undefined} 
+                displayEnergy={false}
+                isEnemy={true}
+              />
+        </div>
+      )
+
+      monsterRowTypes.push(monster.Type);
+    }
+    
     // only display monster movement path during MonsterActions phase
     if (state.GamePhase == "MonsterActions")
     {
@@ -134,29 +140,31 @@ function App() {
 
   return (
     <div className="bg-slate-950">
-      <div className="flex flex-col items-center flex-start gap-5 sm:justify-between h-screen bg-slate-900 p-4 sm:max-w-400 mx-auto">
-        {/* Character stats */}
-        <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full">
-          {/* Hero stats */}
-          <div 
-            className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
-            onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
-            >
-            <CharacterStats 
-              name={heroInitialized ? state.Hero!.Name! : "Hero"}
-              health={heroInitialized ? state.Hero!.Health! : HeroMaxHealth}
-              maxHealth={HeroMaxHealth}
-              stats={heroInitialized ? state.Hero!.Stats : undefined}
-              energy={heroEnergy} 
-              displayEnergy={true}
-              isEnemy={false}
-            />
-          </div>
-          {/* Monster stats */}
-          <div className="hidden sm:grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
-            {monsterRows}
+      <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
+        {/* Stats */}
+        <div className="flex-auto">
+          
+          <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full mt-2">
+            {/* Hero stats */}
+            <div 
+              className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
+              onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
+              >
+              <CharacterStats 
+                name={heroInitialized ? state.Hero!.Name! : "Hero"}
+                stats={heroInitialized ? state.Hero!.Stats : undefined}
+                energy={heroEnergy} 
+                displayEnergy={true}
+                isEnemy={false}
+              />
+            </div>
+            {/* Monster stats */}
+            <div className="grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
+              {monsterRows}
+            </div>
           </div>
         </div>
+        
         {/* Game grid */}
         <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
           <div className={`${levelNameColor(state.LevelNumber ?? 1)} p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
@@ -203,7 +211,7 @@ function App() {
           </div>
         </div>
         {/* Dice and Buttons */}
-        <div className="flex flex-col gap-8 justify-around sm:h-50">
+        <div className="flex flex-col gap-5 justify-evenly h-[200px] mt-3 mb-1">
           <div className="flex gap-3 items-center justify-center">
             {
               state.GamePhase == "EnergyDicePreRoll" 
