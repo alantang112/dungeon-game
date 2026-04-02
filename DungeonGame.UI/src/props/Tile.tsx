@@ -58,7 +58,7 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
                         {[...Array(maxHealth)].map((_, i) => (
                             <div
                             key={i}
-                            className={`h-[5px] flex-1 transition-colors duration-500 border border-slate-900 ${
+                            className={`h-[4px] flex-1 transition-colors duration-500 border-x-1 border-slate-700 ${
                                 i < health! ? ' bg-green-500 ' : ' bg-red-700 '
                             }`}
                             />
