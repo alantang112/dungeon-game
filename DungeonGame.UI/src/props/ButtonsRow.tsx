@@ -23,9 +23,10 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
                 }
             }}
             className={`
-        
+            whitespace-pre
             inline-block
-            px-3 py-2
+            px-3 ${button.smaller === true ? 'py-3 ' : 'py-4 '}
+            text-sm sm:text-base
             text-white bg-indigo-600
             font-bold tracking-wide
             rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 

@@ -284,13 +284,13 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
         if (!state.EnergyDice?.AssignedSkills?.includes(skillType))
         {
           availableButtons.push({
-            textNode: <>⚡{currentDiceValue} ⟶ <span className={`${statColor[skillType]}`}>{statText[skillType]}</span></>,
+            textNode: <>⚡{currentDiceValue} ⟶ <span className={`${statColor[skillType]}`}>{`${statText[skillType]} `}</span></>,
             gameEventOnClick: GameActions.AssignDiceEvent(currentDiceIndex, skillType)
           });
         }
         else {
           availableButtons.push({
-            textNode: <>⚡{GetAssignedEnergyDiceValue(state.EnergyDice, skillType)} ⟶ <span className={`${statColor[skillType]}`}>{statText[skillType]}</span></>,
+            textNode: <>⚡{GetAssignedEnergyDiceValue(state.EnergyDice, skillType)} ⟶ <span className={`${statColor[skillType]}`}>{`${statText[skillType]} `}</span></>,
             disabled: true
           });
         }
@@ -356,13 +356,15 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   {
     availableButtons.push({
       textNode: <>Reset dice assignment</>,
-      gameEventOnClick: GameActions.ResetDiceEvent()
+      gameEventOnClick: GameActions.ResetDiceEvent(),
+      smaller: true
     });
 
     availableButtons.push({
       textNode: <>Reroll (once per level)</>,
       gameEventOnClick: GameActions.RerollDiceEvent(),
-      disabled: (state.World?.RerollsAvailable ?? 0) <= 0
+      disabled: (state.World?.RerollsAvailable ?? 0) <= 0,
+      smaller: true
     })
   } 
   else if (state.GamePhase == "LevelEnd")

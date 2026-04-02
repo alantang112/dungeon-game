@@ -6,4 +6,5 @@ export interface AvailableButton {
   gameEventOnClick?: GameInputEvent;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
+  smaller?: boolean;
 }
