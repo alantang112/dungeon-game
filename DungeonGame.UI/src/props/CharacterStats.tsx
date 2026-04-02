@@ -36,24 +36,8 @@ export const CharacterStats = ({ name, health, maxHealth, stats, energy, display
   return (
     <div className={`${containerBg} p-4 rounded border border-slate-600 mb-4 font-mono text-sm text-slate-200`}>
       <div className="flex pb-3">
-        <div className={`font-bold text-lg w-40 mt-auto ${headerColor}`}>
+        <div className={`font-bold text-lg mt-auto ${headerColor}`}>
           {name}
-        </div>
-        {/* Health Bar Row */}
-        <div className="flex-auto flex flex-col">
-          <span className="text-xs w-full text-right">Health: {health}/{maxHealth}</span>
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1 h-4 flex-1">
-              {[...Array(maxHealth)].map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-full flex-1 rounded-sm transition-colors duration-500 ${
-                    i < greenBarsCount ? 'bg-green-500' : 'bg-red-600'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 

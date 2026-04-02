@@ -53,6 +53,7 @@ function App() {
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
+          maxHealth={tileData.maxHealth}
           />
         </div>
       );
@@ -248,10 +249,10 @@ function App() {
 }
 
 const getTileData = (state: GameState, x: number, y: number) : TileData => {
-    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health, name: state!.Hero!.Name  };
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health, maxHealth: HeroMaxHealth,  name: state!.Hero!.Name  };
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall" };
     const monster = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
-    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health, name: monster.Monster.Name };
+    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health, maxHealth: monster.Monster.MaxHealth, name: monster.Monster.Name };
     return { tileType: "Empty" };
 };
 
