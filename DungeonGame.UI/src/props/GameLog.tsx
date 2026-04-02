@@ -12,7 +12,7 @@ export const GameLog = ({ messages }: GameLogProps) => {
   }, [messages]);
 
   return (
-    <div className="fixed bottom-0 left-0 w-full p-[10px] pointer-events-none z-15">
+    <div className="w-full pointer-events-none z-15">
     <div className="mx-auto bg-slate-950/90 border border-slate-700 rounded-t-lg p-2 h-40 overflow-y-auto pointer-events-auto shadow-2xl backdrop-blur-sm">
       {messages.map((msg, i) => (
         <div key={i} className="text-sm font-mono text-slate-300">

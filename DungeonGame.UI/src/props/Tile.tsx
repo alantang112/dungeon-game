@@ -38,7 +38,7 @@ export const Tile = ({ x, y, tileType, heroCanWalk, heroCanAttack, health }: Til
     }, [health]);
 
     return (
-        <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-22 aspect-square relative "
+        <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
             + (isAnimatingDamage ? 'animate-damage ' : 'bg-slate-800 ')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')

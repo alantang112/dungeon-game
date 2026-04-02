@@ -25,7 +25,7 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
             className={`
         
             inline-block
-            px-7 py-3
+            px-3 py-2
             text-white bg-indigo-600
             font-bold tracking-wide
             rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 

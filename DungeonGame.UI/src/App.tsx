@@ -132,31 +132,31 @@ function App() {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[350px] p-5 font-mono grid grid-cols-2 gap-5 lg:grid-cols-12">
-        {/* LEFT SIDE: INPUT */}
-        <div 
-          className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
-          onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
-          >
-          <CharacterStats 
-            name={heroInitialized ? state.Hero!.Name! : "Hero"}
-            health={heroInitialized ? state.Hero!.Health! : HeroMaxHealth}
-            maxHealth={HeroMaxHealth}
-            stats={heroInitialized ? state.Hero!.Stats : undefined}
-            energy={heroEnergy} 
-            displayEnergy={true}
-            isEnemy={false}
-          />
+      <div className="flex flex-col items-center flex-start gap-5 sm:justify-between h-screen bg-slate-900 p-4">
+        {/* Character stats */}
+        <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12">
+          {/* LEFT SIDE: INPUT */}
+          <div 
+            className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
+            onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
+            >
+            <CharacterStats 
+              name={heroInitialized ? state.Hero!.Name! : "Hero"}
+              health={heroInitialized ? state.Hero!.Health! : HeroMaxHealth}
+              maxHealth={HeroMaxHealth}
+              stats={heroInitialized ? state.Hero!.Stats : undefined}
+              energy={heroEnergy} 
+              displayEnergy={true}
+              isEnemy={false}
+            />
+          </div>
+          {/* RIGHT SIDE: OUTPUT */}
+          <div className="hidden sm:grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
+            {monsterRows}
+          </div>
         </div>
-        {/* RIGHT SIDE: OUTPUT */}
-        <div className="col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
-          {monsterRows}
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4">
-        
-        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1 mt-40">
+        {/* Game grid */}
+        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
           <div className={`${levelNameColor(state.LevelNumber ?? 1)} p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
           <div className="relative">
             {/* The Grid */}
@@ -200,42 +200,48 @@ function App() {
             </svg>
           </div>
         </div>
-        <div className="flex gap-3 mt-8 h-12 items-center justify-center">
-          {
-            state.GamePhase == "EnergyDicePreRoll" 
-              && <>
-                  <ShufflingDice />
-                  <ShufflingDice />
-                  <ShufflingDice />
-                </>
-          }
-          {
-            state.GamePhase == "EnergyDiceAssignment" 
-              && <>
-                  {state.EnergyDice!.Dice!.map((diceNumber, index) => {
-                        return (
-                          <div key={`dice-to-assign-${index}`}>
-                            <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
-                          </div>
-                        )
-                      })}
+        {/* Dice and Buttons */}
+        <div className="flex flex-col gap-8 justify-around">
+          <div className="flex gap-3 items-center justify-center">
+            {
+              state.GamePhase == "EnergyDicePreRoll" 
+                && <>
+                    <ShufflingDice />
+                    <ShufflingDice />
+                    <ShufflingDice />
                   </>
-          }
-        </div>
-        <div className="flex gap-6 mt-8 h-12 items-center justify-center">
+            }
+            {
+              state.GamePhase == "EnergyDiceAssignment" 
+                && <>
+                    {state.EnergyDice!.Dice!.map((diceNumber, index) => {
+                          return (
+                            <div key={`dice-to-assign-${index}`}>
+                              <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
+                            </div>
+                          )
+                        })}
+                    </>
+            }
+          </div>
+          <div className="flex gap-6 items-center justify-center">
+              <ButtonsRow
+                buttons={GetAvailableButtons(state)}
+                eventDispatcher={dispatch}
+              />
+          </div>
+          <div className="flex gap-6 mb-4 items-center justify-center">
             <ButtonsRow
-              buttons={GetAvailableButtons(state)}
+              buttons={GetAvailableButtonsRow2(state)}
               eventDispatcher={dispatch}
-            />
-        </div>
-        <div className="flex gap-6 mt-8 h-12 items-center justify-center">
-          <ButtonsRow
-            buttons={GetAvailableButtonsRow2(state)}
-            eventDispatcher={dispatch}
-            />
+              />
+          </div>
+        </div>  
+        {/* Game Log */}
+        <div className="hidden sm:block">
+            <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
       </div>
-      <GameLog messages={state.GameMessageLog ?? []}/>
     </>
   )
 }
