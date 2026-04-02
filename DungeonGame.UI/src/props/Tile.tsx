@@ -41,7 +41,7 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
         // Always update the ref so the next change is compared correctly
         prevHealthRef.current = health;
         prevIdentity.current = identity;
-    }, [health]);
+    }, [health, identity]);
 
     return (
         <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
