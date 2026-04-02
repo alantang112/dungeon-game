@@ -14,6 +14,7 @@ import { ShufflingDice } from './props/ShufflingDice';
 import type { ReactNode } from "react";
 import type { TileData } from './models/TileData';
 import type { TileType } from './models/TileType';
+import { AssetPreloader } from './props/AssetPreloader';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -140,6 +141,7 @@ function App() {
 
   return (
     <div className="bg-slate-900">
+      <AssetPreloader/>
       <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
         {/* Stats */}
         <div className="flex-auto">
