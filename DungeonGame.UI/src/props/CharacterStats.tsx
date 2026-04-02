@@ -53,7 +53,7 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: 
                 key={`base-${type}`}
                 value={stats[type] ?? 0}
                 className="bg-slate-900/20 p-1 text-center font-bold text-base"
-                >{stats["Movement"] ?? 0}</FlashCell>
+                >{stats[type] ?? 0}</FlashCell>
             ))}
           </>
         }
