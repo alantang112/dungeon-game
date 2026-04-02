@@ -6,6 +6,7 @@ namespace DungeonGame.Engine.Models.Enums
         NewGame,
         
         // Game actions - EnergyDice
+        EnergyDiceSetup,
         EnergyDiceRoll,
         EnergyDiceAssign,
         EnergyDiceResetAssignment,

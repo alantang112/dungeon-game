@@ -59,8 +59,13 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 gameState.World.RerollsAvailable--;
-                gameState.EnergyDice.ResetAssignment();
+                
                 gameState.GamePhase = GamePhase.EnergyDicePreRoll;
+                
+                gameState.ScheduledEvents.Add(new InputEvent()
+                {
+                    EventType = InputEventType.EnergyDiceSetup
+                });
 
                 return gameState;
             }

@@ -28,8 +28,13 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
-                gameState.World.HeroActionPoints.Clear();
                 gameState.GamePhase = GamePhase.EnergyDicePreRoll;
+
+                gameState.ScheduledEvents.Add(new InputEvent()
+                {
+                    EventType = InputEventType.EnergyDiceSetup
+                });
+
                 return gameState;
             }
 

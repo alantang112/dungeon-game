@@ -18,7 +18,7 @@ namespace DungeonGame.Engine
 
         internal IGameInputHandler _gameInputHandler;
 
-        private InputEventType[] InternalInputEventTypes = new InputEventType[] { InputEventType.MonstersMove, InputEventType.MonstersAttack };
+        private InputEventType[] InternalInputEventTypes = new InputEventType[] { InputEventType.EnergyDiceSetup, InputEventType.MonstersMove, InputEventType.MonstersAttack };
 
         public GameEngine()
         {
