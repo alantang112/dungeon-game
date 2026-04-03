@@ -23,7 +23,7 @@ namespace DungeonGame.Engine.GameTemplates
                 case MonsterType.Overseer:
                     if (monster.Health <= 0)
                     {
-                        if (monster.GetStat(SkillType.Movement) != 2)
+                        if (monster.GetStat(SkillType.Movement, true) != 2)
                         {
                             monster.SetStat(SkillType.Movement, 2);
                             monster.SetStat(SkillType.Attack, 5);
