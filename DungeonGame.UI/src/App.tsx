@@ -279,7 +279,7 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
     if (monsterPosition) {
       const monsterTileData: TileData = { tileType: monsterPosition.Monster.Type, health: monsterPosition.Monster.Health, maxHealth: monsterPosition.Monster.MaxHealth, name: monsterPosition.Monster.Name };
 
-      if (monsterPosition.Monster.Type == "Overseer" && monsterPosition.Monster.Health <= 3)
+      if (monsterPosition.Monster.Type == "Overseer" && monsterPosition.Monster.Stats["Movement"] === 2)
       {
         monsterTileData.tileType = "Overseer-2";
       }
