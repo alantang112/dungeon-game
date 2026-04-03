@@ -105,7 +105,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     return gameState;
                 }
 
-                var monstrDefence = monsterPosition.Monster.GetStat(SkillType.Defence);
+                var monsterDefence = monsterPosition.Monster.GetStat(SkillType.Defence);
                 if (monsterDefence > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
                     gameState.AddGameMessage(string.Format(GameMessages.NotEnoughAttackToAttackMonster, gameState.Hero.Name, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
