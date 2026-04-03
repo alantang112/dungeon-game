@@ -375,8 +375,9 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   else if (state.GamePhase == "EnergyDiceAssignment")
   {
     availableButtons.push({
-      textNode: <>Reset dice assignment</>,
+      textNode: <>Reset turn</>,
       gameEventOnClick: GameActions.ResetDiceEvent(),
+      disabled: !state.EnergyDice!.AssignedSkills!.some(x => x !== null),
       smaller: true
     });
 

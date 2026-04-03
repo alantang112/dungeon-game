@@ -37,14 +37,14 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: 
         </div>
       </div>
 
-      <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2`}>
+      <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2 w-[220px]`}>
         
         {/* Header Row: Labels */}
-        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
-        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Attack"]} font-bold`}>{statText["Attack"]}</div>
-        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["Defence"]} font-bold`}>{statText["Defence"]}</div>
-        <div className={`bg-slate-800 p-1 pr-2 text-center ${statColor["AttackRange"]} font-bold`}>{statText["AttackRange"]}</div>
-
+        <div className={`${!isEnemy ? '' : 'hidden sm:block'} bg-slate-800 p-1 pr-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
+        <div className={`${!isEnemy ? '' : 'hidden sm:block'} bg-slate-800 p-1 pr-2 text-center ${statColor["Attack"]} font-bold`}>{statText["Attack"]}</div>
+        <div className={`${!isEnemy ? '' : 'hidden sm:block'} bg-slate-800 p-1 pr-2 text-center ${statColor["Defence"]} font-bold`}>{statText["Defence"]}</div>
+        <div className={`${!isEnemy ? '' : 'hidden sm:block'} bg-slate-800 p-1 pr-2 text-center ${statColor["AttackRange"]} font-bold`}>{statText["AttackRange"]}</div>
+        
         {/* Row 1: Base Values */}
         {
           <>
