@@ -38,6 +38,10 @@ export type MonsterType =
     | "Colossus"
 ;
 
+export type DiceType =
+    "D4"
+  | "D6"
+;
 
 export class EnergyDice {
     Dice?: number[];
@@ -69,7 +73,9 @@ export class Monster {
     Health!: number;
     MaxHealth!: number;
     Stats!: Record<SkillType, number>;
-
+    IsBossType!: boolean;
+    BossDice!: Record<SkillType, number>;
+    BossDiceType?: DiceType;
 }
 
 export class MonsterPosition {

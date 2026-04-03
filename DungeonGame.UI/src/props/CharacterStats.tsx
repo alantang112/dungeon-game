@@ -1,15 +1,17 @@
 import { type SkillType } from '../models/GameEngineModels'; 
 import { statColor, statText, colorEnergy } from '../constants/gameConstants';
+import { ShufflingDice } from './ShufflingDice';
 
 interface CharacterStatsProps {
     name: string,
     stats?: Record<SkillType, number>,
     energy?: Record<SkillType, number>,
     displayEnergy: boolean,
-    isEnemy: boolean
+    isEnemy: boolean,
+    displayBossDiceRoll: boolean,
 }
 
-export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: CharacterStatsProps) => {
+export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, displayBossDiceRoll }: CharacterStatsProps) => {
   stats ??= {
     "Movement": 0,
     "Attack": 0,
@@ -59,18 +61,32 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: 
         }
 
         {/* Row 2: Energy */}
-        {displayEnergy 
+        {(displayEnergy && !displayBossDiceRoll)
           ? <>
-          {(["Movement", "Attack", "Defence"] as SkillType[]).map((type) => (
-            <FlashCell
-              key={`energy-${type}`}
-              value={energy[type] ?? 0}
-              className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold border-t border-slate-700`}
-            >⚡{energy[type] ?? 0}</FlashCell>
-          ))}
-          <div className={`bg-slate-900/40 p-2 text-center text-slate-600`}>—</div>
-          </> 
+              {(["Movement", "Attack", "Defence"] as SkillType[]).map((type) => (
+                <FlashCell
+                  key={`energy-${type}`}
+                  value={energy[type] ?? 0}
+                  className={`bg-slate-900/40 p-2 text-center ${colorEnergy} font-bold border-t border-slate-700`}
+                >⚡{energy[type] ?? 0}</FlashCell>
+              ))}
+            </> 
           : <></>}
+          {/* Row 2: Boss Dice Roll */}
+          {(displayEnergy && displayBossDiceRoll)
+            ?
+            <>
+              <ShufflingDice diceType="D4" />
+              <ShufflingDice diceType="D4" />
+              <ShufflingDice diceType="D4" />
+            </>
+            :
+            <></>
+          }
+          {displayEnergy
+            ? <div className={`bg-slate-900/40 p-2 text-center text-slate-600`}>—</div>
+            : <></>
+          }
       </div>
     </div>
   );

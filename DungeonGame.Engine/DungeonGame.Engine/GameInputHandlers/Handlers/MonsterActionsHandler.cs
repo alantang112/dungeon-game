@@ -28,6 +28,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
+                // TODO: unit test this
+                gameState.World.Monsters.ForEach(mp =>
+                {
+                    if (mp.Monster.IsBossType)
+                    {
+                        mp.Monster.BossDice.Clear();
+                    }
+                });
+
                 gameState.GamePhase = GamePhase.EnergyDicePreRoll;
 
                 gameState.ScheduledEvents.Add(new InputEvent()

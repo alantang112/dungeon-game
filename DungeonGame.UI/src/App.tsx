@@ -91,7 +91,7 @@ function App() {
     }
   }
 
-  const monsterRows: ReactNode[] = [];
+  const monsterStatRows: ReactNode[] = [];
   var monsterRowTypes: TileType[] = [];
   const monsterPaths: Arrow[] = [];
   const monsterCount: number = state.World?.Monsters?.length ?? 0;
@@ -102,13 +102,26 @@ function App() {
 
     if (!monsterRowTypes.some(x => x == monster.Type))
     {
-        monsterRows.push(
+        var monsterEnergy: Record<SkillType, number> | undefined = undefined;
+
+        if (monster.IsBossType)
+        {
+          monsterEnergy = {
+            "Movement": monster.Stats["Movement"] + monster.BossDice["Movement"],
+            "Attack": monster.Stats["Attack"] + monster.BossDice["Attack"],
+            "Defence": monster.Stats["Defence"] + monster.BossDice["Defence"],
+            "AttackRange": 0
+          };
+        }
+
+        monsterStatRows.push(
         <div key={`monster-${monsterIndex}`}>
           <CharacterStats 
                 name={monster.Type}
                 stats={monster.Stats}
-                energy={undefined} 
-                displayEnergy={false}
+                energy={monsterEnergy} 
+                displayEnergy={monster.IsBossType}
+                displayBossDiceRoll={state.GamePhase === "EnergyDicePreRoll" && state.World!.RerollsAvailable! > 0}
                 isEnemy={true}
               />
         </div>
@@ -158,11 +171,12 @@ function App() {
                 energy={heroEnergy} 
                 displayEnergy={true}
                 isEnemy={false}
+                displayBossDiceRoll={false}
               />
             </div>
             {/* Monster stats */}
             <div className="grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
-              {monsterRows}
+              {monsterStatRows}
             </div>
           </div>
         </div>
@@ -218,9 +232,9 @@ function App() {
             {
               state.GamePhase == "EnergyDicePreRoll" 
                 && <>
-                    <ShufflingDice />
-                    <ShufflingDice />
-                    <ShufflingDice />
+                    <ShufflingDice diceType="D6" />
+                    <ShufflingDice diceType="D6" />
+                    <ShufflingDice diceType="D6" />
                   </>
             }
             {

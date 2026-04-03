@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
@@ -19,6 +20,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.World.HeroActionPoints.Clear();
                 gameState.EnergyDice.ResetAssignment();
 
+                // TODO: unit test this
+                gameState.World.Monsters.ForEach(mp =>
+                {
+                    if (mp.Monster.IsBossType && !mp.Monster.BossDice.Any())
+                    {
+                        mp.Monster.BossDice.Add(SkillType.Movement, RandomUtility.RollDice(mp.Monster.BossDiceType!.Value));
+                        mp.Monster.BossDice.Add(SkillType.Attack, RandomUtility.RollDice(mp.Monster.BossDiceType!.Value));
+                        mp.Monster.BossDice.Add(SkillType.Defence, RandomUtility.RollDice(mp.Monster.BossDiceType!.Value));
+                    }
+                });
+
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.EnergyDiceRoll)
@@ -31,6 +43,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.EnergyDiceSnapshot = gameState.EnergyDice.DeepClone();
                 gameState.WorldSnapshot = gameState.World.DeepClone();
                 
+                // TODO: unit test: boss monster dice is not reset
+
                 return gameState;
             }
             

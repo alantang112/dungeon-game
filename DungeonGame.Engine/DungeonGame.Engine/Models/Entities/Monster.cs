@@ -22,9 +22,19 @@ namespace DungeonGame.Engine.Models.Entities
                 Stats.Add(skillType, value);
         }
 
-        public int GetStat(SkillType skillType)
+        public int GetStat(SkillType skillType, bool baseValueOnly = false)
         {
-            return Stats[skillType];
+            var baseValue = Stats[skillType];
+
+            if (!IsBossType || baseValueOnly)
+                return baseValue;
+
+            var bossDice = BossDice.ContainsKey(skillType) ? BossDice[skillType] : 0;
+
+            return baseValue + bossDice;
         }
+
+        public Dictionary<SkillType, int> BossDice { get; set; } = new Dictionary<SkillType, int>();
+        public DiceType? BossDiceType { get; set; }
     }
 }

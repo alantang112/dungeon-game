@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Utilities
 {
@@ -32,6 +33,17 @@ namespace DungeonGame.Engine.Utilities
                 Array.Copy(hash, 0, newGuidBytes, 0, 16);
 
                 return new Guid(newGuidBytes);
+            }
+        }
+
+        public static int RollDice(DiceType diceType)
+        {
+            switch (diceType)
+            {
+                case DiceType.D4:
+                    return RandomInt(1, 4);
+                default:
+                    throw new NotImplementedException();
             }
         }
     }
