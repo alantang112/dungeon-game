@@ -12,7 +12,7 @@ namespace DungeonGame.Engine.GameTemplates
             switch (monster.Type)
             {
                 case MonsterType.Colossus:
-                    if (monster.Health > 0)
+                    if (monster.Health > 1)
                     {
                         // level a deterministically random stat
                         var missingHealth = monster.MaxHealth - monster.Health;
@@ -21,14 +21,15 @@ namespace DungeonGame.Engine.GameTemplates
                     }
                     break;
                 case MonsterType.Overseer:
-                    if (monster.Health <= 3)
+                    if (monster.Health <= 0)
                     {
                         if (monster.GetStat(SkillType.Movement) != 2)
                         {
                             monster.SetStat(SkillType.Movement, 2);
                             monster.SetStat(SkillType.Attack, 5);
-                            monster.SetStat(SkillType.Attack, 5);
+                            monster.SetStat(SkillType.Defence, 5);
                             monster.SetStat(SkillType.AttackRange, 4);
+                            monster.Health = 6;
                         }
                     }
                     break;
