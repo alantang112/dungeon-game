@@ -105,7 +105,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     return gameState;
                 }
 
-                if (monsterPosition.Monster.Stats[SkillType.Defence] > gameState.World.HeroActionPoints[SkillType.Attack])
+                if (monsterPosition.Monster.GetStat(SkillType.Defence) > gameState.World.HeroActionPoints[SkillType.Attack])
                 {
                     gameState.AddGameMessage(string.Format(GameMessages.NotEnoughAttackToAttackMonster, gameState.Hero.Name, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     return gameState;
@@ -114,7 +114,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 monsterPosition.Monster.Health -= 1;
                 MonsterSpecialFunctions.PostDamageFunction(monsterPosition.Monster);
 
-                gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
+                gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.GetStat(SkillType.Defence);
                 gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type, 
                     monsterPosition.Monster.Health, monsterPosition.Monster.Name));
 

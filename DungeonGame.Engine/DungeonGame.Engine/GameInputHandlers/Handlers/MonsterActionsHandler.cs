@@ -51,10 +51,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             var totalMonsterAttack = 0;
             foreach(var monsterPosition in gameState.World.Monsters)
             {
-                if (GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition) <= monsterPosition.Monster.Stats[SkillType.AttackRange]
+                if (GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition) <= monsterPosition.Monster.GetStat(SkillType.AttackRange)
                         && GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonsters))
                 {
-                    totalMonsterAttack += monsterPosition.Monster.Stats[SkillType.Attack];
+                    totalMonsterAttack += monsterPosition.Monster.GetStat(SkillType.Attack);
                 }
             }
 
@@ -96,7 +96,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 
                 var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
 
-                if (monsterPosition.Monster.Stats[SkillType.Movement] < GameConstants.MovementPointsOrthogonal)
+                if (monsterPosition.Monster.GetStat(SkillType.Movement) < GameConstants.MovementPointsOrthogonal)
                 {
                     gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
@@ -108,7 +108,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
 
                 // If monster already at max attack range from hero and in line of sight of hero, continue
-                if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.Stats[SkillType.AttackRange])
+                if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.GetStat(SkillType.AttackRange))
                 {
                     gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
@@ -130,7 +130,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (bestWalkablePositionInRangeAndLineOfSight != null)
                 {
                     // check if current position is better
-                    if (currentlyHasLineOfSight && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
+                    if (currentlyHasLineOfSight && currentDistanceFromHero <= monsterPosition.Monster.GetStat(SkillType.AttackRange) && currentDistanceFromHero >= bestWalkablePositionInRangeAndLineOfSight.DistanceFromTarget)
                     {
                         gameState.AddGameMessage(monsterDoesNotMoveMessage);
                         continue;
@@ -162,8 +162,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 // If moving would put monster out of attack range of hero, do not move
                 if (currentlyHasLineOfSight 
-                    && currentDistanceFromHero <= monsterPosition.Monster.Stats[SkillType.AttackRange] 
-                    && (!GeometryUtility.HasLineOfSightOf(movementCandidate.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf) || movementCandidate.DistanceFromTarget > monsterPosition.Monster.Stats[SkillType.AttackRange]))
+                    && currentDistanceFromHero <= monsterPosition.Monster.GetStat(SkillType.AttackRange) 
+                    && (!GeometryUtility.HasLineOfSightOf(movementCandidate.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf) || movementCandidate.DistanceFromTarget > monsterPosition.Monster.GetStat(SkillType.AttackRange)))
                 {
                     gameState.AddGameMessage(monsterDoesNotMoveMessage);
                     continue;
@@ -189,12 +189,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             Func<Dictionary<Position, int>, int?> floodUntilStep = (Dictionary<Position, int> floodValues) =>
             {
-                return monsterPosition.Monster.Stats[SkillType.Movement] - 2;
+                return monsterPosition.Monster.GetStat(SkillType.Movement) - 2;
             };
 
             Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
             {
-                return value <= monsterPosition.Monster.Stats[SkillType.Movement] && value > 0;
+                return value <= monsterPosition.Monster.GetStat(SkillType.Movement) && value > 0;
             };
 
             var walkablePositions = GeometryUtility.PlotValuesByFloodSearch(monsterPosition.Position, walkBlockers, FloodSearchHelpers.WalkValueFunction, floodUntilStep, returnPositionsFilter);
@@ -227,7 +227,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 .ToList();
 
             var inRangeAndLineOfSight = walkablePositionsCalculation
-                .Where(candidate => candidate.DistanceFromTarget <= monsterPosition.Monster.Stats[SkillType.AttackRange])
+                .Where(candidate => candidate.DistanceFromTarget <= monsterPosition.Monster.GetStat(SkillType.AttackRange))
                 .Where(candidate => GeometryUtility.HasLineOfSightOf(candidate.Position, gameState.World.HeroPosition, wallsMonsters))
                 .ToList();
 
@@ -268,12 +268,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             Func<Dictionary<Position, int>, int?> floodUntilStep = (Dictionary<Position, int> floodValues) =>
             {
-                return monsterPosition.Monster.Stats[SkillType.AttackRange] - 2;
+                return monsterPosition.Monster.GetStat(SkillType.AttackRange) - 2;
             };
 
             Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
             {
-                return value <= monsterPosition.Monster.Stats[SkillType.AttackRange] && value > 0 && !gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Any(mp => mp.Position == position);
+                return value <= monsterPosition.Monster.GetStat(SkillType.AttackRange) && value > 0 && !gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Any(mp => mp.Position == position);
             };
 
             var positionsInAttackRangeAndLineOfSight = GeometryUtility.PlotValuesByFloodSearch(gameState.World.HeroPosition, gameState.World.Borders.ToList(), valueFunction, floodUntilStep, returnPositionsFilter);

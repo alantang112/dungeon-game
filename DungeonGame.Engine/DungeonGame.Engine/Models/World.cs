@@ -135,7 +135,7 @@ namespace DungeonGame.Engine.Models
 
             foreach(var monsterPosition in Monsters)
             {
-                if (HeroActionPoints[SkillType.Attack] < monsterPosition.Monster.Stats[SkillType.Defence])
+                if (HeroActionPoints[SkillType.Attack] < monsterPosition.Monster.GetStat(SkillType.Defence))
                     continue;
 
                 if (heroAttackRange < GeometryUtility.CalculateDistanceBetween(HeroPosition, monsterPosition.Position))

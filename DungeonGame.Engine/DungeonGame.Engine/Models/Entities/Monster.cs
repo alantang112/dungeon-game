@@ -13,5 +13,18 @@ namespace DungeonGame.Engine.Models.Entities
         public int MaxHealth { get; set; }
         public Dictionary<SkillType, int> Stats { get; set; } = new Dictionary<SkillType, int>();
         public Guid RandomSeed { get; set; }
+
+        public void SetStat(SkillType skillType, int value)
+        {
+            if (Stats.ContainsKey(skillType))
+                Stats[skillType] = value;
+            else
+                Stats.Add(skillType, value);
+        }
+
+        public int GetStat(SkillType skillType)
+        {
+            return Stats[skillType];
+        }
     }
 }

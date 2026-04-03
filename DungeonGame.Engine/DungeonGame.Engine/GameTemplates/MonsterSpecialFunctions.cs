@@ -17,7 +17,7 @@ namespace DungeonGame.Engine.GameTemplates
                         // level a deterministically random stat
                         var missingHealth = monster.MaxHealth - monster.Health;
                         var skillToLevel = ColossusLevelUpSkills.OrderBy(x => monster.RandomSeed).Skip(missingHealth - 1).First();
-                        monster.Stats[skillToLevel]++;
+                        monster.SetStat(skillToLevel, monster.GetStat(skillToLevel) + 1);
                     }
                     break;
             }
