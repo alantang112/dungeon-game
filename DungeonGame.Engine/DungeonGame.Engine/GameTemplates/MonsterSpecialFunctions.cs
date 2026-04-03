@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -7,14 +6,16 @@ namespace DungeonGame.Engine.GameTemplates
 {
     public static class MonsterSpecialFunctions
     {
+        private static readonly SkillType[] ColossusLevelUpSkills = { SkillType.Attack, SkillType.Attack, SkillType.Defence, SkillType.Movement, SkillType.AttackRange };     
         public static void PostDamageFunction(Monster monster)
         {
             switch (monster.Type)
             {
                 case MonsterType.Colossus:
-                    // level a random stat
-                    var randomStat = monster.Stats.OrderBy(_ => Guid.NewGuid()).First();
-                    monster.Stats[randomStat.Key]++;
+                    // level a deterministically random stat
+                    var missingHealth = monster.MaxHealth - monster.Health;
+                    var skillToLevel = ColossusLevelUpSkills.OrderBy(x => monster.RandomSeed).Skip(missingHealth - 1).First();
+                    monster.Stats[skillToLevel]++;
                     break;
             }
         }

@@ -15,7 +15,8 @@ namespace DungeonGame.Engine.GameTemplates
             var monster = new Monster
             {
                 Type = type,
-                Name = name
+                Name = name,
+                RandomSeed = Guid.NewGuid()
             };
 
             switch (type)
