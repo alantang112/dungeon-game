@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { assetPath } from "../constants/assetConstants";
+import { assetPath, diceFileName } from "../constants/assetConstants";
 import { diceShuffleSpeed } from "../constants/gameConstants";
 
 export const ShufflingDice = () => {
@@ -19,7 +19,7 @@ export const ShufflingDice = () => {
     return (
         <div className="flex items-center justify-center w-full h-12 aspect-square relative">
             <img
-                src={`${assetPath}dice${displayNumber}.png`}
+                src={`${assetPath}${diceFileName}${displayNumber}.png`}
                 alt="Shuffling Dice"
                 className={`
                     w-full h-full object-contain p-1

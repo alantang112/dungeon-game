@@ -1,4 +1,4 @@
-import { assetPath } from "../constants/assetConstants";
+import { assetPath, diceFileName } from "../constants/assetConstants";
 
 interface DiceProps {
     number: number;
@@ -10,7 +10,7 @@ export const Dice = ({ number, active, disabled }: DiceProps) => {
     return (
         <div className="flex items-center justify-center w-full h-12 aspect-square relative">
             <img
-            src={`${assetPath}dice${number}.png`}
+            src={`${assetPath}${diceFileName}${number}.png`}
             alt={`Dice ${number}`}
             className={`
                     w-full h-full object-contain p-1 transition-all duration-200
