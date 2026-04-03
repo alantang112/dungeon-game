@@ -1,4 +1,5 @@
 using System.Text.Json;
+using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -579,6 +580,49 @@ public class HeroActionTests
         });
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
+    }
+    #endregion
+
+    #region PostDamageFunction
+    [TestCase(MonsterType.Colossus, false, false)]
+    [TestCase(MonsterType.Colossus, true, true)]
+    [TestCase(MonsterType.Spider, false, false)]
+    [TestCase(MonsterType.Spider, true, false)]
+    public void GivenColossus_WhenDamaged_ThenRunPostDamageFunction(MonsterType monsterType, bool damaged, bool expectedLevelUpStat)
+    {
+        var heroInitialX = 5;
+        var heroInitialY = 3;
+        
+        var monsterX = 5;
+        var monsterY = 4;
+
+        var gameState = _sut.GetCurrentState();
+        gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY);
+        
+        gameState.World.Monsters[0].Monster = MonsterSpawner.Spawn(monsterType);
+
+        var initialAttackPoints = damaged ? gameState.World.Monsters[0].Monster.Stats[SkillType.Defence] : 0;
+        gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
+
+        var initialStatSum = gameState.World.Monsters[0].Monster.Stats.Sum(kv => kv.Value);
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = monsterX,
+            Y = monsterY
+        };
+
+        var newGameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        var newStatSum = newGameState.World.Monsters[0].Monster.Stats.Sum(kv => kv.Value);
+
+        Assert.That(newStatSum, Is.EqualTo(expectedLevelUpStat ? (initialStatSum + 1) : initialStatSum));
     }
     #endregion
 }

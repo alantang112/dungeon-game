@@ -93,7 +93,7 @@ namespace DungeonGame.Engine.GameTemplates
                 RandomWallsCountMin = 2,
                 RandomWallsCountMax = 2,
                 EnforceWallIslands = true,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(5, 3)), (MonsterType.Skeleton, new Position(5, 1)), (MonsterType.Skeleton, new Position(5, 5)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(5, 3)), (MonsterType.Skeleton, new Position(5, 1)) }
             },
             // Test levels
             new Level()

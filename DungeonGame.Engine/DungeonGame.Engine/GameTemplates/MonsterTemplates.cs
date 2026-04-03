@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
@@ -52,12 +53,12 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.Stats.Add(SkillType.AttackRange, 4);
                     break;
                 case MonsterType.Colossus:
-                    monster.Health = 8;
+                    monster.Health = 6;
                     monster.MaxHealth = monster.Health;
                     monster.Stats.Add(SkillType.Movement, 3);
-                    monster.Stats.Add(SkillType.Attack, 6);
-                    monster.Stats.Add(SkillType.Defence, 8);
-                    monster.Stats.Add(SkillType.AttackRange, 3);
+                    monster.Stats.Add(SkillType.Attack, 5);
+                    monster.Stats.Add(SkillType.Defence, 5);
+                    monster.Stats.Add(SkillType.AttackRange, 2);
                     break;
                 case MonsterType.Overseer:
                     monster.IsBossType = true;

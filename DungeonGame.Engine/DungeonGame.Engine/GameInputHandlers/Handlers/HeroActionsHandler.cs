@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
@@ -111,6 +112,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 monsterPosition.Monster.Health -= 1;
+                MonsterSpecialFunctions.PostDamageFunction(monsterPosition.Monster);
+
                 gameState.World.HeroActionPoints[SkillType.Attack] -= monsterPosition.Monster.Stats[SkillType.Defence];
                 gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type, 
                     monsterPosition.Monster.Health, monsterPosition.Monster.Name));
