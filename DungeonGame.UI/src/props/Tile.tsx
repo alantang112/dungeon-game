@@ -16,36 +16,41 @@ interface TileProps {
 export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth }: TileProps) => {
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
-    const prevIdentity = useRef<string | undefined>(identity);
+    const prevIdentityRef = useRef<string | undefined>(identity);
     const prevHealthRef = useRef<number | undefined>(health);
 
     useEffect(() => {
-        // Only trigger if health actually decreased, and same entity on the tile
-        if (prevHealthRef.current !== undefined && health !== undefined && health < prevHealthRef.current
-            && prevIdentity.current !== undefined && identity !== undefined && prevIdentity.current === identity) {
-            const damageTaken = prevHealthRef.current - health;
-            
-            // Start the rapid pulse
-            setIsAnimatingDamage(true);
+        const entityChanged = prevIdentityRef.current !== identity;
 
-            // Duration = 300ms per heart/hit point lost
+        const shouldFlash = !entityChanged && 
+                           prevHealthRef.current !== undefined && 
+                           health !== undefined && 
+                           health < prevHealthRef.current;
+
+        if (shouldFlash) {
+            const damageTaken = prevHealthRef.current! - health!;
             const totalDuration = damageTaken * 250; 
+
+            setIsAnimatingDamage(true);
 
             const timer = setTimeout(() => {
                 setIsAnimatingDamage(false);
             }, totalDuration);
 
-            return () => clearTimeout(timer);
+            return () => {
+                clearTimeout(timer);
+            };
+        } else if (entityChanged) {
+            setIsAnimatingDamage(false);
         }
 
-        // Always update the ref so the next change is compared correctly
         prevHealthRef.current = health;
-        prevIdentity.current = identity;
+        prevIdentityRef.current = identity;
     }, [health, identity]);
 
     return (
         <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
-            + (isAnimatingDamage ? 'animate-damage ' : 'bg-slate-800 ')
+            + (isAnimatingDamage ? 'animate-damage ' : '')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')
             + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')}>
