@@ -19,7 +19,7 @@ import { AssetPreloader } from './props/AssetPreloader';
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
 
-  if (!isReady) return <div>Loading game engine...</div>;
+  if (!isReady) return <div className="text-white">Loading game engine...</div>;
 
   const handleTileClick = async (state: GameState, x: number, y: number) => {
     if (state.GamePhase != "HeroActions")
