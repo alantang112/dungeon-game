@@ -20,6 +20,18 @@ namespace DungeonGame.Engine.GameTemplates
                         monster.SetStat(skillToLevel, monster.GetStat(skillToLevel) + 1);
                     }
                     break;
+                case MonsterType.Overseer:
+                    if (monster.Health <= 3)
+                    {
+                        if (monster.GetStat(SkillType.Movement) != 2)
+                        {
+                            monster.SetStat(SkillType.Movement, 2);
+                            monster.SetStat(SkillType.Attack, 5);
+                            monster.SetStat(SkillType.Attack, 5);
+                            monster.SetStat(SkillType.AttackRange, 4);
+                        }
+                    }
+                    break;
             }
         }
     }

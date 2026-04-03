@@ -275,8 +275,17 @@ function App() {
 const getTileData = (state: GameState, x: number, y: number) : TileData => {
     if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health, maxHealth: HeroMaxHealth,  name: state!.Hero!.Name  };
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall" };
-    const monster = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
-    if (monster) return { tileType: monster.Monster.Type, health: monster.Monster.Health, maxHealth: monster.Monster.MaxHealth, name: monster.Monster.Name };
+    const monsterPosition = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
+    if (monsterPosition) {
+      const monsterTileData: TileData = { tileType: monsterPosition.Monster.Type, health: monsterPosition.Monster.Health, maxHealth: monsterPosition.Monster.MaxHealth, name: monsterPosition.Monster.Name };
+
+      if (monsterPosition.Monster.Type == "Overseer" && monsterPosition.Monster.Health <= 3)
+      {
+        monsterTileData.tileType = "Overseer-2";
+      }
+
+      return monsterTileData;
+    } 
     return { tileType: "Empty" };
 };
 

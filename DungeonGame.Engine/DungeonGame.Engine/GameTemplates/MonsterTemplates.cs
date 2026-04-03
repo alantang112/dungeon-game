@@ -64,7 +64,7 @@ namespace DungeonGame.Engine.GameTemplates
                 case MonsterType.Overseer:
                     monster.IsBossType = true;
                     monster.BossDiceType = DiceType.D4;
-                    monster.Health = 5;
+                    monster.Health = 6;
                     monster.MaxHealth = monster.Health;
                     monster.SetStat(SkillType.Movement, 1);
                     monster.SetStat(SkillType.Attack, 3);
