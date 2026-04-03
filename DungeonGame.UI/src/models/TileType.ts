@@ -6,7 +6,8 @@ export const TileType = {
   Skeleton: "Skeleton",
   Minotaur: "Minotaur",
   Hellspawn: "Hellspawn",
-  Colossus: "Colossus"
+  Colossus: "Colossus",
+  Overseer: "Overseer"
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];

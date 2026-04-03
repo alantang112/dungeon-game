@@ -59,6 +59,15 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.Stats.Add(SkillType.Defence, 8);
                     monster.Stats.Add(SkillType.AttackRange, 3);
                     break;
+                case MonsterType.Overseer:
+                    monster.IsBossType = true;
+                    monster.Health = 5;
+                    monster.MaxHealth = monster.Health;
+                    monster.Stats.Add(SkillType.Movement, 1);
+                    monster.Stats.Add(SkillType.Attack, 3);
+                    monster.Stats.Add(SkillType.Defence, 3);
+                    monster.Stats.Add(SkillType.AttackRange, 4);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
