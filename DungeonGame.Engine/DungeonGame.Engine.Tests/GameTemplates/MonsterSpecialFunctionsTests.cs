@@ -15,7 +15,8 @@ public class MonsterSpecialFunctionsTests
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 3, SkillType.Defence)]
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 2, SkillType.Movement)]
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 1, SkillType.AttackRange)]
-    public void GivenColossusWithRandomSeed_ThenDeterministicallyLevelStat(string guid, int currentHealth, SkillType expectedSkillTypeLeveled)
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 0, null)]
+    public void GivenColossusWithRandomSeed_ThenDeterministicallyLevelStat(string guid, int currentHealth, SkillType? expectedSkillTypeLeveled)
     {
         var monster = MonsterSpawner.Spawn(Engine.Models.Enums.MonsterType.Colossus);
         monster.Health = currentHealth;
