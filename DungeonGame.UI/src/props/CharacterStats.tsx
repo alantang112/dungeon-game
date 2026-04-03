@@ -37,7 +37,7 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy }: 
         </div>
       </div>
 
-      <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2 w-[220px]`}>
+      <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2 w-[220px] shrink-0`}>
         
         {/* Header Row: Labels */}
         <div className={`${!isEnemy ? '' : 'hidden sm:block'} bg-slate-800 p-1 pr-2 text-center ${statColor["Movement"]} font-bold`}>{statText["Movement"]}</div>
