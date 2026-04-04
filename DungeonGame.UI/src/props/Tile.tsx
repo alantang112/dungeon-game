@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { TileType } from "../models/TileType";
 import { assetPath } from "../constants/assetConstants";
+import { damageAnimationDelayMs } from "../constants/gameConstants";
 
 interface TileProps {
     x: number;
@@ -11,9 +12,10 @@ interface TileProps {
     heroCanAttack: boolean;
     health?: number;
     maxHealth?: number;
+    angleToHero?: number;
 }
 
-export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth }: TileProps) => {
+export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, angleToHero }: TileProps) => {
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
     const prevIdentityRef = useRef<string | undefined>(identity);
@@ -29,7 +31,7 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
 
         if (shouldFlash) {
             const damageTaken = prevHealthRef.current! - health!;
-            const totalDuration = damageTaken * 250; 
+            const totalDuration = (damageTaken * 250) + damageAnimationDelayMs; 
 
             setIsAnimatingDamage(true);
 
@@ -50,12 +52,24 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
         prevIdentityRef.current = identity;
     }); // runs on every render
 
+    const isAttacking = true; // TODO: do properly
+
+    const flipMonster = angleToHero !== undefined && angleToHero > -Math.PI/2 && angleToHero < Math.PI/2;
+
+    const tileStyle: React.CSSProperties = {
+        ...(angleToHero !== undefined && { 
+            "--bump-angle": `${angleToHero}rad`,
+            "--flip-factor": flipMonster ? -1 : 1, 
+        } as React.CSSProperties)
+    };
+
     return (
         <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
             + (isAnimatingDamage ? 'animate-damage ' : '')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')
-            + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')}>
+            + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')}
+            >
             {
                 health !== undefined &&
                 <div className="absolute top-1 right-0 w-full flex px-1">
@@ -81,7 +95,10 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
                 <img
                     src={`${assetPath}${tileType.toLowerCase()}.png`}
                     alt={`Tile ${x}-${y}`}
-                    className='w-full h-full object-contain p-1 z-10'
+                    className={'w-full h-full object-contain p-1 z-10 ' 
+                        + (isAttacking ? 'animate-bump ': '')
+                        + (flipMonster ? '-scale-x-100 ' : 'scale-x-100')}
+                    style={tileStyle}
                 />
             )}
         </div>

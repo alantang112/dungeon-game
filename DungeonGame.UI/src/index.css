@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+:root {
+  --attack-animation-duration: 350ms;
+  --attack-animation-delay: 150ms;
+  --damage-animation-delay: 325ms;
+}
+
 @keyframes flash-yellow {
   0% { background-color: rgba(250, 204, 21, 0.6); } 
   100% { background-color: rgba(250, 204, 21, 0); } /* Explicitly fade to 0 opacity yellow */
@@ -28,4 +34,24 @@
 
 .animate-damage {
   animation: rapid-pulse 0.25s infinite;
+  animation-delay: var(--damage-animation-delay);
+}
+
+@keyframes dynamic-bump {
+  0%, 100% { 
+    transform: translate(0, 0); 
+  }
+  50% { 
+    /* Multiply the Cosine (X-axis) by the flip factor */
+    transform: translate(
+      calc(cos(var(--bump-angle)) * 15px * var(--flip-factor, 1)), 
+      calc(sin(var(--bump-angle)) * -15px) 
+    );
+  }
+}
+
+.animate-bump {
+  animation: dynamic-bump var(--attack-animation-duration) ease-in-out;
+  animation-delay: var(--attack-animation-delay);
+  animation-fill-mode: backwards;
 }
