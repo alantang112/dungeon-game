@@ -35,7 +35,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: DungeonGame.UI
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # 4. Move WASM bits into React Public folder
       # This ensures Vite/Webpack bundles the framework files
