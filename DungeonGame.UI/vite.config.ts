@@ -27,9 +27,11 @@ export default defineConfig(({ command }) => ({
         // Increase limit to 5 MiB (5 * 1024 * 1024)
         maximumFileSizeToCacheInBytes: 5242880,
         // Ensure wasm files are included in the patterns to be cached
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm}', '_framework/**/*.{wasm,dll,js}']
       },
       manifest: {
+        start_url: '/dungeon-game/',
+        scope: '/dungeon-game/',
         name: 'Dungeon Game',
         icons: [
           {
