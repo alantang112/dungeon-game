@@ -63,7 +63,7 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
                 return () => {
                     clearTimeout(timer);
                 };
-            } else if (entityChanged) {
+            } else {
                 setIsAnimatingDamage(false);
             }
         }
