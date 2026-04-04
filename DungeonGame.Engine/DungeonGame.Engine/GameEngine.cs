@@ -50,10 +50,6 @@ namespace DungeonGame.Engine
                 gameState.ViewData.HeroCanWalkPositions = gameState.World.CalculateHeroCanWalkPositions();
                 gameState.ViewData.HeroCanAttackPositions = gameState.World.CalculateHeroCanAttackPositions(gameState.Hero.Stats[SkillType.AttackRange]);
             }
-            else
-            {
-                gameState.ViewData = new ViewData();
-            }
 
             return gameState;
         }
@@ -63,7 +59,9 @@ namespace DungeonGame.Engine
             if (InternalInputEventTypes.Contains(inputEvent.EventType))
                 throw new NotSupportedException($"Input Event Type not allowed: {inputEvent.EventType}");
 
+            // clean-up
             CurrentState.ClearGameMessage();
+            CurrentState.ViewData = new ViewData();
             CurrentState.ScheduledEvents.Clear();
 
             CurrentState.ScheduledEvents.Add(inputEvent);

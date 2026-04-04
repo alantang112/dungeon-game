@@ -6,6 +6,7 @@ namespace DungeonGame.Engine.Models.Entities
 {
     public class Monster
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         public MonsterType Type { get; set; }
         public bool IsBossType { get; set; } = false;
         public string Name { get; set; }

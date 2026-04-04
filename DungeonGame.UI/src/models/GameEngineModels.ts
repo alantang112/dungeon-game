@@ -69,6 +69,7 @@ export class Hero {
 }
 
 export class Monster {
+    Id!: string;
     Type!: MonsterType;
     Name!: string;
     Health!: number;
@@ -88,6 +89,8 @@ export class MonsterPosition {
 export class ViewData {
     HeroCanWalkPositions?: Position[];
     HeroCanAttackPositions?: Position[];
+    MonstersAttacking?: string[];
+    MonsterAttackedByHero?: string;
 }
 
 export class GameState {

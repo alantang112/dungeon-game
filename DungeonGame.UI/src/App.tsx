@@ -47,6 +47,8 @@ function App() {
 
       const angleToHero: number | undefined = tileData.isMonster ? getAngleToHero({ X: x, Y: y }, state.World!.HeroPosition) : undefined;
 
+      const isAttackingHero = state.ViewData?.MonstersAttacking?.some(x => x == tileData.monsterId) ?? false;
+
       gridRows.push(
         <div key={`${x}-${y}`} onClick={() => handleTileClick(state, x, y)}>
           <Tile
@@ -58,6 +60,7 @@ function App() {
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
           maxHealth={tileData.maxHealth}
+          isAttackingHero={isAttackingHero}
           angleToHero={angleToHero}
           />
         </div>
@@ -280,7 +283,14 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall", isMonster: false };
     const monsterPosition = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
     if (monsterPosition) {
-      const monsterTileData: TileData = { tileType: monsterPosition.Monster.Type, health: monsterPosition.Monster.Health, maxHealth: monsterPosition.Monster.MaxHealth, name: monsterPosition.Monster.Name, isMonster: true };
+      const monsterTileData: TileData = { 
+        monsterId: monsterPosition.Monster.Id,
+        tileType: monsterPosition.Monster.Type, 
+        health: monsterPosition.Monster.Health, 
+        maxHealth: monsterPosition.Monster.MaxHealth, 
+        name: monsterPosition.Monster.Name, 
+        isMonster: true 
+      };
 
       if (monsterPosition.Monster.Type == "Overseer" && monsterPosition.Monster.Stats["Movement"] === 2)
       {

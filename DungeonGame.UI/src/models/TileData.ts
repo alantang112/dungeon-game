@@ -6,4 +6,5 @@ export class TileData {
     maxHealth?: number;
     name?: string;
     isMonster!: boolean;
+    monsterId?: string;
 }

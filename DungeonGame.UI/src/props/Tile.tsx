@@ -12,10 +12,11 @@ interface TileProps {
     heroCanAttack: boolean;
     health?: number;
     maxHealth?: number;
+    isAttackingHero?: boolean;
     angleToHero?: number;
 }
 
-export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, angleToHero }: TileProps) => {
+export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isAttackingHero, angleToHero }: TileProps) => {
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
     const prevIdentityRef = useRef<string | undefined>(identity);
@@ -51,8 +52,6 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
         prevHealthRef.current = health;
         prevIdentityRef.current = identity;
     }); // runs on every render
-
-    const isAttacking = true; // TODO: do properly
 
     const flipMonster = angleToHero !== undefined && angleToHero > -Math.PI/2 && angleToHero < Math.PI/2;
 
@@ -96,7 +95,7 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
                     src={`${assetPath}${tileType.toLowerCase()}.png`}
                     alt={`Tile ${x}-${y}`}
                     className={'w-full h-full object-contain p-1 z-10 ' 
-                        + (isAttacking ? 'animate-bump ': '')
+                        + (isAttackingHero ? 'animate-bump ': '')
                         + (flipMonster ? '-scale-x-100 ' : 'scale-x-100')}
                     style={tileStyle}
                 />
