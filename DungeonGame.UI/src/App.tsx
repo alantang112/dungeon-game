@@ -297,7 +297,7 @@ function App() {
 }
 
 const getTileType = (monster: Monster) : TileType => {
-  if (monster.Type == "Overseer" && monster.Stats["Movement"] === 2)
+  if (monster.Type == "Overseer" && monster.Stats["Movement"] === 3)
   {
     return "Overseer-2";
   }
