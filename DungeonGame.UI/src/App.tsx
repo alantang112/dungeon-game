@@ -1,5 +1,5 @@
 import { useGameEngine } from './hooks/useGameEngine';
-import { MonsterPosition, Position, GameState, type SkillType, EnergyDice } from './models/GameEngineModels'
+import { MonsterPosition, Position, GameState, type SkillType, EnergyDice, Monster } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
@@ -45,23 +45,40 @@ function App() {
     for (let x = 1; x <= gridSize; x++) {
       const tileData = getTileData(state, x, y);
 
-      const angleToHero: number | undefined = tileData.isMonster ? getAngleToHero({ X: x, Y: y }, state.World!.HeroPosition) : undefined;
+      var angleToTarget: number | undefined = undefined;
+      var isAttacking: boolean = false;
 
-      const isAttackingHero = state.ViewData?.MonstersAttacking?.some(x => x == tileData.monsterId) ?? false;
+      var hasGhostTile = state.ViewData?.MonsterAttackedByHero?.Position?.X == x && state.ViewData?.MonsterAttackedByHero?.Position?.Y == y;
+
+      if (tileData.tileType == "Hero")
+      {
+        if (state.ViewData?.MonsterAttackedByHero?.Monster?.Id)
+        {
+          angleToTarget = getAngleToTarget(state.World!.HeroPosition, state.ViewData?.MonsterAttackedByHero.Position);
+          isAttacking = true;
+        }
+      }
+      else if (tileData.isMonster)
+      {
+        angleToTarget = getAngleToTarget({ X: x, Y: y }, state.World!.HeroPosition);
+        isAttacking = state.ViewData?.MonstersAttacking?.some(x => x == tileData.monsterId) ?? false;
+      }
 
       gridRows.push(
         <div key={`${x}-${y}`} onClick={() => handleTileClick(state, x, y)}>
           <Tile
           x={x}
           y={y}
+          ghostTileType={hasGhostTile ? getTileType(state.ViewData!.MonsterAttackedByHero!.Monster) : undefined}
           tileType={tileData.tileType}
           name={tileData.name ?? ''}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
           maxHealth={tileData.maxHealth}
-          isAttackingHero={isAttackingHero}
-          angleToHero={angleToHero}
+          isAttacking={isAttacking}
+          angleToTarget={angleToTarget}
+          isMonster={tileData.isMonster}
           />
         </div>
       );
@@ -278,27 +295,34 @@ function App() {
   )
 }
 
+const getTileType = (monster: Monster) : TileType => {
+  if (monster.Type == "Overseer" && monster.Stats["Movement"] === 2)
+  {
+    return "Overseer-2";
+  }
+
+  return monster.Type;
+}
+
 const getTileData = (state: GameState, x: number, y: number) : TileData => {
-    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) return { tileType: "Hero", health: state!.Hero!.Health, maxHealth: HeroMaxHealth,  name: state!.Hero!.Name, isMonster: false  };
-    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) return { tileType: "Wall", isMonster: false };
+    if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) 
+      return { tileType: "Hero", health: state!.Hero!.Health, maxHealth: HeroMaxHealth,  name: state!.Hero!.Name, isMonster: false  };
+
+    if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) 
+      return { tileType: "Wall", isMonster: false };
+
     const monsterPosition = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
     if (monsterPosition) {
-      const monsterTileData: TileData = { 
+      return { 
         monsterId: monsterPosition.Monster.Id,
-        tileType: monsterPosition.Monster.Type, 
+        tileType: getTileType(monsterPosition.Monster), 
         health: monsterPosition.Monster.Health, 
         maxHealth: monsterPosition.Monster.MaxHealth, 
         name: monsterPosition.Monster.Name, 
         isMonster: true 
       };
-
-      if (monsterPosition.Monster.Type == "Overseer" && monsterPosition.Monster.Stats["Movement"] === 2)
-      {
-        monsterTileData.tileType = "Overseer-2";
-      }
-
-      return monsterTileData;
     } 
+
     return { tileType: "Empty", isMonster: false };
 };
 
@@ -449,9 +473,9 @@ const GetAssignedEnergyDiceValue = (energyDice: EnergyDice, skill: SkillType): n
   return 0;
 }
 
-const getAngleToHero = (monsterPos: Position, heroPos: Position): number => {
-    const dx = heroPos.X - monsterPos.X;
-    const dy = heroPos.Y - monsterPos.Y;
+const getAngleToTarget = (attacker: Position, target: Position): number => {
+    const dx = target.X - attacker.X;
+    const dy = target.Y - attacker.Y;
     // Math.atan2 gives the angle in radians
     return Math.atan2(dy, dx); 
 };

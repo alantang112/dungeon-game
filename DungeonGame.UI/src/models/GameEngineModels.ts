@@ -90,7 +90,7 @@ export class ViewData {
     HeroCanWalkPositions?: Position[];
     HeroCanAttackPositions?: Position[];
     MonstersAttacking?: string[];
-    MonsterAttackedByHero?: string;
+    MonsterAttackedByHero?: MonsterPosition;
 }
 
 export class GameState {

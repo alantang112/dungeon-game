@@ -6,32 +6,28 @@ import { damageAnimationDelayMs } from "../constants/gameConstants";
 interface TileProps {
     x: number;
     y: number;
+    ghostTileType?: TileType;
     tileType: TileType;
     name: string;
     heroCanWalk: boolean;
     heroCanAttack: boolean;
     health?: number;
     maxHealth?: number;
-    isAttackingHero?: boolean;
-    angleToHero?: number;
+    isMonster: boolean;
+    isAttacking?: boolean;
+    angleToTarget?: number;
 }
 
-export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isAttackingHero, angleToHero }: TileProps) => {
+export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, angleToTarget }: TileProps) => {
+    // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
     const prevIdentityRef = useRef<string | undefined>(identity);
     const prevHealthRef = useRef<number | undefined>(health);
 
     useEffect(() => {
-        const entityChanged = prevIdentityRef.current !== identity;
-
-        const shouldFlash = !entityChanged && 
-                           prevHealthRef.current !== undefined && 
-                           health !== undefined && 
-                           health < prevHealthRef.current;
-
-        if (shouldFlash) {
-            const damageTaken = prevHealthRef.current! - health!;
+        if (ghostTileType) {
+            const damageTaken = 1;
             const totalDuration = (damageTaken * 250) + damageAnimationDelayMs; 
 
             setIsAnimatingDamage(true);
@@ -43,24 +39,71 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
             return () => {
                 clearTimeout(timer);
             };
-        } else if (entityChanged) {
-            setIsAnimatingDamage(false);
         }
-    }, [health, identity]);
+        else {
+            const entityChanged = prevIdentityRef.current !== identity && prevIdentityRef.current !== undefined && identity !== undefined;
+
+            const shouldFlash = identity !== undefined &&
+                                !entityChanged && 
+                                prevHealthRef.current !== undefined && 
+                                health !== undefined && 
+                                health < prevHealthRef.current;
+
+            if (shouldFlash) {
+                const damageTaken = prevHealthRef.current! - health!;
+                const totalDuration = (damageTaken * 250) + damageAnimationDelayMs; 
+
+                setIsAnimatingDamage(true);
+
+                const timer = setTimeout(() => {
+                    setIsAnimatingDamage(false);
+                }, totalDuration);
+
+                return () => {
+                    clearTimeout(timer);
+                };
+            } else if (entityChanged) {
+                setIsAnimatingDamage(false);
+            }
+        }
+    }, [ghostTileType, health, identity]);
 
     useEffect(() => {
         prevHealthRef.current = health;
         prevIdentityRef.current = identity;
     }); // runs on every render
 
-    const flipMonster = angleToHero !== undefined && angleToHero > -Math.PI/2 && angleToHero < Math.PI/2;
+    // Attack display logic
+
+    const shouldFlip = isMonster ? (angleToTarget !== undefined && angleToTarget > -Math.PI/2 && angleToTarget < Math.PI/2) : false;
 
     const tileStyle: React.CSSProperties = {
-        ...(angleToHero !== undefined && { 
-            "--bump-angle": `${angleToHero}rad`,
-            "--flip-factor": flipMonster ? -1 : 1, 
+        ...(angleToTarget !== undefined && { 
+            "--bump-angle": `${angleToTarget}rad`,
+            "--flip-factor": shouldFlip ? -1 : 1, 
         } as React.CSSProperties)
     };
+
+    // "Ghost tile" logic
+    // 1. Initialize state: Use ghostTileType if it exists, otherwise the regular tileType
+    const [displayType, setDisplayType] = useState<TileType>(ghostTileType ?? tileType);
+
+    useEffect(() => {
+        if (ghostTileType) {
+            const duration = damageAnimationDelayMs + 50;
+                        
+            const swapTimer = setTimeout(() => {
+                setDisplayType(tileType);
+            }, duration);
+
+            return () => {
+                clearTimeout(swapTimer);
+            };
+        }
+        else {
+            setDisplayType(tileType);
+        }
+    }, [ghostTileType, tileType]);
 
     return (
         <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
@@ -90,13 +133,13 @@ export const Tile = ({ x, y, tileType, name, heroCanWalk, heroCanAttack, health,
             }
             
             <span className="absolute bottom-0 left-1 opacity-70 text-white z-15">{name}</span>
-            {tileType != "Empty" && (
+            {displayType != "Empty" && (
                 <img
-                    src={`${assetPath}${tileType.toLowerCase()}.png`}
+                    src={`${assetPath}${displayType.toLowerCase()}.png`}
                     alt={`Tile ${x}-${y}`}
                     className={'w-full h-full object-contain p-1 z-10 ' 
-                        + (isAttackingHero ? 'animate-bump ': '')
-                        + (flipMonster ? '-scale-x-100 ' : 'scale-x-100')}
+                        + (isAttacking ? 'animate-bump ': '')
+                        + (shouldFlip ? '-scale-x-100 ' : 'scale-x-100')}
                     style={tileStyle}
                 />
             )}

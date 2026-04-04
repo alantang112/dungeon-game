@@ -113,7 +113,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 }
 
                 // TODO: add unit test
-                gameState.ViewData.MonsterAttackedByHero = monsterPosition.Monster.Id;
+                gameState.ViewData.MonsterAttackedByHero = monsterPosition;
                 monsterPosition.Monster.Health -= 1;
                 MonsterSpecialFunctions.PostDamageFunction(monsterPosition.Monster);
 
