@@ -274,6 +274,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 .OrderBy(x => (x.HasLineOfSight && x.RangeFromTarget <= monsterAttackRange) ? 0 : 1)
                 .ThenBy(x => x.DistanceFromTarget)
                 .ThenBy(x => x.MovementPointsRequired)
+                .ThenBy(x => x.Position.X)
+                .ThenBy(x => x.Position.Y)
                 .First();
 
             return bestWalkablePositionCandidate;
