@@ -139,7 +139,7 @@ function App() {
         }
 
         monsterStatRows.push(
-        <div key={`monster-${monsterIndex}`}>
+        <div key={`monster-${monster.Type}`}>
           <CharacterStats 
                 name={monster.Type}
                 stats={monster.Stats}
