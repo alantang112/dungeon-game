@@ -30,10 +30,10 @@ namespace DungeonGame.Engine.GameTemplates
                     {
                         if (monster.GetStat(SkillType.Movement, true) != 2)
                         {
-                            monster.SetStat(SkillType.Movement, 2);
+                            monster.SetStat(SkillType.Movement, 3);
                             monster.SetStat(SkillType.Attack, 5);
-                            monster.SetStat(SkillType.Defence, 5);
-                            monster.SetStat(SkillType.AttackRange, 4);
+                            monster.SetStat(SkillType.Defence, 6);
+                            monster.SetStat(SkillType.AttackRange, 6);
                             monster.Health = 6;
                         }
                     }
