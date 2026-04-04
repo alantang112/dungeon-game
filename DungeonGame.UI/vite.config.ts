@@ -33,6 +33,8 @@ export default defineConfig(({ command }) => ({
         start_url: '/dungeon-game/',
         scope: '/dungeon-game/',
         name: 'Dungeon Game',
+        short_name: 'Dungeon Game',
+        theme_color: '#3a455c',
         icons: [
           {
             src: 'icon-192x192.png',
