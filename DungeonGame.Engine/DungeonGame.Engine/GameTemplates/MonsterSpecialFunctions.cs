@@ -12,9 +12,9 @@ namespace DungeonGame.Engine.GameTemplates
             switch (monster.Type)
             {
                 case MonsterType.Colossus:
-                    if (monster.Health > 1)
+                    if (monster.Health >= 1)
                     {
-                        // level a deterministically random stat
+                        // deterministically level a random stat
                         var missingHealth = monster.MaxHealth - monster.Health;
                         var skillToLevel = ColossusLevelUpSkills.OrderBy(x => monster.RandomSeed).Skip(missingHealth - 1).First();
                         monster.SetStat(skillToLevel, monster.GetStat(skillToLevel) + 1);
