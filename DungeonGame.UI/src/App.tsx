@@ -77,6 +77,7 @@ function App() {
           health={tileData.health}
           maxHealth={tileData.maxHealth}
           isAttacking={isAttacking}
+          attackId={isAttacking ? String(Date.now()) : undefined}
           angleToTarget={angleToTarget}
           isMonster={tileData.isMonster}
           />

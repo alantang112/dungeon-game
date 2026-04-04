@@ -66,4 +66,4 @@ export const levelNameColor = (levelNumber: number): string => {
     }        
 }
 
-export const damageAnimationDelayMs: number = 325;
+export const damageAnimationDelayMs: number = 180;

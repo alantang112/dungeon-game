@@ -15,10 +15,11 @@ interface TileProps {
     maxHealth?: number;
     isMonster: boolean;
     isAttacking?: boolean;
+    attackId?: string;
     angleToTarget?: number;
 }
 
-export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, angleToTarget }: TileProps) => {
+export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, attackId, angleToTarget }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
@@ -74,7 +75,6 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
     }); // runs on every render
 
     // Attack display logic
-
     const shouldFlip = isMonster ? (angleToTarget !== undefined && angleToTarget > -Math.PI/2 && angleToTarget < Math.PI/2) : false;
 
     const tileStyle: React.CSSProperties = {
@@ -135,6 +135,7 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
             <span className="absolute bottom-0 left-1 opacity-70 text-white z-15">{name}</span>
             {displayType != "Empty" && (
                 <img
+                    key={`${x}-${y}-${displayType}-${attackId}`}
                     src={`${assetPath}${displayType.toLowerCase()}.png`}
                     alt={`Tile ${x}-${y}`}
                     className={'w-full h-full object-contain p-1 z-10 ' 

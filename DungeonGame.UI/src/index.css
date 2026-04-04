@@ -2,8 +2,8 @@
 
 :root {
   --attack-animation-duration: 350ms;
-  --attack-animation-delay: 150ms;
-  --damage-animation-delay: 325ms;
+  --attack-animation-delay: 0ms;
+  --damage-animation-delay: 180ms;
 }
 
 @keyframes flash-yellow {
