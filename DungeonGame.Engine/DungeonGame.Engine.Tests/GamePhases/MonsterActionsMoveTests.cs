@@ -1,4 +1,5 @@
 using System.Text.Json;
+using DungeonGame.Engine.GameTemplates;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -176,7 +177,7 @@ public class MonsterActionsMoveTests
     }
 
     [TestCase(2, 1, 5, 5, 4, 5, null, null, null, null, 4, 3, 3, 3)]
-    [TestCase(1, 1, 3, 2, 5, 3, 1, 3,  null, null, 2, 1, 3, 2)] // or 4, 1
+    [TestCase(1, 1, 3, 2, 5, 3, 1, 3,  null, null, 2, 1, 4, 1)] 
     [TestCase(1, 1, 2, 3, 1, 3, 2, 1,  null, null, 1, 3, 1, 2)]
     [TestCase(2, 1, 3, 1, 3, 3, 3, 2,  null, null, 3, 1, 1, 2)]
     [TestCase(1, 1, 4, 5, 5, 4, 3, 3, 5, 2, 2, 4, 3, 5)]
@@ -195,6 +196,7 @@ public class MonsterActionsMoveTests
             Monster = initialGameState.World.Monsters[0].Monster,
             Position = new Position(otherMonsterX, otherMonsterY)
         });
+        initialGameState.World.Monsters[1].Monster.Id = Guid.NewGuid();
 
         if (extraWallX.HasValue)
         {
@@ -220,6 +222,37 @@ public class MonsterActionsMoveTests
         Assert.That(newGameState.World.Monsters[0].LastMovementPath.Count() > 0, Is.EqualTo(expectPathIsNotEmpty));
         var expectOtherPathIsNotEmpty = otherMonsterX != expectedOtherMonsterX || otherMonsterY != expectedOtherMonsterY;
         Assert.That(newGameState.World.Monsters[1].LastMovementPath.Count() > 0, Is.EqualTo(expectOtherPathIsNotEmpty));
+    }
+
+    [Test]
+    public void GivenMonsterMovementTargetOutsideOfWalkableRange_MoveIntoLessIdealPosition()
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.World.InitializeLevel(-1);
+
+        initialGameState.World.HeroPosition = new Position(4, 4);
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Spider),
+            Position = new Position(5, 5)
+        });
+        initialGameState.World.Monsters[0].Monster.Stats = new Dictionary<SkillType, int>()
+        {
+            { SkillType.Movement, 6 },
+            { SkillType.Attack, 6 },
+            { SkillType.Defence, 6 },
+            { SkillType.AttackRange, 4 }
+        };
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
+        });
+
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(3, 4)));
     }
 
     [Test]
