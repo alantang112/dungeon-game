@@ -1,6 +1,7 @@
 using System.Linq;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
+using DungeonGame.Engine.Utilities;
 
 namespace DungeonGame.Engine.GameTemplates
 {
@@ -16,8 +17,12 @@ namespace DungeonGame.Engine.GameTemplates
                     {
                         // deterministically level a random stat
                         var missingHealth = monster.MaxHealth - monster.Health;
-                        var skillToLevel = ColossusLevelUpSkills.OrderBy(x => monster.RandomSeed).Skip(missingHealth - 1).First();
-                        monster.SetStat(skillToLevel, monster.GetStat(skillToLevel) + 1);
+                        var enumeratedSkillToLevel = ColossusLevelUpSkills
+                                .Select((skillType, index) => (skillType, index))
+                                .OrderBy(tup => RandomUtility.GenerateDeterministicGuid(monster.RandomSeed, tup.index))
+                                .Skip(missingHealth - 1)
+                                .First();
+                        monster.SetStat(enumeratedSkillToLevel.skillType, monster.GetStat(enumeratedSkillToLevel.skillType) + 1);
                     }
                     break;
                 case MonsterType.Overseer:

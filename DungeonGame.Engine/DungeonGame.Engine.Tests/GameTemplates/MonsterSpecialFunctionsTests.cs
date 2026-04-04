@@ -5,16 +5,16 @@ namespace DungeonGame.Engine.Tests.GameTemplates;
 
 public class MonsterSpecialFunctionsTests
 {
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 5, SkillType.Attack)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 4, SkillType.Attack)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 3, SkillType.Defence)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 2, SkillType.Movement)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 1, SkillType.AttackRange)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 5, SkillType.Attack)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 5, SkillType.Defence)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 4, SkillType.AttackRange)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 3, SkillType.Movement)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 2, SkillType.Attack)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 1, SkillType.Attack)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 5, SkillType.Defence)]
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 4, SkillType.Attack)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 3, SkillType.Defence)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 2, SkillType.Movement)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 1, SkillType.AttackRange)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 3, SkillType.Attack)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 2, SkillType.AttackRange)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 1, SkillType.Movement)]
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 0, null)]
     public void GivenColossusWithRandomSeed_ThenDeterministicallyLevelStat(string guid, int currentHealth, SkillType? expectedSkillTypeLeveled)
     {
