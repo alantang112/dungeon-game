@@ -328,6 +328,7 @@ public class HeroActionTests
         var monster = newGameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster;
         Assert.That(monster.Health, Is.EqualTo(1)); // decreased from 2
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(0));
+        Assert.That(newGameState.ViewData.MonsterAttackedByHero.Monster.Id, Is.EqualTo(monster.Id));
     }
 
     [Test]
@@ -343,7 +344,8 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
-        gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
+        var monster = gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster;
+        monster.Health = 1;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
 
@@ -366,6 +368,7 @@ public class HeroActionTests
         Assert.That(monsterPosition, Is.Null);
         Assert.That(newGameState.World.Monsters.Count, Is.EqualTo(1)); // 1 other monster remaining
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Attack], Is.EqualTo(0));
+        Assert.That(newGameState.ViewData.MonsterAttackedByHero.Monster.Id, Is.EqualTo(monster.Id));
     }
 
     [Test]
@@ -381,7 +384,8 @@ public class HeroActionTests
         var gameState = _sut.GetCurrentState();
         gameState.World.HeroPosition = new Position(heroInitialX, heroInitialY); 
         gameState.World.HeroActionPoints[SkillType.Attack] = initialAttackPoints;
-        gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster.Health = 1;
+        var monster = gameState.World.Monsters.First(x => x.Position.X == monsterX && x.Position.Y == monsterY).Monster;
+        monster.Health = 1;
         var otherMonster = gameState.World.Monsters.First(x => x.Position.X == 4 && x.Position.Y == 5);
         gameState.World.Monsters.Remove(otherMonster);
 
@@ -400,6 +404,7 @@ public class HeroActionTests
         });
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
+        Assert.That(newGameState.ViewData.MonsterAttackedByHero.Monster.Id, Is.EqualTo(monster.Id));
     }
 
     [Test]
