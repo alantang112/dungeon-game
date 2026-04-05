@@ -93,7 +93,7 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
                 </div>
 
                 {/* --- PAGE CONTENT --- (Scrollable) */}
-                <div className="flex-1 p-6 overflow-y-auto min-h-[400px]">
+                <div className="flex-1 p-6 overflow-y-auto">
                     <h1 className="text-3xl font-black text-green-400 mb-6">
                         {currentPage.title}
                     </h1>

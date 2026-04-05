@@ -27,7 +27,7 @@ export const HelpPageRenderer = ({ items }: HelpPageRendererProps) => {
                                 <img
                                     src={item.content}
                                     alt={item.alt || "Help Image"}
-                                    className="max-h-48 object-contain" // Constrain image height
+                                    className="max-w-full object-contain" // Constrain image height
                                 />
                             </div>
                         );
