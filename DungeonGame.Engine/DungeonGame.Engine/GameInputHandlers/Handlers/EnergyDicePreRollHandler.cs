@@ -41,8 +41,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 gameState.EnergyDiceSnapshot = gameState.EnergyDice.DeepClone();
                 gameState.WorldSnapshot = gameState.World.DeepClone();
-                
-                // TODO: unit test: boss monster dice is not reset
 
                 return gameState;
             }
