@@ -4,6 +4,47 @@
   --attack-animation-duration: 350ms;
   --attack-animation-delay: 0ms;
   --damage-animation-delay: 180ms;
+
+  --title-color-1: #d81a1a;
+  --title-color-2: #974141;
+  --title-color-3: #e67545;
+}
+
+.game-title-mask {
+  width: 100%;
+  height: 200px;
+  
+  /* Apply the PNG as a mask */
+  -webkit-mask-image: url('/title.png');
+  mask-image: url('/title.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+
+  /* CONFIGURE COLOR HERE */
+  background: linear-gradient(
+    to bottom, 
+    var(--title-color-1), 
+    var(--title-color-2),
+    var(--title-color-3), 
+    var(--title-color-1), 
+    var(--title-color-2),
+    var(--title-color-3), 
+    var(--title-color-1)
+  );
+  
+  background-repeat: repeat-y;
+  background-size: 100% 400px;
+}
+
+@keyframes color-roll {
+  from { background-position: 0 0; }
+  to { background-position: 0 -200px; }
+}
+
+.game-title-mask.moving {
+  animation: color-roll  5s linear infinite;
 }
 
 @keyframes flash-yellow {

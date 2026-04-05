@@ -16,6 +16,7 @@ import type { TileData } from './models/TileData';
 import type { TileType } from './models/TileType';
 import { AssetPreloader } from './props/AssetPreloader';
 import { HowToPlayModal } from './props/HowToPlayModal';
+import { StartTitle } from './props/StartTitle';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
@@ -190,8 +191,6 @@ function App() {
 
   var availableButtonsRow2 = GetAvailableButtonsRow2(state);
 
-  console.log(availableButtonsRow2);
-
   if (state.GamePhase === "Start")
   {
     availableButtonsRow2 = [...availableButtonsRow2, {
@@ -208,33 +207,38 @@ function App() {
           onClose={() => setIsHelpOpen(false)}
       />
       {
-        state.GamePhase === "Start" && <span className='absolute bottom-0 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
+        state.GamePhase === "Start" && <span className='absolute bottom-1 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
       }
       <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
-        {/* Stats */}
-        <div className="flex-auto">
-          
-          <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full mt-2">
-            {/* Hero stats */}
-            <div 
-              className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
-              onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } }}
-              >
-              <CharacterStats 
-                name={heroInitialized ? state.Hero!.Name! : "Hero"}
-                stats={heroInitialized ? state.Hero!.Stats : undefined}
-                energy={heroEnergy} 
-                displayEnergy={true}
-                isEnemy={false}
-                displayBossDiceRoll={false}
-              />
-            </div>
-            {/* Monster stats */}
-            <div className="grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
-              {monsterStatRows}
-            </div>
-          </div>
-        </div>
+        {/* Game Title (GamePhase == Start) */}
+        {(!state.GamePhase || state.GamePhase === "Start") && <div className="w-full pt-20 m-auto"><StartTitle /></div>}
+        {/* Stats (GamePhase after Start) */}
+        {
+          state.GamePhase && state.GamePhase !== "Start" 
+            && <div className="flex-auto">
+                <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full mt-2">
+                  {/* Hero stats */}
+                  <div 
+                    className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
+                    onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } }}
+                    >
+                    <CharacterStats 
+                      name={heroInitialized ? state.Hero!.Name! : "Hero"}
+                      stats={heroInitialized ? state.Hero!.Stats : undefined}
+                      energy={heroEnergy} 
+                      displayEnergy={true}
+                      isEnemy={false}
+                      displayBossDiceRoll={false}
+                    />
+                  </div>
+                  {/* Monster stats */}
+                  <div className="grid col-span-1 lg:w-auto lg:col-span-3 lg:col-start-10 flex flex-col gap-2">
+                    {monsterStatRows}
+                  </div>
+                </div>
+              </div>
+        }
+        
         
         {/* Game grid */}
         <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
