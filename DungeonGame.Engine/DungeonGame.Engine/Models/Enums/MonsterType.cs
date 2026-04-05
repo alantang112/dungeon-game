@@ -5,7 +5,7 @@ namespace DungeonGame.Engine.Models.Enums
         Spider,
         Skeleton,
         Minotaur,
-        Hellspawn,
+        Fiendling,
         Colossus,
         Overseer
     }

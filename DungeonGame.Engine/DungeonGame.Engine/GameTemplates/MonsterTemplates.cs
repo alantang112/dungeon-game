@@ -45,7 +45,7 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.SetStat(SkillType.Defence, 7);
                     monster.SetStat(SkillType.AttackRange, 2);
                     break;
-                case MonsterType.Hellspawn:
+                case MonsterType.Fiendling:
                     monster.Health = 5;
                     monster.MaxHealth = monster.Health;
                     monster.SetStat(SkillType.Movement, 4);

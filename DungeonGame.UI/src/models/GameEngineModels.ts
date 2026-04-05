@@ -34,7 +34,7 @@ export type MonsterType =
     "Spider"
     | "Skeleton"
     | "Minotaur"
-    | "Hellspawn"
+    | "Fiendling"
     | "Colossus"
     | "Overseer"
 ;

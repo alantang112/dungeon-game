@@ -6,7 +6,7 @@ export const TileType = {
   Spider: "Spider",
   Skeleton: "Skeleton",
   Minotaur: "Minotaur",
-  Hellspawn: "Hellspawn",
+  Fiendling: "Fiendling",
   Colossus: "Colossus",
   Overseer: "Overseer",
   Overseer2: "Overseer-2"

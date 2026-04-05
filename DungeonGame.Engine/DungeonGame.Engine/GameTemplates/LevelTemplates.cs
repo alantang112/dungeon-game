@@ -45,7 +45,7 @@ namespace DungeonGame.Engine.GameTemplates
                 RandomWallsCountMin = 2,
                 RandomWallsCountMax = 3,
                 EnforceWallIslands = true,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(2, 5)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Fiendling, new Position(2, 5)) }
             },
             new Level()
             {
@@ -75,16 +75,6 @@ namespace DungeonGame.Engine.GameTemplates
                 EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Minotaur, new Position(1, 1)), (MonsterType.Minotaur, new Position(3, 5)) }
             },
-            // new Level()
-            // {
-            //     LevelNumber = 8,
-            //     HeroPosition = new Position(1, 5),
-            //     WallPositions = new Position[] { new Position(2, 3), new Position(2, 1), new Position(4, 2) },
-            //     RandomWallsCountMin = 3,
-            //     RandomWallsCountMax = 3,
-            //     EnforceWallIslands = true,
-            //     MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(4, 5)), (MonsterType.Hellspawn, new Position(5, 2)) }
-            // },
             new Level()
             {
                 LevelNumber = 8,
@@ -102,7 +92,7 @@ namespace DungeonGame.Engine.GameTemplates
                 WallPositions = new Position[] { new Position(3, 2), new Position(3, 4) },
                 RandomWallsCountMin = 4,
                 RandomWallsCountMax = 4,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Hellspawn, new Position(1, 1)), (MonsterType.Hellspawn, new Position(5, 5)), 
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Fiendling, new Position(1, 1)), (MonsterType.Fiendling, new Position(5, 5)), 
                     (MonsterType.Skeleton, new Position(5, 1)), (MonsterType.Skeleton, new Position(1, 5)) }
             },
             new Level()
