@@ -36,31 +36,28 @@ export const howToPlayUrl = 'https://www.google.com/search?q=one+card+dungeon+ru
 export const levelNameColor = (levelNumber: number): string => {
     switch (levelNumber) {
         case 1:
-            return 'text-mist-50';
         case 2:
-            return 'text-amber-200';
         case 3:
-            return 'text-amber-300';
+            return 'text-mist-50';
         case 4:
-            return 'text-amber-400';
         case 5:
-            return 'text-amber-500';
         case 6:
-            return 'text-amber-600';            
+            return 'text-amber-200';         
         case 7:
-            return 'text-red-400';
         case 8:
-            return 'text-red-500';
         case 9:
-            return 'text-red-600';
+            return 'text-amber-300';
         case 10:
-            return 'text-red-700';
         case 11:
-            return 'text-purple-400';
         case 12:
-            return 'text-purple-500';
+            return 'text-amber-400';
         case 13:
-            return 'text-purple-600';
+        case 14:
+            return 'text-amber-500';
+        case 15:
+            return 'text-amber-600';
+        case 16:
+            return 'text-purple-500';  
         default:
             return '';
     }        
