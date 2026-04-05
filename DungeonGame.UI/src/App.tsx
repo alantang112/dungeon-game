@@ -48,7 +48,16 @@ function App() {
       var angleToTarget: number | undefined = undefined;
       var isAttacking: boolean = false;
 
-      var hasGhostTile = state.ViewData?.MonsterAttackedByHero?.Position?.X == x && state.ViewData?.MonsterAttackedByHero?.Position?.Y == y;
+      var ghostTileType: TileType | undefined = undefined;
+
+      if (state.ViewData?.MonsterAttackedByHero?.Position?.X == x && state.ViewData?.MonsterAttackedByHero?.Position?.Y == y)
+      {
+        ghostTileType = getTileType(state.ViewData!.MonsterAttackedByHero!.Monster);
+      }
+      else if (state.GamePhase !== "Start" && state.Hero?.Health == 0 && tileData.tileType == "Hero-RIP")
+      {
+        ghostTileType = "Hero";
+      }
 
       if (tileData.tileType == "Hero")
       {
@@ -69,7 +78,7 @@ function App() {
           <Tile
           x={x}
           y={y}
-          ghostTileType={hasGhostTile ? getTileType(state.ViewData!.MonsterAttackedByHero!.Monster) : undefined}
+          ghostTileType={ghostTileType}
           tileType={tileData.tileType}
           name={tileData.name ?? ''}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
@@ -310,7 +319,13 @@ const getTileType = (monster: Monster) : TileType => {
 
 const getTileData = (state: GameState, x: number, y: number) : TileData => {
     if (state?.World?.HeroPosition?.X === x && state?.World?.HeroPosition?.Y === y) 
-      return { tileType: "Hero", health: state!.Hero!.Health, maxHealth: HeroMaxHealth,  name: state!.Hero!.Name, isMonster: false  };
+      return { 
+        tileType: state!.Hero!.Health! > 0 ? "Hero" : "Hero-RIP", 
+        health: state!.Hero!.Health, 
+        maxHealth: HeroMaxHealth,  
+        name: state!.Hero!.Name, 
+        isMonster: false  
+      };
 
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) 
       return { tileType: "Wall", isMonster: false };
