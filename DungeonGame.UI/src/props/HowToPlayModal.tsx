@@ -83,7 +83,7 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
                     {/* Close Button */}
                     <button
                         onClick={onClose}
-                        className="rounded-full p-2 text-slate-500 hover:bg-slate-800 hover:text-white transition-colors focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        className="rounded-full p-2 text-slate-500 hover:bg-slate-800 hover:text-white transition-colors focus:ring-2 focus:ring-orange-400 focus:outline-none"
                         aria-label="Close Help"
                     >
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,7 +94,7 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
 
                 {/* --- PAGE CONTENT --- (Scrollable) */}
                 <div className="flex-1 p-6 overflow-y-auto">
-                    <h1 className="text-3xl font-black text-green-400 mb-6">
+                    <h1 className="text-3xl font-black text-orange-400 mb-6">
                         {currentPage.title}
                     </h1>
                     
