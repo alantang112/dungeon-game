@@ -1,5 +1,7 @@
 import type { SkillType } from "../models/GameEngineModels";
 
+export const UIVersion: string = '1.0';
+
 export const DebugMode: boolean = false; 
 
 export const HeroMaxHealth: number = 6;

@@ -13,10 +13,10 @@ interface CharacterStatsProps {
 
 export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, displayBossDiceRoll }: CharacterStatsProps) => {
   stats ??= {
-    "Movement": 0,
-    "Attack": 0,
-    "Defence": 0,
-    "AttackRange": 0
+    "Movement": 1,
+    "Attack": 1,
+    "Defence": 1,
+    "AttackRange": 2
   };
   energy ??= {
     "Movement": 0,

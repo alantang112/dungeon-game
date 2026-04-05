@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl, levelNameColor } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl, levelNameColor, UIVersion } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -292,6 +292,9 @@ function App() {
             <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
       </div>
+      {
+        state.GamePhase === "Start" && <span className='absolute bottom-0 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
+      }
     </div>
   )
 }
