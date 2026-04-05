@@ -63,7 +63,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                         && GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonsters))
                 {
                     totalMonsterAttack += monsterPosition.Monster.GetStat(SkillType.Attack);
-                    gameState.ViewData.MonstersAttacking.Add(monsterPosition.Monster.Id); // TODO: add unit test
+                    gameState.ViewData.MonstersAttacking.Add(monsterPosition.Monster.Id);
                 }
             }
 

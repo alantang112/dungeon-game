@@ -75,6 +75,7 @@ public class MonsterActionsAttackTests
         });
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth));
+        Assert.That(newGameState.ViewData.MonstersAttacking.Count, Is.EqualTo(0));
     }
 
     [Test]
@@ -95,6 +96,7 @@ public class MonsterActionsAttackTests
         });
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth));
+        Assert.That(newGameState.ViewData.MonstersAttacking.Count, Is.EqualTo(0));
     }
 
     [TestCase(5, 0)]
@@ -119,6 +121,8 @@ public class MonsterActionsAttackTests
         });
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth - expectedHealthLoss));
+        Assert.That(newGameState.ViewData.MonstersAttacking.Count, Is.EqualTo(1));
+        Assert.That(newGameState.ViewData.MonstersAttacking.First(), Is.EqualTo(initialGameState.World.Monsters[0].Monster.Id));
     }
 
     [TestCase(9, 0)]
@@ -147,6 +151,9 @@ public class MonsterActionsAttackTests
         });
 
         Assert.That(newGameState.Hero.Health, Is.EqualTo(_heroInitialHealth - expectedHealthLoss));
+        Assert.That(newGameState.ViewData.MonstersAttacking.Count, Is.EqualTo(2));
+        Assert.That(newGameState.ViewData.MonstersAttacking.Any(x => x == initialGameState.World.Monsters[0].Monster.Id), Is.True);
+        Assert.That(newGameState.ViewData.MonstersAttacking.Any(x => x == initialGameState.World.Monsters[1].Monster.Id), Is.True);
     }
 
     [TestCase(4, false)]
