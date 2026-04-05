@@ -177,7 +177,7 @@ public class MonsterActionsMoveTests
     }
 
     [TestCase(2, 1, 5, 5, 4, 5, null, null, null, null, 4, 3, 3, 3)]
-    [TestCase(1, 1, 3, 2, 5, 3, 1, 3,  null, null, 2, 1, 4, 1)] 
+    [TestCase(1, 1, 3, 2, 5, 3, 1, 3,  null, null, 2, 1, 3, 2)] 
     [TestCase(1, 1, 2, 3, 1, 3, 2, 1,  null, null, 1, 3, 1, 2)]
     [TestCase(2, 1, 3, 1, 3, 3, 3, 2,  null, null, 3, 1, 1, 2)]
     [TestCase(1, 1, 4, 5, 5, 4, 3, 3, 5, 2, 2, 4, 3, 5)]
@@ -253,6 +253,67 @@ public class MonsterActionsMoveTests
         });
 
         Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(3, 4)));
+    }
+
+    [Test]
+    public void GivenWallIsland_PathInTheCorrectDirection()
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.World.InitializeLevel(-1);
+
+        initialGameState.World.HeroPosition = new Position(1, 2);
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Skeleton),
+            Position = new Position(3, 5)
+        });
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Skeleton),
+            Position = new Position(4, 4)
+        });
+        initialGameState.World.Walls.Add(new Position(2, 3));
+        initialGameState.World.Walls.Add(new Position(2, 4));
+        initialGameState.World.Walls.Add(new Position(3, 4));
+        initialGameState.World.Walls.Add(new Position(4, 2));
+        initialGameState.World.Walls.Add(new Position(4, 3));
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
+        });
+
+        // Note: They go this way because the ideal position is at (3, 1)
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(4, 5)));
+        Assert.That(newGameState.World.Monsters[1].Position, Is.EqualTo(new Position(5, 4)));
+    }
+
+    [Test]
+    public void GivenTwoPathsToIdealPosition_PickBasedOnBetterRangeFromTarget()
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.World.InitializeLevel(-1);
+
+        initialGameState.World.HeroPosition = new Position(1, 3);
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Skeleton),
+            Position = new Position(1, 2)
+        });
+        initialGameState.World.Walls.Add(new Position(2, 3));
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
+        });
+
+        Assert.That(newGameState.World.Monsters[0].Position, Is.EqualTo(new Position(1, 1)));
     }
 
     [Test]
