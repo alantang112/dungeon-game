@@ -33,8 +33,6 @@ const monsterPathColors: string[] = [
 
 export const getMonsterPathColor = (index: number): string => monsterPathColors[index];
 
-export const howToPlayUrl = 'https://www.google.com/search?q=one+card+dungeon+rulebook';
-
 export const levelNameColor = (levelNumber: number): string => {
     switch (levelNumber) {
         case 1:

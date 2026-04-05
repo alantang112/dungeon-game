@@ -4,20 +4,23 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, howToPlayUrl, levelNameColor, UIVersion } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, levelNameColor, UIVersion } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
 import type { Arrow } from './models/Arrow';
 import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { TileData } from './models/TileData';
 import type { TileType } from './models/TileType';
 import { AssetPreloader } from './props/AssetPreloader';
+import { HowToPlayModal } from './props/HowToPlayModal';
 
 function App() {
   const { state, dispatch, isReady } = useGameEngine();
+
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   if (!isReady) return <div className="text-white">Loading game engine...</div>;
 
@@ -54,7 +57,7 @@ function App() {
       {
         ghostTileType = getTileType(state.ViewData!.MonsterAttackedByHero!.Monster);
       }
-      else if (state.GamePhase !== "Start" && state.Hero?.Health == 0 && tileData.tileType == "Hero-RIP")
+      else if (state.GamePhase !== "Start" && state.Hero?.Health && state.Hero?.Health <= 0 && tileData.tileType == "Hero-RIP") 
       {
         ghostTileType = "Hero";
       }
@@ -185,9 +188,28 @@ function App() {
     }
   }
 
+  var availableButtonsRow2 = GetAvailableButtonsRow2(state);
+
+  console.log(availableButtonsRow2);
+
+  if (state.GamePhase === "Start")
+  {
+    availableButtonsRow2 = [...availableButtonsRow2, {
+      textNode: <>How to play</>,
+      onClick: () => setIsHelpOpen(true)
+    }];
+  } 
+
   return (
     <div className="bg-slate-900">
       <AssetPreloader/>
+      <HowToPlayModal 
+          isOpen={isHelpOpen} 
+          onClose={() => setIsHelpOpen(false)}
+      />
+      {
+        state.GamePhase === "Start" && <span className='absolute bottom-0 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
+      }
       <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
         {/* Stats */}
         <div className="flex-auto">
@@ -196,7 +218,7 @@ function App() {
             {/* Hero stats */}
             <div 
               className="col-span-1 lg:w-auto lg:col-span-3 flex flex-col gap-2"
-              onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } return; }}
+              onClick={() => { if (DebugMode) { navigator.clipboard.writeText(JSON.stringify(state)); console.log('gameState copied to clipboard') } }}
               >
               <CharacterStats 
                 name={heroInitialized ? state.Hero!.Name! : "Hero"}
@@ -291,7 +313,7 @@ function App() {
           </div>
           <div className="flex gap-6 mb-4 items-center justify-center">
             <ButtonsRow
-              buttons={GetAvailableButtonsRow2(state)}
+              buttons={availableButtonsRow2}
               eventDispatcher={dispatch}
               />
           </div>
@@ -301,9 +323,6 @@ function App() {
             <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
       </div>
-      {
-        state.GamePhase === "Start" && <span className='absolute bottom-0 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
-      }
     </div>
   )
 }
@@ -437,21 +456,7 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
 const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   const availableButtons: AvailableButton[] = [];
 
-  if (state.GamePhase == "Start")
-  {
-    availableButtons.push({
-      textNode: <>How to play</>,
-      onClick: () => { 
-          const newTab = window.open(howToPlayUrl, '_blank');
-          if (newTab)
-            newTab.focus();
-          else {
-            alert('Google "one card dungeon rulebook"');
-          }
-       }
-    });
-  } 
-  else if (state.GamePhase == "EnergyDiceAssignment")
+  if (state.GamePhase == "EnergyDiceAssignment")
   {
     availableButtons.push({
       textNode: <>Reset turn</>,
