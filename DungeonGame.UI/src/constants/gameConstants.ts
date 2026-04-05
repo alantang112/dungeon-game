@@ -1,6 +1,6 @@
 import type { SkillType } from "../models/GameEngineModels";
 
-export const DebugMode: boolean = true; 
+export const DebugMode: boolean = false; 
 
 export const HeroMaxHealth: number = 6;
 export const LevelSize: number = 5;
