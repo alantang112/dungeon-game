@@ -206,10 +206,8 @@ function App() {
           isOpen={isHelpOpen} 
           onClose={() => setIsHelpOpen(false)}
       />
-      {
-        state.GamePhase === "Start" && <span className='absolute bottom-1 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
-      }
-      <div className="flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
+      
+      <div className="relative flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
         {/* Game Title (GamePhase == Start) */}
         {(!state.GamePhase || state.GamePhase === "Start") && <div className="w-full pt-20 m-auto"><StartTitle /></div>}
         {/* Stats (GamePhase after Start) */}
@@ -326,6 +324,9 @@ function App() {
         <div className="hidden sm:block w-full">
             <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
+        {
+        state.GamePhase === "Start" && <span className='absolute bottom-1 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
+        }
       </div>
     </div>
   )
