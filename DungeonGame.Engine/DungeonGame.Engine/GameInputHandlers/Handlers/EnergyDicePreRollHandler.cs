@@ -20,7 +20,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.World.HeroActionPoints.Clear();
                 gameState.EnergyDice.ResetAssignment();
 
-                // TODO: unit test this
                 gameState.World.Monsters.ForEach(mp =>
                 {
                     if (mp.Monster.IsBossType && !mp.Monster.BossDice.Any())
