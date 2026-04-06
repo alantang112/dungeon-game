@@ -115,6 +115,16 @@ namespace DungeonGame.Engine.GameContent
             },
             new Level()
             {
+                LevelNumber = 12,
+                HeroPosition = new Position(4, 4),
+                WallPositions = new Position[] { new Position(3, 2), new Position(2, 3), },
+                RandomWallsCountMin = 3,
+                RandomWallsCountMax = 3,
+                EnforceWallIslands = true,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(1, 1)), (MonsterType.Fiendling, new Position(2, 2)), (MonsterType.Spider, new Position(1,2)) }
+            },
+            new Level()
+            {
                 LevelNumber = 15,
                 HeroPosition = new Position(1, 2),
                 WallPositions = new Position[] { new Position(3, 3), },
