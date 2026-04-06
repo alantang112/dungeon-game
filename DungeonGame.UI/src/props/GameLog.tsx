@@ -1,16 +1,8 @@
-import { useEffect, useRef } from 'react';
-
 interface GameLogProps {
   messages: string[];
 }
 
 export const GameLog = ({ messages }: GameLogProps) => {
-  const logEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   return (
     <div className="w-full pointer-events-none z-15">
     <div className="mx-auto bg-slate-950/90 border border-slate-700 rounded-t-lg p-2 h-40 overflow-y-auto pointer-events-auto shadow-2xl backdrop-blur-sm">
@@ -20,7 +12,6 @@ export const GameLog = ({ messages }: GameLogProps) => {
           {" "}{msg}
         </div>
       ))}
-      <div ref={logEndRef} />
     </div>
   </div>
   );

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.InputEventModels;
@@ -29,6 +30,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                         mp.Monster.BossDice.Add(SkillType.Defence, RandomUtility.RollDice(mp.Monster.BossDiceType!.Value));
                     }
                 });
+
+                MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
 
                 return gameState;
             }

@@ -71,7 +71,19 @@ namespace DungeonGame.Engine.GameContent
             {
                 if (monsterPosition.Monster.Type == MonsterType.Reaper)
                 {
-                    RecalculateReaper(monsterPosition);
+                    RecalculateReaperPhase(monsterPosition);
+                    continue;
+                }
+            }
+        }
+
+        public static void TurnStartMonsterFunctions(GameState gameState)
+        {
+            foreach(var monsterPosition in gameState.World.Monsters)
+            {
+                if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                {
+                    TransformReaper(monsterPosition);
                     continue;
                 }
             }
@@ -91,12 +103,32 @@ namespace DungeonGame.Engine.GameContent
             direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
         }
 
-        private static void RecalculateReaper(MonsterPosition reaper)
+        private static void RecalculateReaperPhase(MonsterPosition reaper)
         {
             var moved = reaper.LastMovementPath.Any();
 
-            reaper.Monster.Phase = moved ? 1 : 2;
-            reaper.Monster.SetStat(SkillType.Attack, moved ? GameConstants.ReaperBaseAttack : GameConstants.ReaperEmpoweredAttack);
+            if (moved)
+            {
+                reaper.Monster.Phase = -1;
+            }
+            else if (reaper.Monster.Phase == 1)
+            {
+                reaper.Monster.Phase = -2;
+            }
+        }
+
+        private static void TransformReaper(MonsterPosition reaper)
+        {
+            if (reaper.Monster.Phase == -1)
+            {
+                reaper.Monster.Phase = 1;
+                reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
+            }
+            else if (reaper.Monster.Phase == -2)
+            {
+                reaper.Monster.Phase = 2;
+                reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperEmpoweredAttack);
+            }
         }
     }
 }

@@ -155,7 +155,6 @@ public class MonsterSpecialFunctionsTests
 
         MonsterSpecialFunctions.PostMonstersAttackFunction(gameState);
 
-        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(moved ? 1 : 2));
-        Assert.That(gameState.World.Monsters[0].Monster.GetStat(SkillType.Attack), Is.EqualTo(moved ? GameConstants.ReaperBaseAttack : GameConstants.ReaperEmpoweredAttack));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(moved ? -1 : -2));
     }
 }
