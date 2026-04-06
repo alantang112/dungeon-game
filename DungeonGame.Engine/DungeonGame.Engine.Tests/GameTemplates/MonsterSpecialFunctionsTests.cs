@@ -72,6 +72,39 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(expectedAttack));
     }
 
+    public void GivenThreeDirewolves_WhenPostMove_RecalculateState()
+    {
+        var gameState = new GameState();
+
+        gameState.World.InitializeLevel(-1);
+
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(3, 3)
+        });
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(3, 4)
+        });
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(3, 5)
+        });
+
+        MonsterSpecialFunctions.PostMonstersMoveFunction(gameState);
+
+        var expectedAttack = GameConstants.DirewolfBaseAttack + GameConstants.DirewolfBonusAttack * 2;
+
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(3));
+        Assert.That(gameState.World.Monsters[1].Monster.Phase, Is.EqualTo(3));
+
+        Assert.That(gameState.World.Monsters[0].Monster.GetStat(SkillType.Attack), Is.EqualTo(expectedAttack));
+        Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(expectedAttack));
+    }
+
     [Test]
     public void GivenDireWolves_WhenPostHeroAttack_AndDirewolfDefeated_RecalculateState()
     {

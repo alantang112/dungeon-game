@@ -339,9 +339,12 @@ const getTileType = (monster: Monster) : TileType => {
   {
     return "Overseer-2";
   }
-  else if (monster.Type == "Direwolf" && monster.Phase === 2)
+  else if (monster.Type == "Direwolf")
   {
-    return "Direwolf-2";
+    if (monster.Phase === 2)
+      return "Direwolf-2";
+    if (monster.Phase === 3)
+      return "Direwolf-3";
   }
 
   return monster.Type;
