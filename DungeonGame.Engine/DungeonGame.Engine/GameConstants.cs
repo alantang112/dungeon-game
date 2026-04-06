@@ -24,5 +24,7 @@ namespace DungeonGame.Engine
         public static int DirewolfBonusAttack = 2;
         public static int ReaperBaseAttack = 6;
         public static int ReaperEmpoweredAttack = 99;
+        public static int ReaperBaseMovement = 6;
+        public static int ReaperEmpoweredMovement = 2;
     }
 }

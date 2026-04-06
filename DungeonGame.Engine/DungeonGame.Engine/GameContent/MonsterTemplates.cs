@@ -84,7 +84,7 @@ namespace DungeonGame.Engine.GameContent
                     monster.Health = 4;
                     monster.Phase = 1;
                     monster.MaxHealth = monster.Health;
-                    monster.SetStat(SkillType.Movement, 6);
+                    monster.SetStat(SkillType.Movement, GameConstants.ReaperBaseMovement);
                     monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
                     monster.SetStat(SkillType.Defence, 6);
                     monster.SetStat(SkillType.AttackRange, 3);
