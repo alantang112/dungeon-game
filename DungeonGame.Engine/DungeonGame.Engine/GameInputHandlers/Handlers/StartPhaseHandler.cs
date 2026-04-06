@@ -22,7 +22,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.Hero.Stats.Add(SkillType.Defence, 1);
             gameState.Hero.Stats.Add(SkillType.AttackRange, 2);
             gameState.Hero.Health = GameConstants.HeroMaxHealth;
-            gameState.Hero.BirthYear = DateTime.Now.Year;
+            gameState.Hero.Birthday = DateTime.Today;
 
             gameState.LevelNumber = 1;
             gameState.World = new World();
