@@ -123,11 +123,13 @@ namespace DungeonGame.Engine.GameContent
             {
                 reaper.Monster.Phase = 1;
                 reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
+                reaper.Monster.SetStat(SkillType.Movement, GameConstants.ReaperBaseMovement);
             }
             else if (reaper.Monster.Phase == -2)
             {
                 reaper.Monster.Phase = 2;
                 reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperEmpoweredAttack);
+                reaper.Monster.SetStat(SkillType.Movement, GameConstants.ReaperEmpoweredMovement);
             }
         }
     }
