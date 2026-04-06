@@ -107,11 +107,11 @@ namespace DungeonGame.Engine.GameContent
         {
             var moved = reaper.LastMovementPath.Any();
 
-            if (moved)
+            if (reaper.Monster.Phase == 2 && moved)
             {
                 reaper.Monster.Phase = -1;
             }
-            else if (reaper.Monster.Phase == 1)
+            else if (reaper.Monster.Phase == 1 && !moved)
             {
                 reaper.Monster.Phase = -2;
             }
