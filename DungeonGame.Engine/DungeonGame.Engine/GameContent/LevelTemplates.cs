@@ -121,7 +121,7 @@ namespace DungeonGame.Engine.GameContent
                 RandomWallsCountMin = 3,
                 RandomWallsCountMax = 3,
                 EnforceWallIslands = true,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(1, 1)), (MonsterType.Fiendling, new Position(2, 2)), (MonsterType.Spider, new Position(1,2)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(1, 1)), (MonsterType.Colossus, new Position(5, 1)) }
             },
             new Level()
             {
