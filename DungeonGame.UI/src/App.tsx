@@ -129,7 +129,7 @@ function App() {
   }
 
   const monsterStatRows: ReactNode[] = [];
-  var monsterRowTypes: TileType[] = [];
+  var monsterRowTypes: string[] = [];
   const monsterPaths: Arrow[] = [];
   const monsterCount: number = state.World?.Monsters?.length ?? 0;
 
@@ -137,7 +137,9 @@ function App() {
   {
     const monster = state.World!.Monsters![monsterIndex].Monster;
 
-    if (!monsterRowTypes.some(x => x == monster.Type))
+    const monsterRowType = `${monster.Type}|${monster.Stats["Movement"]}|${monster.Stats["Attack"]}|${monster.Stats["Defence"]}|${monster.Stats["AttackRange"]}`;
+
+    if (!monsterRowTypes.some(x => x == monsterRowType))
     {
         var monsterEnergy: Record<SkillType, number> | undefined = undefined;
 
@@ -164,7 +166,7 @@ function App() {
         </div>
       )
 
-      monsterRowTypes.push(monster.Type);
+      monsterRowTypes.push(monsterRowType);
     }
     
     // only display monster movement path during MonsterActions phase
@@ -333,9 +335,20 @@ function App() {
 }
 
 const getTileType = (monster: Monster) : TileType => {
-  if (monster.Type == "Overseer" && monster.Stats["Movement"] === 3)
+  if (monster.Type === "Overseer" && monster.Phase === 2)
   {
     return "Overseer-2";
+  }
+  else if (monster.Type === "Direwolf")
+  {
+    if (monster.Phase === 2)
+      return "Direwolf-2";
+    if (monster.Phase === 3)
+      return "Direwolf-3";
+  }
+  else if (monster.Type === "Reaper" && (monster.Phase === 2 || monster.Phase === -2))
+  {
+    return "Reaper-2";
   }
 
   return monster.Type;

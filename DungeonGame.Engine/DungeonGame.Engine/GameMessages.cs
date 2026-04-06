@@ -23,7 +23,7 @@ namespace DungeonGame.Engine
         public static string MonsterMoves = "{0} {3} moves to ({1},{2}))";
         public static string MonsterStays = "{0} {1} stands ready";
         public static string MonstersAttack = "The monsters attack {0} with {1} attack point(s) against your {2} point(s) of defence, dealing {3} point(s) of damage!";
-        public static string HeroDefeated = "{0} has been slain. R.I.P {1}-{2}";
+        public static string HeroDefeated = "{0} has been slain. R.I.P {1:dd.MM.yyyy}-{2:dd.MM.yyyy}";
         public static string MonsterAttackAvoided = "{0} has avoided the monsters for now";
         public static string LevelUpError = "You must choose to level up a skill or replenish health but not both";
         public static string LevelUpReplenishHealth = "{0} takes a long rest and is filled with newfound ENERGY";

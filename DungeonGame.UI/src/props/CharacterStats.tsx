@@ -54,7 +54,7 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, di
               <FlashCell
                 key={`base-${type}`}
                 value={stats[type] ?? 0}
-                className="bg-slate-900/20 p-1 text-center font-bold text-base"
+                className={`bg-slate-900/20 p-1 text-center font-bold text-base ${stats[type] >= 99 ? 'text-red-400 ' : ''}`}
                 >{stats[type] ?? 0}</FlashCell>
             ))}
           </>

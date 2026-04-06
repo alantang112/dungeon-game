@@ -7,6 +7,8 @@ namespace DungeonGame.Engine.Models.Enums
         Minotaur,
         Fiendling,
         Colossus,
-        Overseer
+        Overseer,
+        Direwolf,
+        Reaper,
     }
 }

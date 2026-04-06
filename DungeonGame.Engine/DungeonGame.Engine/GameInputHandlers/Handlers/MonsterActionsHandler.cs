@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -20,11 +21,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             if (inputEvent.EventType == InputEventType.MonstersMove)
             {
-                return PerformMonsterMove(gameState);
+                var newGameState = PerformMonsterMove(gameState);
+                MonsterSpecialFunctions.PostMonstersMoveFunction(newGameState);
+                return newGameState;
             }
             else if (inputEvent.EventType == InputEventType.MonstersAttack)
             {
-                return PerformMonsterAttack(gameState);
+                var newGameState = PerformMonsterAttack(gameState);
+                MonsterSpecialFunctions.PostMonstersAttackFunction(newGameState);
+                return newGameState;
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
@@ -76,7 +81,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (gameState.Hero.Health <= 0)
                 {
                     gameState.GamePhase = GamePhase.GameEnd;
-                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.BirthYear, DateTime.Now.Year));
+                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.Birthday, DateTime.Today));
                 }
             }
             else

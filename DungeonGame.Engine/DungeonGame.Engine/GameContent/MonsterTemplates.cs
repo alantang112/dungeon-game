@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
 
-namespace DungeonGame.Engine.GameTemplates
+namespace DungeonGame.Engine.GameContent
 {
     public static class MonsterSpawner
     {
@@ -63,6 +62,7 @@ namespace DungeonGame.Engine.GameTemplates
                     break;
                 case MonsterType.Overseer:
                     monster.IsBossType = true;
+                    monster.Phase = 1;
                     monster.BossDiceType = DiceType.D4;
                     monster.Health = 6;
                     monster.MaxHealth = monster.Health;
@@ -70,6 +70,24 @@ namespace DungeonGame.Engine.GameTemplates
                     monster.SetStat(SkillType.Attack, 3);
                     monster.SetStat(SkillType.Defence, 3);
                     monster.SetStat(SkillType.AttackRange, 4);
+                    break;
+                case MonsterType.Direwolf:
+                    monster.Health = 3;
+                    monster.Phase = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, 4);
+                    monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack);
+                    monster.SetStat(SkillType.Defence, 6);
+                    monster.SetStat(SkillType.AttackRange, 3);
+                    break;
+                case MonsterType.Reaper:
+                    monster.Health = 4;
+                    monster.Phase = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, 6);
+                    monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
+                    monster.SetStat(SkillType.Defence, 6);
+                    monster.SetStat(SkillType.AttackRange, 3);
                     break;
                 default:
                     throw new NotImplementedException();

@@ -37,6 +37,8 @@ export type MonsterType =
     | "Fiendling"
     | "Colossus"
     | "Overseer"
+    | "Direwolf"
+    | "Reaper"
 ;
 
 export type DiceType =
@@ -78,6 +80,7 @@ export class Monster {
     IsBossType!: boolean;
     BossDice!: Record<SkillType, number>;
     BossDiceType?: DiceType;
+    Phase?: number;
 }
 
 export class MonsterPosition {
