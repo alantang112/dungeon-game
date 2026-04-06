@@ -27,7 +27,9 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.MonstersAttack)
             {
-                return PerformMonsterAttack(gameState);
+                var newGameState = PerformMonsterAttack(gameState);
+                MonsterSpecialFunctions.PostMonstersAttackFunction(newGameState);
+                return newGameState;
             }
             else if (inputEvent.EventType == InputEventType.MonsterActionsEnd)
             {
