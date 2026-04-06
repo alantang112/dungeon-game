@@ -109,23 +109,23 @@ namespace DungeonGame.Engine.GameContent
 
             if (reaper.Monster.Phase == 2 && moved)
             {
-                reaper.Monster.Phase = -1;
+                reaper.Monster.Phase = -2;
             }
             else if (reaper.Monster.Phase == 1 && !moved)
             {
-                reaper.Monster.Phase = -2;
+                reaper.Monster.Phase = -1;
             }
         }
 
         private static void TransformReaper(MonsterPosition reaper)
         {
-            if (reaper.Monster.Phase == -1)
+            if (reaper.Monster.Phase == -2)
             {
                 reaper.Monster.Phase = 1;
                 reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
                 reaper.Monster.SetStat(SkillType.Movement, GameConstants.ReaperBaseMovement);
             }
-            else if (reaper.Monster.Phase == -2)
+            else if (reaper.Monster.Phase == -1)
             {
                 reaper.Monster.Phase = 2;
                 reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperEmpoweredAttack);
