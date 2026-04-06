@@ -130,4 +130,32 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Monsters[1].Monster.Phase, Is.EqualTo(1));
         Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(GameConstants.DirewolfBaseAttack));
     }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void GivenReaper_AndMoved_WhenPostMonstersAttack_RecalculateState(bool moved)
+    {
+        var gameState = new GameState();
+
+        gameState.World.InitializeLevel(-1);
+
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Reaper),
+            Position = new Engine.Models.Geometry.Position(1, 1)
+        });
+        if (moved)
+        {
+            gameState.World.Monsters[0].LastMovementPath = new List<Engine.Models.Geometry.Position>()
+            {
+                new Engine.Models.Geometry.Position(2, 1),
+                new Engine.Models.Geometry.Position(1, 1)
+            };
+        }
+
+        MonsterSpecialFunctions.PostMonstersAttackFunction(gameState);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(moved ? 1 : 2));
+        Assert.That(gameState.World.Monsters[0].Monster.GetStat(SkillType.Attack), Is.EqualTo(moved ? GameConstants.ReaperBaseAttack : GameConstants.ReaperEmpoweredAttack));
+    }
 }

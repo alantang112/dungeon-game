@@ -80,6 +80,15 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.Defence, 6);
                     monster.SetStat(SkillType.AttackRange, 3);
                     break;
+                case MonsterType.Reaper:
+                    monster.Health = 4;
+                    monster.Phase = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, 6);
+                    monster.SetStat(SkillType.Attack, GameConstants.ReaperBaseAttack);
+                    monster.SetStat(SkillType.Defence, 6);
+                    monster.SetStat(SkillType.AttackRange, 3);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

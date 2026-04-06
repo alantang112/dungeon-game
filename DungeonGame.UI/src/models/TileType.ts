@@ -13,6 +13,8 @@ export const TileType = {
   Direwolf: "Direwolf",
   Direwolf2: "Direwolf-2",
   Direwolf3: "Direwolf-3",
+  Reaper: "Reaper",
+  Reaper2: "Reaper-2"
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];

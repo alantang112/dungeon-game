@@ -38,6 +38,7 @@ export type MonsterType =
     | "Colossus"
     | "Overseer"
     | "Direwolf"
+    | "Reaper"
 ;
 
 export type DiceType =

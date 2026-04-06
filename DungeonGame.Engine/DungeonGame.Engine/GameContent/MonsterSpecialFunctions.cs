@@ -65,6 +65,18 @@ namespace DungeonGame.Engine.GameContent
             }
         }
 
+        public static void PostMonstersAttackFunction(GameState gameState)
+        {
+            foreach(var monsterPosition in gameState.World.Monsters)
+            {
+                if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                {
+                    RecalculateReaper(monsterPosition);
+                    continue;
+                }
+            }
+        }
+
         private static void RecalculateDirewolf(MonsterPosition direwolf, GameState gameState)
         {
             if (direwolf.Monster.Type != MonsterType.Direwolf)
@@ -77,6 +89,14 @@ namespace DungeonGame.Engine.GameContent
 
             direwolf.Monster.Phase = neighbouringDirewolfCount <= 0 ? 1 : (neighbouringDirewolfCount == 1 ? 2 : 3);
             direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
+        }
+
+        private static void RecalculateReaper(MonsterPosition reaper)
+        {
+            var moved = reaper.LastMovementPath.Any();
+
+            reaper.Monster.Phase = moved ? 1 : 2;
+            reaper.Monster.SetStat(SkillType.Attack, moved ? GameConstants.ReaperBaseAttack : GameConstants.ReaperEmpoweredAttack);
         }
     }
 }
