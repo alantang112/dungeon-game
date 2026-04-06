@@ -79,7 +79,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if (gameState.Hero.Health <= 0)
                 {
                     gameState.GamePhase = GamePhase.GameEnd;
-                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.BirthYear, DateTime.Now.Year));
+                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.Birthday, DateTime.Today));
                 }
             }
             else
