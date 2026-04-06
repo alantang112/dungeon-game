@@ -166,7 +166,7 @@ function App() {
         </div>
       )
 
-      monsterRowTypes.push(monster.Type);
+      monsterRowTypes.push(monsterRowType);
     }
     
     // only display monster movement path during MonsterActions phase
@@ -339,7 +339,7 @@ const getTileType = (monster: Monster) : TileType => {
   {
     return "Overseer-2";
   }
-  else if (monster.Type == "Direwolf" && monster.Phase === 1)
+  else if (monster.Type == "Direwolf" && monster.Phase === 2)
   {
     return "Direwolf-2";
   }
