@@ -3,7 +3,7 @@ using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
 
-namespace DungeonGame.Engine.GameTemplates
+namespace DungeonGame.Engine.GameContent
 {
     public static class MonsterSpecialFunctions
     {
@@ -28,13 +28,14 @@ namespace DungeonGame.Engine.GameTemplates
                 case MonsterType.Overseer:
                     if (monster.Health <= 0)
                     {
-                        if (monster.GetStat(SkillType.Movement, true) != 3)
+                        if (monster.Phase == 1)
                         {
                             monster.SetStat(SkillType.Movement, 3);
                             monster.SetStat(SkillType.Attack, 5);
                             monster.SetStat(SkillType.Defence, 6);
                             monster.SetStat(SkillType.AttackRange, 6);
                             monster.Health = 6;
+                            monster.Phase = 2;
                         }
                     }
                     break;

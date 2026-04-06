@@ -1,4 +1,4 @@
-using DungeonGame.Engine.GameTemplates;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests.GameTemplates;

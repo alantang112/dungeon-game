@@ -3,7 +3,7 @@ using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.InputEventModels;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
-using DungeonGame.Engine.GameTemplates;
+using DungeonGame.Engine.GameContent;
 
 namespace DungeonGame.Engine.Tests.GamePhases;
 

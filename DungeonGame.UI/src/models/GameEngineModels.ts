@@ -78,6 +78,7 @@ export class Monster {
     IsBossType!: boolean;
     BossDice!: Record<SkillType, number>;
     BossDiceType?: DiceType;
+    Phase?: number;
 }
 
 export class MonsterPosition {

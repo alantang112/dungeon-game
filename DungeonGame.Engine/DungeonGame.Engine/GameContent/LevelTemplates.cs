@@ -3,7 +3,7 @@ using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
 
-namespace DungeonGame.Engine.GameTemplates
+namespace DungeonGame.Engine.GameContent
 {
     public static class LevelTemplates
     {

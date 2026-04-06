@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonGame.Engine.GameTemplates;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;

@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
 
-namespace DungeonGame.Engine.GameTemplates
+namespace DungeonGame.Engine.GameContent
 {
     public static class MonsterSpawner
     {
@@ -63,6 +62,7 @@ namespace DungeonGame.Engine.GameTemplates
                     break;
                 case MonsterType.Overseer:
                     monster.IsBossType = true;
+                    monster.Phase = 1;
                     monster.BossDiceType = DiceType.D4;
                     monster.Health = 6;
                     monster.MaxHealth = monster.Health;

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using DungeonGame.Engine.GameTemplates;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
