@@ -6,16 +6,16 @@ namespace DungeonGame.Engine.Tests.GameTemplates;
 
 public class MonsterSpecialFunctionsTests
 {
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 5, SkillType.Defence)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 4, SkillType.AttackRange)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 3, SkillType.Movement)]
-    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 2, SkillType.Attack)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 5, SkillType.Attack)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 4, SkillType.Defence)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 3, SkillType.AttackRange)]
+    [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 2, SkillType.Movement)]
     [TestCase("6946ddcd-ff4b-4798-845d-75c2c599e143", 1, SkillType.Attack)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 5, SkillType.Defence)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 4, SkillType.Attack)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 3, SkillType.Attack)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 2, SkillType.AttackRange)]
-    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 1, SkillType.Movement)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 5, SkillType.Attack)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 4, SkillType.Defence)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 3, SkillType.AttackRange)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 2, SkillType.Movement)]
+    [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 1, SkillType.Attack)]
     [TestCase("c04d22e4-92f6-4293-a0b7-9babefacfe72", 0, null)]
     public void GivenColossusWithRandomSeed_ThenDeterministicallyLevelStat(string guid, int currentHealth, SkillType? expectedSkillTypeLeveled)
     {
@@ -131,9 +131,11 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(GameConstants.DirewolfBaseAttack));
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void GivenReaper_AndMoved_WhenPostMonstersAttack_RecalculateState(bool moved)
+    [TestCase(1, true, 1)]
+    [TestCase(1, false, -1)]
+    [TestCase(2, true, -2)]
+    [TestCase(2, false, 2)]
+    public void GivenReaper_AndMoved_WhenPostMonstersAttack_RecalculateState(int initialPhase, bool moved, int expectedPhase)
     {
         var gameState = new GameState();
 
@@ -144,6 +146,7 @@ public class MonsterSpecialFunctionsTests
             Monster = MonsterSpawner.Spawn(MonsterType.Reaper),
             Position = new Engine.Models.Geometry.Position(1, 1)
         });
+        gameState.World.Monsters[0].Monster.Phase = initialPhase;
         if (moved)
         {
             gameState.World.Monsters[0].LastMovementPath = new List<Engine.Models.Geometry.Position>()
@@ -155,6 +158,6 @@ public class MonsterSpecialFunctionsTests
 
         MonsterSpecialFunctions.PostMonstersAttackFunction(gameState);
 
-        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(moved ? -1 : -2));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
     }
 }

@@ -8,7 +8,7 @@ namespace DungeonGame.Engine.GameContent
 {
     public static class MonsterSpecialFunctions
     {
-        private static readonly SkillType[] ColossusLevelUpSkills = { SkillType.Attack, SkillType.Attack, SkillType.Defence, SkillType.Movement, SkillType.AttackRange };     
+        private static readonly SkillType[] ColossusLevelUpSkills = { SkillType.Attack, SkillType.Defence, SkillType.AttackRange, SkillType.Movement, SkillType.Attack };     
         public static void PostDamageFunction(Monster monster, GameState gameState)
         {
             switch (monster.Type)
@@ -16,14 +16,9 @@ namespace DungeonGame.Engine.GameContent
                 case MonsterType.Colossus:
                     if (monster.Health >= 1)
                     {
-                        // deterministically level a random stat
                         var missingHealth = monster.MaxHealth - monster.Health;
-                        var enumeratedSkillToLevel = ColossusLevelUpSkills
-                                .Select((skillType, index) => (skillType, index))
-                                .OrderBy(tup => RandomUtility.GenerateDeterministicGuid(monster.RandomSeed, tup.index))
-                                .Skip(missingHealth - 1)
-                                .First();
-                        monster.SetStat(enumeratedSkillToLevel.skillType, monster.GetStat(enumeratedSkillToLevel.skillType) + 1);
+                        var nextSkillToLevel = ColossusLevelUpSkills[missingHealth - 1];
+                        monster.SetStat(nextSkillToLevel, monster.GetStat(nextSkillToLevel) + 1);
                     }
                     break;
                 case MonsterType.Overseer:

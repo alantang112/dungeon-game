@@ -57,7 +57,7 @@ namespace DungeonGame.Engine.GameContent
                     monster.MaxHealth = monster.Health;
                     monster.SetStat(SkillType.Movement, 3);
                     monster.SetStat(SkillType.Attack, 5);
-                    monster.SetStat(SkillType.Defence, 5);
+                    monster.SetStat(SkillType.Defence, 6);
                     monster.SetStat(SkillType.AttackRange, 2);
                     break;
                 case MonsterType.Overseer:
