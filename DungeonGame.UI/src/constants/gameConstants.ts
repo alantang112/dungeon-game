@@ -1,6 +1,6 @@
 import type { SkillType } from "../models/GameEngineModels";
 
-export const UIVersion: string = '1.2.4';
+export const UIVersion: string = '1.3';
 
 export const DebugMode: boolean = false; 
 

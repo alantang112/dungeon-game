@@ -21,6 +21,18 @@ export const HelpPageRenderer = ({ items }: HelpPageRendererProps) => {
                                 {item.content}
                             </p>
                         );
+                    case 'ordered-list':
+                        return (
+                            <ol key={index} type='1' className="text-slate-300 leading-relaxed list-decimal list-inside">
+                                {item.contents!.map(content => <li>{content}</li>)}
+                            </ol>
+                        );
+                    case 'unordered-list':
+                        return (
+                            <ol key={index} type='1' className="text-slate-300 leading-relaxed list-disc list-inside">
+                                {item.contents!.map(content => <li>{content}</li>)}
+                            </ol>
+                        );
                     case 'image':
                         return (
                             <div key={index} className="flex justify-center my-6 p-2 bg-slate-800 border border-slate-700 rounded">

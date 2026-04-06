@@ -1,8 +1,9 @@
 import { assetPath, howToPlayAssetsPath } from "./constants/assetConstants";
 
 export interface HelpItem {
-    type: 'heading' | 'text' | 'image' | 'separator';
-    content: string; // The text content or the image src URL
+    type: 'heading' | 'text' | 'image' | 'separator' | 'ordered-list' | 'unordered-list';
+    content?: string; // The text content or the image src URL
+    contents?: string[]; // The text content for ordered list
     alt?: string;    // Optional alt text for images
 }
 
@@ -18,7 +19,8 @@ export const howToPlayPages: HelpPage[] = [
         title: "Dungeon Game",
         items: [
             { type: 'text', content: "This is a turn based action game played on a 5x5 grid." },
-            { type: 'text', content: 'Each turn consists of 1) rolling energy dice, 2) your actions (moving and attacking), and 3) monster actions (moving and attacking).'},
+            { type: 'text', content: 'Each turn consists of:'},
+            { type: 'ordered-list', contents: ['Rolling energy dice', 'Hero actions (moving and attack)', 'Monsters movement', 'Monsters attack'] },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}overview-1.png`},
         ]
     },
@@ -34,18 +36,19 @@ export const howToPlayPages: HelpPage[] = [
     },
     {
         id: 3,
-        title: "Moving Your Hero",
+        title: "Hero movement",
         items: [
             { type: 'text', content: "Click on any tile adjacent to your hero to move." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}movement-1.png` },
-            { type: 'text', content: "It costs 2 movement points to move orthogonally and 3 movement points to move diagonally." },
+            { type: 'text', content: "Movement energy requirements:" },
+            { type: 'unordered-list', contents: ["2 energy to move orthogonally", "3 energy to move diagonally."] },
             { type: 'text', content: "You can't hop diagonally through walls." },
             { type: 'text', content: "You can hop diagonally past monsters." },
         ]
     },
     {
         id: 4,
-        title: "Hero Combat",
+        title: "Hero combat",
         items: [
             { type: 'text', content: "Click on monster tiles to attack. They must be in range and in line of sight." },
             { type: 'text', content: "You spend attack energy equal to the monster's defence stat to deal 1 damage." },
@@ -56,7 +59,7 @@ export const howToPlayPages: HelpPage[] = [
     },
     {
         id: 4,
-        title: "Hero Combat II",
+        title: "Hero combat II",
         items: [
             { type: 'heading', content: "Line of sight" },
             { type: 'text', content: "You have line of sight if you can draw an uninterrupted line between any corner of your tile to the target tile." },
@@ -66,10 +69,21 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 4,
-        title: "Monster Movement",
+        id: 5,
+        title: "Hero combat III",
         items: [
-            { type: 'text', content: "You don't need to know how monsters behave to play the game but if you really want to know..." },
+            { type: 'heading', content: "Line of sight continued" },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}lineofsight-3.png` },
+            { type: 'text', content: "There is line of sight with Wanda but not with Marge since Wanda blocks line of sight. Marge also does not have line of sight of you." },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}lineofsight-4.png` },
+            { type: 'text', content: "There is line of sight with Wanda but not with Marge since Wanda and the wall blocks line of sight. Marge also does not have line of sight of you." }
+        ]
+    },
+    {
+        id: 6,
+        title: "Monster movement",
+        items: [
+            { type: 'text', content: "You don't need to know how monsters behave to play the game but it is required to master the game." },
             { type: 'text', content: "Monsters move one at a time, in order of distance from you, starting with the closest." },
             { type: 'text', content: "They will move towards the tile at their maximum range from you with line of sight. If there are no tiles in range and in line of sight, they will move as close as possible to you." },
             { type: 'text', content: "If there are multiple options, they will prioritise the closest, then if still tied the leftmost tile, then the bottommost tile." },
@@ -78,21 +92,22 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 5,
-        title: "Monster Attack",
+        id: 7,
+        title: "Monster combat",
         items: [
-            { type: 'text', content: "After all monsters have moved, monsters with enough attack range and line of sight of you, attack." },
+            { type: 'text', content: "After all monsters have moved, monsters that can reach you with their attack range and that has line of sight of you, attack." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monsterattack-1.png` },
-            { type: 'text', content: "Damage taken = (sum of attacking monster's attack) / (your defence energy), rounded down." },
+            { type: 'text', content: "Damage taken = (sum of attacking monster's attack stat) / (your defence energy), rounded down." },
         ]
     },
     {
-        id: 6,
+        id: 8,
         title: "Level end",
         items: [
-            { type: 'text', content: "The level ends after you have defeated all monsters." },
+            { type: 'text', content: "The level ends when you have defeated all monsters." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}levelend-1.png` },
-            { type: 'text', content: "Upgrade a base stat or replenish your health to full as a reward before proceeding to the next level." },
+            { type: 'text', content: "As a reward, upgrade a base stat by 1 or replenish your health to full before proceeding to the next level." },
+            { type: 'text', content: "Happy dungeoning." },
         ]
     }
 ];
