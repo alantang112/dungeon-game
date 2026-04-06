@@ -42,6 +42,7 @@ public class MonsterSpecialFunctionsTests
 
     [TestCase(3,3, 3,4, 2)]
     [TestCase(3,3, 4,4, 2)]
+    [TestCase(3,3, 5,3, 2)]
     [TestCase(3,3, 5,4, 1)]
     public void GivenDirewolves_WhenPostMove_RecalculateState(int posX, int posY, int pos2X, int pos2Y, int expectedPhase)
     {

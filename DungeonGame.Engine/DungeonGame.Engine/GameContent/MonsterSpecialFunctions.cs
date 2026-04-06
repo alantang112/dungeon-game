@@ -73,7 +73,7 @@ namespace DungeonGame.Engine.GameContent
             var neighbouringDirewolfCount = gameState.World.Monsters
                 .Where(mp => mp.Monster.Id != direwolf.Monster.Id)
                 .Where(mp => mp.Monster.Health > 0)
-                .Count(mp => GeometryUtility.CalculateDistanceBetween(direwolf.Position, mp.Position) <= GameConstants.MovementPointsDiagonal);
+                .Count(mp => GeometryUtility.CalculateDistanceBetween(direwolf.Position, mp.Position) <= (GameConstants.MovementPointsOrthogonal * 2));
 
             direwolf.Monster.Phase = neighbouringDirewolfCount > 0 ? 2 : 1;
             direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
