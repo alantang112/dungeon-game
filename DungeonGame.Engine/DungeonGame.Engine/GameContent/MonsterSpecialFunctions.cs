@@ -1,4 +1,5 @@
 using System.Linq;
+using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Utilities;
@@ -8,7 +9,7 @@ namespace DungeonGame.Engine.GameContent
     public static class MonsterSpecialFunctions
     {
         private static readonly SkillType[] ColossusLevelUpSkills = { SkillType.Attack, SkillType.Attack, SkillType.Defence, SkillType.Movement, SkillType.AttackRange };     
-        public static void PostDamageFunction(Monster monster)
+        public static void PostDamageFunction(Monster monster, GameState gameState)
         {
             switch (monster.Type)
             {
@@ -39,7 +40,43 @@ namespace DungeonGame.Engine.GameContent
                         }
                     }
                     break;
+                case MonsterType.Direwolf:
+                    if (monster.Health <= 0)
+                    {
+                        foreach(var otherMonster in gameState.World.Monsters.Where(mp => mp.Monster.Id != monster.Id))
+                        {
+                            if (otherMonster.Monster.Type == MonsterType.Direwolf)
+                                RecalculateDirewolf(otherMonster, gameState);
+                        }
+                    }
+                    break;
             }
+        }
+
+        public static void PostMonstersMoveFunction(GameState gameState)
+        {
+            foreach(var monsterPosition in gameState.World.Monsters)
+            {
+                if (monsterPosition.Monster.Type == MonsterType.Direwolf)
+                {
+                    RecalculateDirewolf(monsterPosition, gameState);
+                    continue;
+                }
+            }
+        }
+
+        private static void RecalculateDirewolf(MonsterPosition direwolf, GameState gameState)
+        {
+            if (direwolf.Monster.Type != MonsterType.Direwolf)
+                return;
+
+            var neighbouringDirewolfCount = gameState.World.Monsters
+                .Where(mp => mp.Monster.Id != direwolf.Monster.Id)
+                .Where(mp => mp.Monster.Health > 0)
+                .Count(mp => GeometryUtility.CalculateDistanceBetween(direwolf.Position, mp.Position) <= GameConstants.MovementPointsDiagonal);
+
+            direwolf.Monster.Phase = neighbouringDirewolfCount > 0 ? 2 : 1;
+            direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
         }
     }
 }

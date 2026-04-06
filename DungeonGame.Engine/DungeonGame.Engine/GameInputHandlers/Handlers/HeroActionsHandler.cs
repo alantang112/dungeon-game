@@ -114,7 +114,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 gameState.ViewData.MonsterAttackedByHero = monsterPosition;
                 monsterPosition.Monster.Health -= 1;
-                MonsterSpecialFunctions.PostDamageFunction(monsterPosition.Monster);
+                MonsterSpecialFunctions.PostDamageFunction(monsterPosition.Monster, gameState);
 
                 gameState.World.HeroActionPoints[SkillType.Attack] -= monsterDefence;
                 gameState.AddGameMessage(string.Format(GameMessages.HeroAttacksMonster, gameState.Hero.Name, monsterPosition.Monster.Type, 

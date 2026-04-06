@@ -19,5 +19,8 @@ namespace DungeonGame.Engine
         public static int HeroMaxHealth = 6;
 
         public static int LoopIterationLimit = 100;
+
+        public static int DirewolfBaseAttack = 4;
+        public static int DirewolfBonusAttack = 2;
     }
 }

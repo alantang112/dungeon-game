@@ -71,6 +71,15 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.Defence, 3);
                     monster.SetStat(SkillType.AttackRange, 4);
                     break;
+                case MonsterType.Direwolf:
+                    monster.Health = 3;
+                    monster.Phase = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, 4);
+                    monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack);
+                    monster.SetStat(SkillType.Defence, 6);
+                    monster.SetStat(SkillType.AttackRange, 3);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

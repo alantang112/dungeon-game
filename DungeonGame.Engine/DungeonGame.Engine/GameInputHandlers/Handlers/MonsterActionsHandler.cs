@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
@@ -20,7 +21,9 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             if (inputEvent.EventType == InputEventType.MonstersMove)
             {
-                return PerformMonsterMove(gameState);
+                var newGameState = PerformMonsterMove(gameState);
+                MonsterSpecialFunctions.PostMonstersMoveFunction(newGameState);
+                return newGameState;
             }
             else if (inputEvent.EventType == InputEventType.MonstersAttack)
             {

@@ -129,7 +129,7 @@ function App() {
   }
 
   const monsterStatRows: ReactNode[] = [];
-  var monsterRowTypes: TileType[] = [];
+  var monsterRowTypes: string[] = [];
   const monsterPaths: Arrow[] = [];
   const monsterCount: number = state.World?.Monsters?.length ?? 0;
 
@@ -137,7 +137,9 @@ function App() {
   {
     const monster = state.World!.Monsters![monsterIndex].Monster;
 
-    if (!monsterRowTypes.some(x => x == monster.Type))
+    const monsterRowType = `${monster.Type}|${monster.Stats["Movement"]}|${monster.Stats["Attack"]}|${monster.Stats["Defence"]}|${monster.Stats["AttackRange"]}`;
+
+    if (!monsterRowTypes.some(x => x == monsterRowType))
     {
         var monsterEnergy: Record<SkillType, number> | undefined = undefined;
 
@@ -336,6 +338,10 @@ const getTileType = (monster: Monster) : TileType => {
   if (monster.Type == "Overseer" && monster.Phase === 2)
   {
     return "Overseer-2";
+  }
+  else if (monster.Type == "Direwolf" && monster.Phase === 1)
+  {
+    return "Direwolf-2";
   }
 
   return monster.Type;

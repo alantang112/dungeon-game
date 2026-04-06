@@ -9,7 +9,9 @@ export const TileType = {
   Fiendling: "Fiendling",
   Colossus: "Colossus",
   Overseer: "Overseer",
-  Overseer2: "Overseer-2"
+  Overseer2: "Overseer-2",
+  Direwolf: "Direwolf",
+  Direwolf2: "Direwolf-2",
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];

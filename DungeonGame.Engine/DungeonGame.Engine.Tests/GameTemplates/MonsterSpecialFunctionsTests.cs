@@ -1,4 +1,5 @@
 using DungeonGame.Engine.GameContent;
+using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests.GameTemplates;
@@ -25,7 +26,7 @@ public class MonsterSpecialFunctionsTests
 
         var initialStats = new Dictionary<SkillType, int>(monster.Stats);
 
-        MonsterSpecialFunctions.PostDamageFunction(monster);
+        MonsterSpecialFunctions.PostDamageFunction(monster, new GameState());
 
         Assert.Multiple(() =>
         {
@@ -37,5 +38,62 @@ public class MonsterSpecialFunctionsTests
                 Assert.That(actual, Is.EqualTo(expected), $"Expected {skillType} to be {expected} but was {actual}");
             }
         });
+    }
+
+    [TestCase(3,3, 3,4, 2)]
+    [TestCase(3,3, 4,4, 2)]
+    [TestCase(3,3, 5,4, 1)]
+    public void GivenDirewolves_WhenPostMove_RecalculateState(int posX, int posY, int pos2X, int pos2Y, int expectedPhase)
+    {
+        var gameState = new GameState();
+
+        gameState.World.InitializeLevel(-1);
+
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(posX, posY)
+        });
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(pos2X, pos2Y)
+        });
+
+        MonsterSpecialFunctions.PostMonstersMoveFunction(gameState);
+
+        var expectedAttack = GameConstants.DirewolfBaseAttack + (expectedPhase == 2 ? GameConstants.DirewolfBonusAttack : 0);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Monsters[1].Monster.Phase, Is.EqualTo(expectedPhase));
+
+        Assert.That(gameState.World.Monsters[0].Monster.GetStat(SkillType.Attack), Is.EqualTo(expectedAttack));
+        Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(expectedAttack));
+    }
+
+    [Test]
+    public void GivenDireWolves_WhenPostHeroAttack_AndDirewolfDefeated_RecalculateState()
+    {
+        var gameState = new GameState();
+
+        gameState.World.InitializeLevel(-1);
+
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(1, 1)
+        });
+        gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Direwolf),
+            Position = new Engine.Models.Geometry.Position(1, 2)
+        });
+
+        gameState.World.Monsters[0].Monster.Health = 0;
+
+        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[0].Monster, gameState);
+
+        Assert.That(gameState.World.Monsters[1].Monster.Phase, Is.EqualTo(1));
+        Assert.That(gameState.World.Monsters[1].Monster.GetStat(SkillType.Attack), Is.EqualTo(GameConstants.DirewolfBaseAttack));
     }
 }
