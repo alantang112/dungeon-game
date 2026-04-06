@@ -113,6 +113,15 @@ namespace DungeonGame.Engine.GameContent
                 RandomWallsCountMax = 0,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Direwolf, new Position(1, 5)), (MonsterType.Direwolf, new Position(5, 5)) }
             },
+            new Level()
+            {
+                LevelNumber = 15,
+                HeroPosition = new Position(1, 2),
+                WallPositions = new Position[] { new Position(3, 3), },
+                RandomWallsCountMin = 3,
+                RandomWallsCountMax = 3,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Direwolf, new Position(3, 5)), (MonsterType.Direwolf, new Position(5, 3)), (MonsterType.Direwolf, new Position(4, 1)) }
+            },
             // Test levels
             new Level()
             {
