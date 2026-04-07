@@ -146,7 +146,7 @@ namespace DungeonGame.Engine.GameContent
               LevelNumber = 15,
               HeroPosition = new Position(1, 5),
               WallPositions = new Position[] { new Position(1,1), new Position(3,3), new Position(5,5)},
-              MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Oathbound, new Position(3, 4)), (MonsterType.Elfling, new Position(5, 5)) }  
+              MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Oathbound, new Position(3, 4)), (MonsterType.Elfling, new Position(5, 1)) }  
             },
             // Test levels
             new Level()
