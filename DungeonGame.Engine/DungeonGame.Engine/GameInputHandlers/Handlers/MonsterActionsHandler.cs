@@ -382,7 +382,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     {
                         Position = x.Key,
                         MovementPointsRequired = x.Value,
-                        DistanceFromTarget = 0,
+                        DistanceFromTarget = int.MaxValue,
                     };
 
                     return result;
@@ -411,7 +411,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
 
             var bestWalkablePositionCandidate = walkablePositionCandidates
-                .OrderByDescending(x => x.DistanceFromTarget)
+                .OrderBy(x => x.DistanceFromTarget)
                 .ThenBy(x => x.MovementPointsRequired)
                 .ThenBy(x => x.Position.X)
                 .ThenBy(x => x.Position.Y)
