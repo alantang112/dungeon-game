@@ -45,6 +45,23 @@ namespace DungeonGame.Engine.GameContent
                         }
                     }
                     break;
+                case MonsterType.Elfling:
+                    var oathbound = gameState.World.Monsters.FirstOrDefault(x => x.Monster.Type == MonsterType.Oathbound); 
+                    if (oathbound != null)
+                    {
+                        oathbound.Monster.Health--;
+                        if (oathbound.Monster.Health <= 0)
+                        {
+                            gameState.World.Monsters.Remove(oathbound);
+                        }
+                        else
+                        {
+                            monster.Health++; // keep elfling alive as long as oathbound is
+                            monster.SetStat(SkillType.Defence, monster.GetStat(SkillType.Defence) + GameConstants.ElflingBonusDefence);
+                            monster.SetStat(SkillType.Movement, monster.GetStat(SkillType.Movement) + GameConstants.ElflingBonusMovement);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -69,6 +86,11 @@ namespace DungeonGame.Engine.GameContent
                     RecalculateReaperPhase(monsterPosition);
                     continue;
                 }
+                else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
+                {
+                    monsterPosition.Monster.Phase *= -1;
+                    continue;
+                }
             }
         }
 
@@ -79,6 +101,17 @@ namespace DungeonGame.Engine.GameContent
                 if (monsterPosition.Monster.Type == MonsterType.Reaper)
                 {
                     TransformReaper(monsterPosition);
+                    continue;
+                }
+                else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
+                {
+                    TransformOathbound(monsterPosition);
+                    continue;
+                }
+                else if (monsterPosition.Monster.Type == MonsterType.Elfling)
+                {
+                    monsterPosition.Monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
+                    monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
                     continue;
                 }
             }
@@ -125,6 +158,23 @@ namespace DungeonGame.Engine.GameContent
                 reaper.Monster.Phase = 2;
                 reaper.Monster.SetStat(SkillType.Attack, GameConstants.ReaperEmpoweredAttack);
                 reaper.Monster.SetStat(SkillType.Movement, GameConstants.ReaperEmpoweredMovement);
+            }
+        }
+
+        private static void TransformOathbound(MonsterPosition oathbound)
+        {
+            if (oathbound.Monster.Phase == -1)
+            {
+                oathbound.Monster.Phase = 2;
+                oathbound.Monster.SetStat(SkillType.Movement, GameConstants.OathboundPhase2Movement);
+                oathbound.Monster.SetStat(SkillType.Attack, GameConstants.OathboundPhase2Attack);
+            }
+            else if (oathbound.Monster.Phase == -2)
+            {
+                
+                oathbound.Monster.Phase = 1;
+                oathbound.Monster.SetStat(SkillType.Movement, GameConstants.OathboundPhase1Movement);
+                oathbound.Monster.SetStat(SkillType.Attack, GameConstants.OathboundPhase1Attack);
             }
         }
     }

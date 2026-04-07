@@ -134,12 +134,19 @@ namespace DungeonGame.Engine.GameContent
             },
             new Level()
             {
-                LevelNumber = 15,
+                LevelNumber = 14,
                 HeroPosition = new Position(1, 2),
                 WallPositions = new Position[] { new Position(3, 3), },
                 RandomWallsCountMin = 3,
                 RandomWallsCountMax = 3,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Direwolf, new Position(3, 5)), (MonsterType.Direwolf, new Position(5, 3)), (MonsterType.Direwolf, new Position(4, 1)) }
+            },
+            new Level()
+            {
+              LevelNumber = 15,
+              HeroPosition = new Position(1, 5),
+              WallPositions = new Position[] { new Position(1,1), new Position(3,3), new Position(5,5)},
+              MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Oathbound, new Position(3, 4)), (MonsterType.Elfling, new Position(5, 5)) }  
             },
             // Test levels
             new Level()
