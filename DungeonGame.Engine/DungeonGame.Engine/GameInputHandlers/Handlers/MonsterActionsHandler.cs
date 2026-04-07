@@ -131,18 +131,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.World.HeroPosition
             };
 
+            var monstersExcludingSelf = GetMonstersExcludingSelf(monsterPosition, gameState);
+
             var monsterWalkMap = GeometryUtility.PlotValuesByFloodSearch(
                 monsterOriginalPosition,
                 wallsAndHero,
-                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()),
                 FloodSearchHelpers.FloodUntilAllSquaresWalked,
                 FloodSearchHelpers.ReturnAllPositions
             );
 
-            var filteredMonsterWalkMap = monsterWalkMap.Where(x => 
-                !gameState.World.Monsters
-                    .Where(mp => mp.Position != monsterOriginalPosition)
-                    .Any(mp => mp.Position == x.Key))
+            var filteredMonsterWalkMap = monsterWalkMap.Where(x => !monstersExcludingSelf.Any(p => p == x.Key))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
 
             if (!filteredMonsterWalkMap.Any())
@@ -211,6 +210,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
 
             var wallsAndMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
+            var monstersExcludingSelf = GetMonstersExcludingSelf(monsterPosition, gameState);
             var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
 
             // If monster already at max attack range from hero and in line of sight of hero, continue
@@ -228,15 +228,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             var monsterWalkMap = GeometryUtility.PlotValuesByFloodSearch(
                 monsterOriginalPosition,
                 wallsAndHero,
-                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()),
                 FloodSearchHelpers.FloodUntilAllSquaresWalked,
                 FloodSearchHelpers.ReturnAllPositions
             );
 
-            var filteredMonsterWalkMap = monsterWalkMap.Where(x => 
-                !gameState.World.Monsters
-                    .Where(mp => mp.Position != monsterOriginalPosition)
-                    .Any(mp => mp.Position == x.Key))
+            var filteredMonsterWalkMap = monsterWalkMap.Where(x => !monstersExcludingSelf .Any(p => p == x.Key))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
 
             if (!filteredMonsterWalkMap.Any())
@@ -314,9 +311,14 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             var result = new List<Position>();
             result.AddRange(gameState.World.Walls);
-            result.AddRange(gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Select(mp => mp.Position));
+            result.AddRange(GetMonstersExcludingSelf(monsterPosition, gameState));
 
             return result;
+        }
+
+        private static List<Position> GetMonstersExcludingSelf(MonsterPosition monsterPosition, GameState gameState)
+        {
+            return gameState.World.Monsters.Where(mp => mp.Position != monsterPosition.Position).Select(mp => mp.Position).ToList();
         }
 
         private static CandidateMovementPosition GetBestWalkableCandidateFromOptimalPositions(List<CandidateMovementPosition> positionCandidates, Dictionary<Position, int> walkablePositions, MonsterPosition monsterPosition, GameState gameState, List<Position> optimalPositions)
@@ -341,14 +343,22 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             var walkBlockers = GetWalkBlockers(gameState);
 
-            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
+            Func<Position, int, Dictionary<Position, (int,int)>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, (int,int)> floodValues) =>
             {
                 return walkablePositionCandidates.Any(x => x.Position == position);
             };
 
+            var monstersExcludingSelf = GetMonstersExcludingSelf(monsterPosition, gameState);
+
             foreach(var optimalPosition in optimalPositions)
             {
-                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(optimalPosition, walkBlockers, FloodSearchHelpers.WalkValueFunction, FloodSearchHelpers.FloodUntilAllSquaresWalked, returnPositionsFilter);
+                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(
+                    optimalPosition, 
+                    walkBlockers, 
+                    FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()), 
+                    FloodSearchHelpers.FloodUntilAllSquaresWalked, 
+                    returnPositionsFilter
+                );
 
                 foreach(var distanceToOptimalPosition in distanceToOptimalPositions)
                 {
@@ -390,14 +400,21 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             var walkBlockers = GetWalkBlockers(gameState);
 
-            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
+            Func<Position, int, Dictionary<Position, (int,int)>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, (int,int)> floodValues) =>
             {
                 return walkablePositionCandidates.Any(x => x.Position == position);
             };
 
+            var monstersExcludingSelf = GetMonstersExcludingSelf(monsterPosition, gameState);
+
             foreach(var optimalPosition in optimalPositions)
             {
-                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(optimalPosition, walkBlockers, FloodSearchHelpers.WalkValueFunction, FloodSearchHelpers.FloodUntilAllSquaresWalked, returnPositionsFilter);
+                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(
+                    optimalPosition, 
+                    walkBlockers, 
+                    FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()),
+                    FloodSearchHelpers.FloodUntilAllSquaresWalked, returnPositionsFilter
+                );
 
                 foreach(var distanceToOptimalPosition in distanceToOptimalPositions)
                 {
