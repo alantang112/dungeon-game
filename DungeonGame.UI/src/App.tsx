@@ -350,6 +350,10 @@ const getTileType = (monster: Monster) : TileType => {
   {
     return "Reaper-2";
   }
+  else if (monster.Type === "Oathbound" && (monster.Phase === 2 || monster.Phase === -2))
+  {
+    return "Oathbound-2";
+  }
 
   return monster.Type;
 }

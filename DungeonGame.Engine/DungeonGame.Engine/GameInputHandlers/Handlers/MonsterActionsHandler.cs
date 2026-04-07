@@ -106,111 +106,199 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => walkDistanceFromHeroMap[x.Position]))
             {
                 monsterPosition.LastMovementPath.Clear();
-                var monsterOriginalPosition = monsterPosition.Position;
-                
-                var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
 
-                if (monsterPosition.Monster.GetStat(SkillType.Movement) < GameConstants.MovementPointsOrthogonal)
+                if (monsterPosition.Monster.Traits.Contains(MonsterTrait.FleeFromHero))
                 {
-                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
-                    continue;
-                }
-                    
-                var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
-
-                var wallsAndMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
-                var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
-
-                // If monster already at max attack range from hero and in line of sight of hero, continue
-                if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.GetStat(SkillType.AttackRange))
-                {
-                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
-                    continue;
+                    PerformFleeFromHeroMonsterMove(monsterPosition, gameState, walkDistanceFromHeroMap);
+                    continue;    
                 }
 
-                var wallsAndHero = new List<Position>(gameState.World.Walls)
-                {
-                    gameState.World.HeroPosition
-                };
-
-                var monsterWalkMap = GeometryUtility.PlotValuesByFloodSearch(
-                    monsterOriginalPosition,
-                    wallsAndHero,
-                    FloodSearchHelpers.WalkValueFunction,
-                    FloodSearchHelpers.FloodUntilAllSquaresWalked,
-                    FloodSearchHelpers.ReturnAllPositions
-                );
-
-                var filteredMonsterWalkMap = monsterWalkMap.Where(x => 
-                    !gameState.World.Monsters
-                        .Where(mp => mp.Position != monsterOriginalPosition)
-                        .Any(mp => mp.Position == x.Key))
-                    .ToDictionary(kv => kv.Key, kv => kv.Value);
-
-                if (!filteredMonsterWalkMap.Any())
-                {
-                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
-                    continue;
-                }
-
-                var positionCandidates = new List<CandidateMovementPosition>();
-                foreach(var position in filteredMonsterWalkMap)
-                {
-                    var candidate = new CandidateMovementPosition()
-                    {
-                        Position = position.Key,
-                        MovementPointsRequired = position.Value,
-                        DistanceFromTarget = walkDistanceFromHeroMap[position.Key],
-                        HasLineOfSight = GeometryUtility.HasLineOfSightOf(position.Key, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf),
-                        RangeFromTarget = int.MaxValue
-                    };
-
-                    if (candidate.HasLineOfSight)
-                    {
-                        candidate.RangeFromTarget = GeometryUtility.CalculateDistanceBetween(candidate.Position, gameState.World.HeroPosition);
-
-                    }
-                        
-                    positionCandidates.Add(candidate);
-                }
-
-                var monsterAttackRange = monsterPosition.Monster.GetStat(SkillType.AttackRange);
-
-                var idealPosition = positionCandidates
-                    // first try to be in line of sight and attack range
-                    .OrderBy(x => (x.HasLineOfSight && x.RangeFromTarget <= monsterAttackRange) ? 0 : 1)
-                    .ThenByDescending(x => x.HasLineOfSight ? x.RangeFromTarget : int.MaxValue) // then try to be at max range (within line of sight)
-                    .ThenBy(x => x.DistanceFromTarget) // then try to be as close as possible to hero
-                    .ThenBy(x => x.MovementPointsRequired) // then try to use as less movement as possible
-                    .ThenBy(x => x.Position.X) // then try to be in leftmost position
-                    .ThenBy(x => x.Position.Y) // then try to be in bottommost position
-                    .First();
-
-                if (idealPosition.Position == monsterOriginalPosition)
-                {
-                    gameState.AddGameMessage(monsterDoesNotMoveMessage);
-                    continue;
-                }
-
-                var monsterMovement = monsterPosition.Monster.GetStat(SkillType.Movement);
-                var walkablePositions = filteredMonsterWalkMap.Where(x =>
-                    x.Value <= monsterMovement)
-                    .ToDictionary(kv => kv.Key, kv => kv.Value);
-
-                var idealPositionInMovementRange = walkablePositions.Any(x => x.Key == idealPosition.Position) 
-                    ? idealPosition.Position
-                    : GetBestWalkableCandidateFromOptimalPositions(positionCandidates, walkablePositions, monsterPosition, gameState, new List<Position>{ idealPosition.Position }).Position;
-
-                if (idealPositionInMovementRange != monsterOriginalPosition)
-                {
-                    monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
-                    monsterPosition.Position = idealPositionInMovementRange;
-                    gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
-                    continue;
-                }
+                PerformStandardMonsterMove(monsterPosition, gameState, walkDistanceFromHeroMap);
             }
 
             return gameState;
+        }
+
+        // TODO: add unit tests
+        private static void PerformFleeFromHeroMonsterMove(MonsterPosition monsterPosition, GameState gameState, Dictionary<Position, int> walkDistanceFromHeroMap)
+        {
+            var monsterOriginalPosition = monsterPosition.Position;
+            
+            var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
+
+            var wallsAndHero = new List<Position>(gameState.World.Walls)
+            {
+                gameState.World.HeroPosition
+            };
+
+            var monsterWalkMap = GeometryUtility.PlotValuesByFloodSearch(
+                monsterOriginalPosition,
+                wallsAndHero,
+                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.FloodUntilAllSquaresWalked,
+                FloodSearchHelpers.ReturnAllPositions
+            );
+
+            var filteredMonsterWalkMap = monsterWalkMap.Where(x => 
+                !gameState.World.Monsters
+                    .Where(mp => mp.Position != monsterOriginalPosition)
+                    .Any(mp => mp.Position == x.Key))
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            if (!filteredMonsterWalkMap.Any())
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+
+            var positionCandidates = new List<CandidateMovementPosition>();
+            foreach(var position in filteredMonsterWalkMap)
+            {
+                var candidate = new CandidateMovementPosition()
+                {
+                    Position = position.Key,
+                    MovementPointsRequired = position.Value,
+                    DistanceFromTarget = walkDistanceFromHeroMap[position.Key],
+                };
+
+                positionCandidates.Add(candidate);
+            }
+
+            var idealPosition = positionCandidates
+                // try to be as far away as possible from hero
+                .OrderByDescending(x => x.DistanceFromTarget) 
+                .ThenBy(x => x.MovementPointsRequired) // then try to use as less movement as possible
+                .ThenBy(x => x.Position.X) // then try to be in leftmost position
+                .ThenBy(x => x.Position.Y) // then try to be in bottommost position
+                .First();
+
+            if (idealPosition.Position == monsterOriginalPosition)
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+
+            var monsterMovement = monsterPosition.Monster.GetStat(SkillType.Movement);
+            var walkablePositions = filteredMonsterWalkMap.Where(x =>
+                x.Value <= monsterMovement)
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            var idealPositionInMovementRange = walkablePositions.Any(x => x.Key == idealPosition.Position) 
+                ? idealPosition.Position
+                : GetBestWalkableCandidateFromOptimalPositionsFleeFromHero(positionCandidates, walkablePositions, monsterPosition, gameState, new List<Position>{ idealPosition.Position }).Position;
+
+            if (idealPositionInMovementRange != monsterOriginalPosition)
+            {
+                monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
+                monsterPosition.Position = idealPositionInMovementRange;
+                gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                return;
+            }
+        }
+
+        private static void PerformStandardMonsterMove(MonsterPosition monsterPosition, GameState gameState, Dictionary<Position, int> walkDistanceFromHeroMap)
+        {
+            var monsterOriginalPosition = monsterPosition.Position;
+            
+            var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
+
+            if (monsterPosition.Monster.GetStat(SkillType.Movement) < GameConstants.MovementPointsOrthogonal)
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+                
+            var currentDistanceFromHero = GeometryUtility.CalculateDistanceBetween(monsterPosition.Position, gameState.World.HeroPosition);
+
+            var wallsAndMonstersExcludingSelf = GetWallsAndMonstersExcludingSelf(monsterPosition, gameState);
+            var currentlyHasLineOfSight = GeometryUtility.HasLineOfSightOf(monsterPosition.Position, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf);
+
+            // If monster already at max attack range from hero and in line of sight of hero, continue
+            if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.GetStat(SkillType.AttackRange))
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+
+            var wallsAndHero = new List<Position>(gameState.World.Walls)
+            {
+                gameState.World.HeroPosition
+            };
+
+            var monsterWalkMap = GeometryUtility.PlotValuesByFloodSearch(
+                monsterOriginalPosition,
+                wallsAndHero,
+                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.FloodUntilAllSquaresWalked,
+                FloodSearchHelpers.ReturnAllPositions
+            );
+
+            var filteredMonsterWalkMap = monsterWalkMap.Where(x => 
+                !gameState.World.Monsters
+                    .Where(mp => mp.Position != monsterOriginalPosition)
+                    .Any(mp => mp.Position == x.Key))
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            if (!filteredMonsterWalkMap.Any())
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+
+            var positionCandidates = new List<CandidateMovementPosition>();
+            foreach(var position in filteredMonsterWalkMap)
+            {
+                var candidate = new CandidateMovementPosition()
+                {
+                    Position = position.Key,
+                    MovementPointsRequired = position.Value,
+                    DistanceFromTarget = walkDistanceFromHeroMap[position.Key],
+                    HasLineOfSight = GeometryUtility.HasLineOfSightOf(position.Key, gameState.World.HeroPosition, wallsAndMonstersExcludingSelf),
+                    RangeFromTarget = int.MaxValue
+                };
+
+                if (candidate.HasLineOfSight)
+                {
+                    candidate.RangeFromTarget = GeometryUtility.CalculateDistanceBetween(candidate.Position, gameState.World.HeroPosition);
+                }
+                    
+                positionCandidates.Add(candidate);
+            }
+
+            var monsterAttackRange = monsterPosition.Monster.GetStat(SkillType.AttackRange);
+
+            var idealPosition = positionCandidates
+                // first try to be in line of sight and attack range
+                .OrderBy(x => (x.HasLineOfSight && x.RangeFromTarget <= monsterAttackRange) ? 0 : 1)
+                .ThenByDescending(x => x.HasLineOfSight ? x.RangeFromTarget : int.MaxValue) // then try to be at max range (within line of sight)
+                .ThenBy(x => x.DistanceFromTarget) // then try to be as close as possible to hero
+                .ThenBy(x => x.MovementPointsRequired) // then try to use as less movement as possible
+                .ThenBy(x => x.Position.X) // then try to be in leftmost position
+                .ThenBy(x => x.Position.Y) // then try to be in bottommost position
+                .First();
+
+            if (idealPosition.Position == monsterOriginalPosition)
+            {
+                gameState.AddGameMessage(monsterDoesNotMoveMessage);
+                return;
+            }
+
+            var monsterMovement = monsterPosition.Monster.GetStat(SkillType.Movement);
+            var walkablePositions = filteredMonsterWalkMap.Where(x =>
+                x.Value <= monsterMovement)
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            var idealPositionInMovementRange = walkablePositions.Any(x => x.Key == idealPosition.Position) 
+                ? idealPosition.Position
+                : GetBestWalkableCandidateFromOptimalPositions(positionCandidates, walkablePositions, monsterPosition, gameState, new List<Position>{ idealPosition.Position }).Position;
+
+            if (idealPositionInMovementRange != monsterOriginalPosition)
+            {
+                monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
+                monsterPosition.Position = idealPositionInMovementRange;
+                gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
+                return;
+            }
         }
 
         private static List<Position> GetWalkBlockers(GameState gameState)
@@ -285,7 +373,52 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             return bestWalkablePositionCandidate;
         }
 
-        
+        private static CandidateMovementPosition GetBestWalkableCandidateFromOptimalPositionsFleeFromHero(List<CandidateMovementPosition> positionCandidates, Dictionary<Position, int> walkablePositions, MonsterPosition monsterPosition, GameState gameState, List<Position> optimalPositions)
+        {
+            var walkablePositionCandidates = new List<CandidateMovementPosition>();
+            walkablePositionCandidates.AddRange(walkablePositions.Select(x =>
+                {
+                    var result = new CandidateMovementPosition()
+                    {
+                        Position = x.Key,
+                        MovementPointsRequired = x.Value,
+                        DistanceFromTarget = int.MaxValue,
+                    };
+
+                    return result;
+                }));
+
+            var walkBlockers = GetWalkBlockers(gameState);
+
+            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter = (Position position, int value, Dictionary<Position, int> floodValues) =>
+            {
+                return walkablePositionCandidates.Any(x => x.Position == position);
+            };
+
+            foreach(var optimalPosition in optimalPositions)
+            {
+                var distanceToOptimalPositions = GeometryUtility.PlotValuesByFloodSearch(optimalPosition, walkBlockers, FloodSearchHelpers.WalkValueFunction, FloodSearchHelpers.FloodUntilAllSquaresWalked, returnPositionsFilter);
+
+                foreach(var distanceToOptimalPosition in distanceToOptimalPositions)
+                {
+                    var walkablePositionCandidate = walkablePositionCandidates.Single(x => x.Position == distanceToOptimalPosition.Key);
+
+                    if (distanceToOptimalPosition.Value < walkablePositionCandidate.DistanceFromTarget)
+                    {
+                        walkablePositionCandidate.DistanceFromTarget = distanceToOptimalPosition.Value;
+                    }
+                }
+            }
+
+            var bestWalkablePositionCandidate = walkablePositionCandidates
+                .OrderBy(x => x.DistanceFromTarget)
+                .ThenBy(x => x.MovementPointsRequired)
+                .ThenBy(x => x.Position.X)
+                .ThenBy(x => x.Position.Y)
+                .First();
+
+            return bestWalkablePositionCandidate;
+        }
         #endregion
     }
 }

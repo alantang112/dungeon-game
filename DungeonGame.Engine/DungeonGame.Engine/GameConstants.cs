@@ -26,5 +26,13 @@ namespace DungeonGame.Engine
         public static int ReaperEmpoweredAttack = 99;
         public static int ReaperBaseMovement = 6;
         public static int ReaperEmpoweredMovement = 2;
+        public static int OathboundPhase1Movement = 5;
+        public static int OathboundPhase1Attack = 9;
+        public static int OathboundPhase2Movement = 3;
+        public static int OathboundPhase2Attack = 12;
+        public static int ElflingBaseDefence = 3;
+        public static int ElflingBonusDefence = 7;
+        public static int ElflingBaseMovement = 5;
+        public static int ElflingBonusMovement = 5;
     }
 }

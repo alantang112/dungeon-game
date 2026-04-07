@@ -10,5 +10,7 @@ namespace DungeonGame.Engine.Models.Enums
         Overseer,
         Direwolf,
         Reaper,
+        Oathbound,
+        Elfling
     }
 }

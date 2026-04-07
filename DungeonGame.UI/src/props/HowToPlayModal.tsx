@@ -52,12 +52,14 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
     const navigateNext = () => {
         if (!isLastPage) {
             setCurrentPageIndex(prev => prev + 1);
+            dialogRef.current?.scrollTo(0, 0);
         }
     };
 
     const navigatePrev = () => {
         if (!isFirstPage) {
             setCurrentPageIndex(prev => prev - 1);
+            dialogRef.current?.scrollTo(0, 0);
         }
     };
 

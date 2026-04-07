@@ -89,6 +89,24 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.Defence, 6);
                     monster.SetStat(SkillType.AttackRange, 3);
                     break;
+                case MonsterType.Oathbound:
+                    monster.Health = 6;
+                    monster.Phase = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, GameConstants.OathboundPhase1Movement);
+                    monster.SetStat(SkillType.Attack, GameConstants.OathboundPhase1Attack);
+                    monster.SetStat(SkillType.Defence, 99);
+                    monster.SetStat(SkillType.AttackRange, 2);
+                    break;
+                case MonsterType.Elfling:
+                    monster.Health = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
+                    monster.SetStat(SkillType.Attack, 3);
+                    monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
+                    monster.SetStat(SkillType.AttackRange, 2);
+                    monster.Traits = new MonsterTrait[] { MonsterTrait.FleeFromHero };
+                    break;
                 default:
                     throw new NotImplementedException();
             }
