@@ -73,15 +73,15 @@ namespace DungeonGame.Engine.Utilities
         /// </summary>
         /// <param name="seed">Starting position</param>
         /// <param name="blockers">Positions to ignore for flood search</param>
-        /// <param name="valueFunction">Function to evaluate "value" of position. Inputs: (currentPosition, stepNumber, isDiagonalStep, previousValue)</param>
+        /// <param name="valueFunction">Function to evaluate "value" of position. Inputs: (currentPosition, stepNumber, isDiagonalStep, previousPosition, previousValue)</param>
         /// <param name="floodUntilStepNumber">Return final step number if possible to determine. Inputs: (allPositionsWithValue)</param>
         /// <param name="returnPositionsFilter">Return true if currentPosition should be returned in results: Inputs: (currentPosition, value, allPositionsWithValues)</param>
         /// <returns>Result contains the position and the calculated value</returns>
         public static Dictionary<Position, int> PlotValuesByFloodSearch(
-            Position seed, List<Position> blockers, Func<Position, int, bool, int, int> valueFunction, Func<Dictionary<Position, int>, int?> floodUntilStepNumber, 
-            Func<Position, int, Dictionary<Position, int>, bool> returnPositionsFilter)
+            Position seed, List<Position> blockers, Func<Position, int, bool, Position, (int, int), (int, int)> valueFunction, Func<Dictionary<Position, int>, int?> floodUntilStepNumber, 
+            Func<Position, int, Dictionary<Position, (int,int)>, bool> returnPositionsFilter)
         {
-            var floodSearchResults = new Dictionary<Position, int> { { seed, 0 } };
+            var floodSearchResults = new Dictionary<Position, (int, int)> { { seed, (0, 0) } };
             var floodSearchResultsPreviousCount = floodSearchResults.Count;
             
             int? finalStepNumber = null;
@@ -89,46 +89,49 @@ namespace DungeonGame.Engine.Utilities
 
             while(true)
             {
-                var positionsToFloodFrom = floodSearchResults.Where(x => x.Value == stepNumber).ToList();
+                var positionsToFloodFrom = floodSearchResults.Where(x => x.Value.Item1 == stepNumber).ToList();
 
-                if (!positionsToFloodFrom.Any() && stepNumber > floodSearchResults.Where(x => x.Value != int.MaxValue).Max(x => x.Value))
+                if (!positionsToFloodFrom.Any() && stepNumber > floodSearchResults.Where(x => x.Value.Item1 != int.MaxValue).Max(x => x.Value.Item1))
                 {
                     break;
                 }
 
-                foreach((Position position, int value) in positionsToFloodFrom)
+                foreach((Position position, (int, int) value) in positionsToFloodFrom)
                 {
-                    // walk diagonally
-                    foreach((int xDelta, int yDelta) in DiagonalStepDirections)
+                    // walk diagonally then orthogonally
+                    foreach((int xDelta, int yDelta) in DiagonalStepDirections.Concat(OrthogonalStepDirections))
                     {
                         var newPosition = position.Translate(xDelta, yDelta);
+                        var isDiagonal = Math.Abs(xDelta) + Math.Abs(yDelta) == 2;
 
-                        // check it is not blocked
-                        if (blockers.Contains(new Position(position.X, newPosition.Y)) && blockers.Contains(new Position(newPosition.X, position.Y)))
+                        // check it is not diagonally blocked
+                        if (isDiagonal && blockers.Contains(new Position(position.X, newPosition.Y)) && blockers.Contains(new Position(newPosition.X, position.Y)))
                             continue;
 
-                        if (floodSearchResults.ContainsKey(newPosition))
-                            continue;
+                        var hasExistingResult = floodSearchResults.TryGetValue(newPosition, out var existingFloorSearchResult);
 
-                        if (!blockers.Contains(newPosition))
+                        if (hasExistingResult && existingFloorSearchResult.Item2 == 0)
                         {
-                            var newPositionValue = valueFunction(newPosition, stepNumber, true, value);
-                            floodSearchResults.Add(newPosition, newPositionValue);
+                            continue;
                         }
-                    }
-
-                    // walk orthogonally
-                    foreach((int xDelta, int yDelta) in OrthogonalStepDirections)
-                    {
-                        var newPosition = position.Translate(xDelta, yDelta);
-
-                        if (floodSearchResults.ContainsKey(newPosition))
-                            continue;
 
                         if (!blockers.Contains(newPosition))
                         {
-                            var newPositionValue = valueFunction(newPosition, stepNumber, false, value);
-                            floodSearchResults.Add(newPosition, newPositionValue);
+                            var newPositionValue = valueFunction(newPosition, stepNumber, isDiagonal, position, value);
+
+                            if (hasExistingResult)
+                            {
+                                floodSearchResults[newPosition] = 
+                                (
+                                    newPositionValue.Item1 < existingFloorSearchResult.Item1 ? newPositionValue.Item1 : existingFloorSearchResult.Item1,
+                                    newPositionValue.Item2 < existingFloorSearchResult.Item2 ? newPositionValue.Item2 : existingFloorSearchResult.Item2
+                                ); 
+                            }
+                            else
+                            {
+                                floodSearchResults.Add(newPosition, newPositionValue);
+                            }
+
                         }
                     }
                 }
@@ -145,10 +148,10 @@ namespace DungeonGame.Engine.Utilities
 
             var returnFloodSearchResults = new Dictionary<Position, int>();
 
-            foreach((Position position, int value) in floodSearchResults)
+            foreach((Position position, (int,int) value) in floodSearchResults)
             {
-                if (returnPositionsFilter(position, value, floodSearchResults))
-                    returnFloodSearchResults.Add(position, value);
+                if (returnPositionsFilter(position, value.Item1, floodSearchResults))
+                    returnFloodSearchResults.Add(position, value.Item1);
             }
 
             return returnFloodSearchResults;

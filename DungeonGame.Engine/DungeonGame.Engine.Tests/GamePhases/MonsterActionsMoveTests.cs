@@ -392,4 +392,59 @@ public class MonsterActionsMoveTests
 
         Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.MonsterActions));
     }
+
+    [TestCase(2,2, "2,3|3,3|4,3", "1,2", MonsterType.Minotaur, 1,3, 2,4)]
+    [TestCase(2,2, "2,3|3,3|4,3", "1,2", MonsterType.Minotaur, 1,4, 2,4)]
+    [TestCase(2,2, "2,3|3,3|4,3|4,4", "1,2", MonsterType.Fiendling, 1,3, 1,1)]
+    [TestCase(2,2, "2,3|3,3|4,3|4,4", "1,2", MonsterType.Fiendling, 1,4, 1,3)]
+    [TestCase(1,1, "2,3|3,3|4,3|4,4", "1,2|1,3", MonsterType.Fiendling, 2,4, 3,5)]
+    [TestCase(1,1, "2,3|3,3|4,3|4,4", "1,2|1,3", MonsterType.Fiendling, 3,5, 5,5)]
+    public void GivenMonstersInTheWay_ThenConsiderThatPathAsNotWalkable(int heroX, int heroY, string walls, string stationaryMonsters, MonsterType monsterType, int monsterX, int monsterY, int expectedMonsterX, int expectedMonsterY)
+    {
+        var initialGameState = _sut.GetCurrentState();
+
+        initialGameState.World.InitializeLevel(-1);
+
+        initialGameState.World.HeroPosition = new Position(heroX, heroY);
+
+        foreach(var wall in walls.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var wallSplit = wall.Split(",");
+            var wallX = int.Parse(wallSplit[0]);
+            var wallY = int.Parse(wallSplit[1]);
+
+            initialGameState.World.Walls.Add(new Position(wallX, wallY));
+        }
+        
+        foreach(var stationaryMonster in stationaryMonsters.Split("|").Where(x => !string.IsNullOrEmpty(x)))
+        {
+            var stationaryMonsterSplit = stationaryMonster.Split(",");
+            var stationaryMonsterX = int.Parse(stationaryMonsterSplit[0]);
+            var stationaryMonsterY = int.Parse(stationaryMonsterSplit[1]);
+
+            var newMonster = MonsterSpawner.Spawn(MonsterType.Spider);
+            newMonster.SetStat(SkillType.Movement, 0);
+
+            initialGameState.World.Monsters.Add(new MonsterPosition()
+            {
+                Monster = newMonster,
+                Position = new Position(stationaryMonsterX, stationaryMonsterY)
+            });
+        }
+
+        initialGameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(monsterType),
+            Position = new Position(monsterX, monsterY)
+        });
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions));
+
+        var newGameState = _sut.ProcessInput(new Engine.Models.InputEventModels.InputEvent()
+        {
+            EventType = Engine.Models.Enums.InputEventType.HeroActionEnd
+        });
+
+        Assert.That(newGameState.World.Monsters.Last().Position, Is.EqualTo(new Position(expectedMonsterX, expectedMonsterY)));
+    }
 }
