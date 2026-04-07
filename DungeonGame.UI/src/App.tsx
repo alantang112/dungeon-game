@@ -327,7 +327,7 @@ function App() {
             <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
         {
-        state.GamePhase === "Start" && <span className='absolute bottom-1 left-1 text-mist-400 text-sm'>V{UIVersion}</span>
+          state.GamePhase === "Start" && <span className='fixed bottom-1 left-1 text-mist-400 text-sm font-mono'>V{UIVersion}</span>
         }
       </div>
     </div>
