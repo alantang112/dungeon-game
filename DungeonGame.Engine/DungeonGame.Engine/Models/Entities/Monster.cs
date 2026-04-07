@@ -38,5 +38,7 @@ namespace DungeonGame.Engine.Models.Entities
         public Dictionary<SkillType, int> BossDice { get; set; } = new Dictionary<SkillType, int>();
         public DiceType? BossDiceType { get; set; }
         public int? Phase { get; set; }
+        
+        public MonsterTrait[] Traits { get; set;} = Array.Empty<MonsterTrait>();
     }
 }

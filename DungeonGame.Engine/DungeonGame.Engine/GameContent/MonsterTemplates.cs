@@ -105,6 +105,7 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.Attack, 3);
                     monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
                     monster.SetStat(SkillType.AttackRange, 2);
+                    monster.Traits = new MonsterTrait[] { MonsterTrait.FleeFromHero };
                     break;
                 default:
                     throw new NotImplementedException();
