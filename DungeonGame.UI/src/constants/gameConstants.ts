@@ -66,3 +66,4 @@ export const levelNameColor = (levelNumber: number): string => {
 export const damageAnimationDelayMs: number = 180;
 
 export const nightmareLevelnumber: number = 16;
+export const borderWallCount: number = LevelSize * 4 + 4;

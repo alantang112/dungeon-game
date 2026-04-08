@@ -4,7 +4,7 @@ import { Tile } from './props/Tile';
 import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
-import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, levelNameColor, UIVersion } from './constants/gameConstants';
+import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, levelNameColor, UIVersion, nightmareLevelnumber, borderWallCount } from './constants/gameConstants';
 import './App.css'
 import type { AvailableButton } from './models/AvailableButton';
 import { ButtonsRow } from './props/ButtonsRow';
@@ -94,6 +94,7 @@ function App() {
           angleToTarget={angleToTarget}
           isMonster={tileData.isMonster}
           pulse={tileData.shouldPulse}
+          customBgColor={tileData.customBgColor}
           />
         </div>
       );
@@ -202,6 +203,14 @@ function App() {
     }];
   } 
 
+  var displayAltGridColors: boolean = false;
+  
+  if (state.LevelNumber === nightmareLevelnumber)
+  {
+    const levelWallCount = state.World!.Walls!.length - borderWallCount;
+    displayAltGridColors = (levelWallCount === 0);
+  }
+
   return (
     <div className="bg-slate-900">
       <AssetPreloader/>
@@ -242,8 +251,8 @@ function App() {
         
         
         {/* Game grid */}
-        <div className="relative inline-block border-2 border-slate-600 bg-slate-700 p-1">
-          <div className={`${levelNameColor(state.LevelNumber ?? 1)} p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
+        <div className={`relative inline-block border-2 border-slate-600 p-1 ${displayAltGridColors ? 'bg-violet-800' : 'bg-slate-700 '} transition-colors`}>
+          <div className={`${displayAltGridColors ? 'text-mist-200 ' : levelNameColor(state.LevelNumber ?? 1)} transition-colors p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
           <div className="relative">
             {/* The Grid */}
             <div 
@@ -393,7 +402,8 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
         health: monsterPosition.Monster.Health, 
         maxHealth: monsterPosition.Monster.MaxHealth, 
         name: monsterPosition.Monster.Name, 
-        isMonster: true 
+        isMonster: true,
+        customBgColor: monsterPosition.Monster.Type === "Nightmare" ? "bg-red-400" : undefined
       };
     } 
 
