@@ -146,6 +146,16 @@ namespace DungeonGame.Engine.GameContent
               WallPositions = new Position[] { new Position(1,1), new Position(3,3), new Position(5,5)},
               MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Oathbound, new Position(3, 4)), (MonsterType.Elfling, new Position(5, 1)) }  
             },
+            new Level()
+            {
+                LevelNumber = GameConstants.NightmareLevelNumber,
+                HeroPosition = new Position(1, 1),
+                RandomWallsCountMin = 4,
+                RandomWallsCountMax = 4,
+                EnforceWallIslands = true,
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Nightmare, new Position(5, 5)), (MonsterType.Minotaur, new Position(4, 5)),
+                    (MonsterType.Spider, new Position(5, 4)), (MonsterType.Skeleton, new Position(4, 4)) } 
+            },
             // Test levels
             new Level()
             {

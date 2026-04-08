@@ -17,7 +17,11 @@ export const TileType = {
   Reaper2: "Reaper-2",
   Oathbound: "Oathbound",
   Oathbound2: "Oathbound-2",
-  Elfling: "Elfling"
+  Elfling: "Elfling",
+  Nightmare: "Nightmare",
+  NightmareDamaged: "Nightmare-Damaged",
+  NightmareBoss: "Nightmare-Boss",
+  NightmareBossDamaged: "Nightmare-Boss-Damaged"
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];
