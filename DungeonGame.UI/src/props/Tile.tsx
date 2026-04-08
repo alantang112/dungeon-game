@@ -17,10 +17,10 @@ interface TileProps {
     isAttacking?: boolean;
     attackId?: string;
     angleToTarget?: number;
-    pulseDarken?: boolean;
+    pulse?: boolean;
 }
 
-export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, attackId, angleToTarget, pulseDarken }: TileProps) => {
+export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, attackId, angleToTarget, pulse }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
@@ -142,7 +142,7 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
                     className={'w-full h-full object-contain p-1 z-10 ' 
                         + (isAttacking ? 'animate-bump ': '')
                         + (shouldFlip ? '-scale-x-100 ' : 'scale-x-100 ')
-                        + (pulseDarken ? 'pulse-darken ' : '')}
+                        + (pulse ? 'pulse-hue ' : '')}
                     style={tileStyle}
                 />
             )}

@@ -93,7 +93,7 @@ function App() {
           attackId={isAttacking ? String(Date.now()) : undefined}
           angleToTarget={angleToTarget}
           isMonster={tileData.isMonster}
-          pulseDarken={tileData.shouldPulseDarken}
+          pulse={tileData.shouldPulse}
           />
         </div>
       );
@@ -392,7 +392,7 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
     {
       return { 
         tileType: state.LevelNumber === 16 ? "Nightmare-Wall" : "Wall", 
-        shouldPulseDarken: state.LevelNumber === 16,
+        shouldPulse: state.LevelNumber === 16,
         isMonster: false };
     }
       
