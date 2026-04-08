@@ -100,7 +100,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.World.Walls.ToList(),
                 FloodSearchHelpers.WalkValueFunction,
                 FloodSearchHelpers.FloodUntilAllSquaresWalked,
-                FloodSearchHelpers.ReturnAllPositions
+                FloodSearchHelpers.ReturnAllValidPositions
             );
 
             foreach(var monsterPosition in gameState.World.Monsters.OrderBy(x => walkDistanceFromHeroMap[x.Position]))
@@ -138,7 +138,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 wallsAndHero,
                 FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()),
                 FloodSearchHelpers.FloodUntilAllSquaresWalked,
-                FloodSearchHelpers.ReturnAllPositions
+                FloodSearchHelpers.ReturnAllValidPositions
             );
 
             var filteredMonsterWalkMap = monsterWalkMap.Where(x => !monstersExcludingSelf.Any(p => p == x.Key))
@@ -230,7 +230,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 wallsAndHero,
                 FloodSearchHelpers.WalkValueFunctionConsideringWalkingThroughMonsters(monsterPosition.Monster.GetStat(SkillType.Movement), monstersExcludingSelf.ToArray()),
                 FloodSearchHelpers.FloodUntilAllSquaresWalked,
-                FloodSearchHelpers.ReturnAllPositions
+                FloodSearchHelpers.ReturnAllValidPositions
             );
 
             var filteredMonsterWalkMap = monsterWalkMap.Where(x => !monstersExcludingSelf .Any(p => p == x.Key))

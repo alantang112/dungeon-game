@@ -34,7 +34,7 @@ namespace DungeonGame.Engine.Utilities
 
         public static Func<Dictionary<Position, int>, int?> FloodUntilAllSquaresWalked = (Dictionary<Position, int> floodValues) 
             => null;
-        public static Func<Position, int, Dictionary<Position, (int,int)>, bool> ReturnAllPositions = (Position position, int value, Dictionary<Position, (int,int)> floodValues) 
-            => true;
+        public static Func<Position, int, Dictionary<Position, (int,int)>, bool> ReturnAllValidPositions = (Position position, int value, Dictionary<Position, (int,int)> floodValues) 
+            => value < int.MaxValue;
     }
 }
