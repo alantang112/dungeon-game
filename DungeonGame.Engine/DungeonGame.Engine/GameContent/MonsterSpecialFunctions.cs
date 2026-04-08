@@ -238,7 +238,7 @@ namespace DungeonGame.Engine.GameContent
                     monsterPosition.Monster.Health = 6;
                     monsterPosition.Monster.MaxHealth = monsterPosition.Monster.Health;
                     monsterPosition.Monster.SetStat(SkillType.Movement, 3);
-                    monsterPosition.Monster.SetStat(SkillType.Attack, 7);
+                    monsterPosition.Monster.SetStat(SkillType.Attack, 8);
                     monsterPosition.Monster.SetStat(SkillType.Defence, 7);
                     monsterPosition.Monster.SetStat(SkillType.AttackRange, 6);
                     monsterPosition.Monster.IsBossType = true;
