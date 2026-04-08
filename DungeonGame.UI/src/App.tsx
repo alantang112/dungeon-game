@@ -94,8 +94,7 @@ function App() {
           angleToTarget={angleToTarget}
           isMonster={tileData.isMonster}
           pulse={tileData.shouldPulse}
-          customBgColor={tileData.customBgColor}
-          customAttackRingColor={tileData.customAttackRingColor}
+          danger={tileData.danger}
           />
         </div>
       );
@@ -409,8 +408,7 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
       // danger display
       if (monsterPosition.Monster.Type === "Nightmare" && monsterPosition.Monster.Stats["Attack"] >= 99)
       {
-        monsterTile.customBgColor = "bg-red-400";
-        monsterTile.customAttackRingColor = "bg-yellow-400";
+        monsterTile.danger = true;
       }
 
       return monsterTile;
