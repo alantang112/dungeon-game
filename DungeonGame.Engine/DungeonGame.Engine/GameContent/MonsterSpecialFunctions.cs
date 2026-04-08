@@ -114,6 +114,61 @@ namespace DungeonGame.Engine.GameContent
                     monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
                     continue;
                 }
+                else if (monsterPosition.Monster.Type == MonsterType.Nightmare)
+                {
+                    switch (monsterPosition.Monster.Phase)
+                    {
+                        // Wave monsters defeated -> nightmare damaged
+                        case 1:
+                        case 3:
+                        case 5:
+                            if (!gameState.World.Monsters.Any(mp => mp.Monster.Id != monsterPosition.Monster.Id))
+                            {
+                                monsterPosition.Monster.SetStat(SkillType.Defence, 1);
+                                monsterPosition.Monster.Phase += 1;
+                            }
+                            break;
+                        // Spawn next wave
+                        case -2:
+                        case -4:
+                            MonsterType[] waveMonsters = monsterPosition.Monster.Phase == -2 
+                                ? new MonsterType[] { MonsterType.Colossus, MonsterType.Fiendling, MonsterType.Direwolf }
+                                : new MonsterType[] { MonsterType.Reaper, MonsterType.Oathbound, MonsterType.Elfling };
+
+                            var spawnPositions = gameState.World.FindSpawnPositions(waveMonsters.Length);
+                            foreach(var (monsterType, index) in waveMonsters.Select((v, i) => (v, i)))
+                            {
+                                gameState.World.Monsters.Add(new MonsterPosition()
+                                {
+                                    Monster = MonsterSpawner.Spawn(monsterType),
+                                    Position = spawnPositions[index]
+                                });
+                            }
+
+                            gameState.World.InitializeRandomWalls(GameConstants.NightmareNumberOfRandomWalls, true);
+                            monsterPosition.Monster.Phase = (monsterPosition.Monster.Phase * -1) + 1;
+                            break;
+                        // Final wave defeated, transform to Boss mode
+                        case -6:
+                            monsterPosition.Monster.Health = 6;
+                            monsterPosition.Monster.MaxHealth = monsterPosition.Monster.Health;
+                            monsterPosition.Monster.SetStat(SkillType.Movement, 4);
+                            monsterPosition.Monster.SetStat(SkillType.Attack, 8);
+                            monsterPosition.Monster.SetStat(SkillType.Defence, 8);
+                            monsterPosition.Monster.SetStat(SkillType.AttackRange, 6);
+                            monsterPosition.Monster.IsBossType = true;
+                            monsterPosition.Monster.BossDiceType = DiceType.D4;
+                            
+                            gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
+                            monsterPosition.Monster.Phase = 7;
+                            break;
+                        // Boss damaged, recreate level walls
+                        case -7:
+                            gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
+                            monsterPosition.Monster.Phase = 7;
+                            break;
+                    }
+                }
             }
         }
 

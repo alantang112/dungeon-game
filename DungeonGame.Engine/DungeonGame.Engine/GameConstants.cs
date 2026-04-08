@@ -35,5 +35,7 @@ namespace DungeonGame.Engine
         public static int ElflingBaseMovement = 5;
         public static int ElflingBonusMovement = 5;
         public static int NightmareLevelNumber = 16;
+        public static int NightmareNumberOfRandomWalls = 4;
+        public static int NightmareBossNumberOfRandomWalls = 6;
     }
 }

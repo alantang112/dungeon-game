@@ -150,8 +150,8 @@ namespace DungeonGame.Engine.GameContent
             {
                 LevelNumber = GameConstants.NightmareLevelNumber,
                 HeroPosition = new Position(1, 1),
-                RandomWallsCountMin = 4,
-                RandomWallsCountMax = 4,
+                RandomWallsCountMin = GameConstants.NightmareNumberOfRandomWalls,
+                RandomWallsCountMax = GameConstants.NightmareNumberOfRandomWalls,
                 EnforceWallIslands = true,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Nightmare, new Position(5, 5)), (MonsterType.Minotaur, new Position(4, 5)),
                     (MonsterType.Spider, new Position(5, 4)), (MonsterType.Skeleton, new Position(4, 4)) } 
