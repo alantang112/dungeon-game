@@ -19,10 +19,11 @@ interface TileProps {
     angleToTarget?: number;
     pulse?: boolean;
     customBgColor?: string;
+    customAttackRingColor?: string;
 }
 
 export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, 
-    isMonster, isAttacking, attackId, angleToTarget, pulse, customBgColor }: TileProps) => {
+    isMonster, isAttacking, attackId, angleToTarget, pulse, customBgColor, customAttackRingColor }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
@@ -112,7 +113,7 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
         <div className={"flex items-center justify-center border border-slate-700 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
             + (isAnimatingDamage ? 'animate-damage ' : '')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
-            + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')
+            + (heroCanAttack ? (customAttackRingColor ? customAttackRingColor : 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ') : '')
             + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')
             + (customBgColor ? customBgColor : 'bg-slate-800 ')}
             >

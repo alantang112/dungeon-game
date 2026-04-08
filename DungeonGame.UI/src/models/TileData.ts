@@ -9,4 +9,5 @@ export class TileData {
     monsterId?: string;
     shouldPulse?: boolean;
     customBgColor?: string;
+    customAttackRingColor?: string;
 }

@@ -95,6 +95,7 @@ function App() {
           isMonster={tileData.isMonster}
           pulse={tileData.shouldPulse}
           customBgColor={tileData.customBgColor}
+          customAttackRingColor={tileData.customAttackRingColor}
           />
         </div>
       );
@@ -148,9 +149,9 @@ function App() {
         if (monster.IsBossType)
         {
           monsterEnergy = {
-            "Movement": monster.Stats["Movement"] + monster.BossDice["Movement"],
-            "Attack": monster.Stats["Attack"] + monster.BossDice["Attack"],
-            "Defence": monster.Stats["Defence"] + monster.BossDice["Defence"],
+            "Movement": monster.Stats["Movement"] + (monster.BossDice["Movement"] ?? 0),
+            "Attack": monster.Stats["Attack"] + (monster.BossDice["Attack"] ?? 0),
+            "Defence": monster.Stats["Defence"] + (monster.BossDice["Defence"] ?? 0),
             "AttackRange": 0
           };
         }
@@ -396,15 +397,23 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
 
     const monsterPosition = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
     if (monsterPosition) {
-      return { 
+      const monsterTile: TileData = { 
         monsterId: monsterPosition.Monster.Id,
         tileType: getTileType(monsterPosition.Monster), 
         health: monsterPosition.Monster.Health, 
         maxHealth: monsterPosition.Monster.MaxHealth, 
         name: monsterPosition.Monster.Name, 
         isMonster: true,
-        customBgColor: monsterPosition.Monster.Type === "Nightmare" ? "bg-red-400" : undefined
       };
+      
+      // danger display
+      if (monsterPosition.Monster.Type === "Nightmare" && monsterPosition.Monster.Stats["Attack"] >= 99)
+      {
+        monsterTile.customBgColor = "bg-red-400";
+        monsterTile.customAttackRingColor = "bg-yellow-400";
+      }
+
+      return monsterTile;
     } 
 
     return { tileType: "Empty", isMonster: false };
