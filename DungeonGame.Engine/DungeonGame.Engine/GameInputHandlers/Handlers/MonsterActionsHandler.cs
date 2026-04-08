@@ -186,7 +186,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 ? idealPosition.Position
                 : GetBestWalkableCandidateFromOptimalPositionsFleeFromHero(positionCandidates, walkablePositions, monsterPosition, gameState, new List<Position>{ idealPosition.Position }).Position;
 
-            if (idealPositionInMovementRange != monsterOriginalPosition)
+            if (idealPositionInMovementRange != monsterOriginalPosition 
+                && walkDistanceFromHeroMap[idealPositionInMovementRange] >= walkDistanceFromHeroMap[monsterOriginalPosition])
             {
                 monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
                 monsterPosition.Position = idealPositionInMovementRange;
