@@ -2,40 +2,40 @@ namespace DungeonGame.Engine
 {
     public static class GameConstants
     {
-        public static int DiceMin = 1;
-        public static int DiceMax = 6;
-        public static int NumberOfEnergyDice = 3;
+        public const int DiceMin = 1;
+        public const int DiceMax = 6;
+        public const int NumberOfEnergyDice = 3;
 
-        public static int LevelSize = 5;
+        public const int LevelSize = 5;
 
-        public static int MovementPointsDiagonal = 3;
-        public static int MovementPointsOrthogonal = 2;
+        public const int MovementPointsDiagonal = 3;
+        public const int MovementPointsOrthogonal = 2;
 
-        public static double GeometryCalculationEpsilon = 0.00001;
-        public static int GeometryCalculationDecimalPlaces = 5;
+        public const double GeometryCalculationEpsilon = 0.00001;
+        public const int GeometryCalculationDecimalPlaces = 5;
 
-        public static int GameMessageLogLimit = 20;
+        public const int GameMessageLogLimit = 20;
 
-        public static int HeroMaxHealth = 6;
+        public const int HeroMaxHealth = 6;
 
-        public static int LoopIterationLimit = 100;
+        public const int LoopIterationLimit = 100;
 
-        public static int DirewolfBaseAttack = 4;
-        public static int DirewolfBonusAttack = 2;
-        public static int ReaperBaseAttack = 4;
-        public static int ReaperEmpoweredAttack = 99;
-        public static int ReaperBaseMovement = 6;
-        public static int ReaperEmpoweredMovement = 2;
-        public static int OathboundPhase1Movement = 5;
-        public static int OathboundPhase1Attack = 9;
-        public static int OathboundPhase2Movement = 3;
-        public static int OathboundPhase2Attack = 12;
-        public static int ElflingBaseDefence = 3;
-        public static int ElflingBonusDefence = 7;
-        public static int ElflingBaseMovement = 5;
-        public static int ElflingBonusMovement = 5;
-        public static int NightmareLevelNumber = 16;
-        public static int NightmareNumberOfRandomWalls = 4;
-        public static int NightmareBossNumberOfRandomWalls = 6;
+        public const int DirewolfBaseAttack = 4;
+        public const int DirewolfBonusAttack = 2;
+        public const int ReaperBaseAttack = 4;
+        public const int ReaperEmpoweredAttack = 99;
+        public const int ReaperBaseMovement = 6;
+        public const int ReaperEmpoweredMovement = 2;
+        public const int OathboundPhase1Movement = 5;
+        public const int OathboundPhase1Attack = 9;
+        public const int OathboundPhase2Movement = 3;
+        public const int OathboundPhase2Attack = 12;
+        public const int ElflingBaseDefence = 3;
+        public const int ElflingBonusDefence = 7;
+        public const int ElflingBaseMovement = 5;
+        public const int ElflingBonusMovement = 5;
+        public const int NightmareLevelNumber = 16;
+        public const int NightmareNumberOfRandomWalls = 4;
+        public const int NightmareBossNumberOfRandomWalls = 6;
     }
 }

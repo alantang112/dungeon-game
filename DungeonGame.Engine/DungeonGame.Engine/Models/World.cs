@@ -161,8 +161,10 @@ namespace DungeonGame.Engine.Models
             Walls.UnionWith(Borders); 
         }
 
-        public List<Position> FindSpawnPositions(int numberOfPositionsRequired)
+        public List<Position> FindSpawnPositions(int numberOfPositionsRequired, int? numberOfPositionsToChooseFrom = null)
         {
+            numberOfPositionsToChooseFrom ??= (numberOfPositionsRequired * 2);
+
             var walkDistanceFromHeroMap = GeometryUtility.PlotValuesByFloodSearch(
                 HeroPosition,
                 Walls.ToList(),
@@ -181,7 +183,7 @@ namespace DungeonGame.Engine.Models
 
             var result = walkDistanceFromHeroMap
                     .OrderByDescending(x => x.Value)
-                    .Take(Math.Min(numberOfPositionsRequired * 2, numberOfPositions))
+                    .Take(Math.Min(numberOfPositionsToChooseFrom.Value, numberOfPositions))
                     .Select(x => x.Key)
                     .OrderBy(_ => Guid.NewGuid())
                     .Take(numberOfPositionsRequired)

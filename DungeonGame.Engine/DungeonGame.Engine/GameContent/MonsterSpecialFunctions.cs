@@ -247,7 +247,13 @@ namespace DungeonGame.Engine.GameContent
                     {
                         if (!gameState.World.Monsters.Any(x => x.Monster.Type == MonsterType.Hope))
                         {
-                            var hopeSpawnPosition = gameState.World.FindSpawnPositions(1)[0];
+                            const int numberOfPositionsToChooseFrom = 
+                                ((GameConstants.LevelSize * 2) // number of tiles
+                                    - 1 // minus hero
+                                    - 1 // minus boss
+                                    - GameConstants.NightmareBossNumberOfRandomWalls // minus walls
+                                ) / 2; // halved, rounded down
+                            var hopeSpawnPosition = gameState.World.FindSpawnPositions(1, numberOfPositionsToChooseFrom)[0];
                             gameState.World.Monsters.Add(new MonsterPosition()
                             {
                                 Monster = MonsterSpawner.Spawn(MonsterType.Hope),
