@@ -1,5 +1,6 @@
 using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
+using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 
 namespace DungeonGame.Engine.Tests.GameContent;
@@ -235,16 +236,26 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareBossNumberOfRandomWalls));
     }
 
-    [TestCase(-7, 7)]
-    public void NightmareTurnStart_RecreateWalls(int phase, int expectedPhase)
+    [TestCase(-7, 5, false, 7)]
+    [TestCase(-7, 4, true, 7)]
+    [TestCase(-7, 3, true, 7)]
+    [TestCase(-7, 2, true, 7)]
+    [TestCase(-7, 1, true, 7)]
+    public void NightmareTurnStart_RecreateWalls(int phase, int health, bool expectedSpawnHope, int expectedPhase)
     {
         var gameState = SetupNightmareLevel();
         gameState.World.InitializeWallBorder();
         gameState.World.Monsters[0].Monster.Phase = phase;
+        gameState.World.Monsters[0].Monster.Health = health;
 
         MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareBossNumberOfRandomWalls));
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Monsters.Count, Is.EqualTo(expectedSpawnHope ? 2 : 1));
+        if (expectedSpawnHope)
+        {
+            Assert.That(gameState.World.Monsters[1].Monster.Type, Is.EqualTo(MonsterType.Hope));
+        }
     }
 
     [TestCase(2, -2)]
@@ -272,5 +283,22 @@ public class MonsterSpecialFunctionsTests
 
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void NightmarePostDamage_BossDefeated_GoToGameEnd()
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Hope),
+            Position = new Engine.Models.Geometry.Position(3, 5)
+        });
+        gameState.World.Monsters[0].Monster.Phase = 7;
+        gameState.World.Monsters[0].Monster.Health = 0;
+
+        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[0].Monster, gameState);
+
+        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.GameEnd));
     }
 }

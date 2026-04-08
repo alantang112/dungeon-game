@@ -125,13 +125,17 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     gameState.AddGameMessage(string.Format(GameMessages.MonsterDefeated, monsterPosition.Monster.Type, monsterPosition.Monster.Name));
                     gameState.World.Monsters.Remove(monsterPosition);
                     
-                    if (!gameState.World.Monsters.Any())
+                    if (gameState.LevelNumber == GameConstants.NightmareLevelNumber)
                     {
-                        if (gameState.LevelNumber == GameConstants.NightmareLevelNumber)
+                        if (!gameState.World.Monsters.Any(x => x.Monster.Type == MonsterType.Nightmare))
                         {
                             gameState.GamePhase = GamePhase.GameEnd;
+                            gameState.AddGameMessage(GameMessages.ThanksForPlaying);
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (!gameState.World.Monsters.Any())
                         {
                             gameState.GamePhase = GamePhase.LevelEnd;
                             gameState.AddGameMessage(GameMessages.AllMonstersDefeated);
