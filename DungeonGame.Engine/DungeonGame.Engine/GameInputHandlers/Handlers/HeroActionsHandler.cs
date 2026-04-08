@@ -136,8 +136,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             }
             else if (inputEvent.EventType == InputEventType.HeroActionReset)
             {
-                gameState.World = gameState.WorldSnapshot.DeepClone();
-                gameState.EnergyDice = gameState.EnergyDiceSnapshot.DeepClone();
+                gameState.LoadTurnSnapshot();
                 gameState.GamePhase = GamePhase.EnergyDiceAssignment;
 
                 gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));

@@ -243,6 +243,18 @@ namespace DungeonGame.Engine.GameContent
                     break;
                 // Boss damaged, recreate level walls
                 case -7:
+                    if (monsterPosition.Monster.Health <= (monsterPosition.Monster.MaxHealth - 2))
+                    {
+                        if (!gameState.World.Monsters.Any(x => x.Monster.Type == MonsterType.Hope))
+                        {
+                            var hopeSpawnPosition = gameState.World.FindSpawnPositions(1)[0];
+                            gameState.World.Monsters.Add(new MonsterPosition()
+                            {
+                                Monster = MonsterSpawner.Spawn(MonsterType.Hope),
+                                Position = hopeSpawnPosition
+                            });
+                        }
+                    }
                     gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
                     monsterPosition.Monster.Phase = 7;
                     break;

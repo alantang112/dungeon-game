@@ -42,6 +42,7 @@ export type MonsterType =
     | "Oathbound"
     | "Elfling"
     | "Nightmare"
+    | "Hope"
 ;
 
 export type DiceType =

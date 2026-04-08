@@ -116,6 +116,15 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.Defence, 99);
                     monster.SetStat(SkillType.AttackRange, 2);
                     break;
+                case MonsterType.Hope:
+                    monster.Health = 1;
+                    monster.MaxHealth = monster.Health;
+                    monster.SetStat(SkillType.Movement, 2);
+                    monster.SetStat(SkillType.Attack, 0);
+                    monster.SetStat(SkillType.Defence, 1);
+                    monster.SetStat(SkillType.AttackRange, 0);
+                    monster.Traits = new MonsterTrait[] { MonsterTrait.FleeFromHero };
+                    break;
                 default:
                     throw new NotImplementedException();
             }

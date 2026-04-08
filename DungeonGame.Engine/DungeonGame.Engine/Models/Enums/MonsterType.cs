@@ -12,6 +12,7 @@ namespace DungeonGame.Engine.Models.Enums
         Reaper,
         Oathbound,
         Elfling,
-        Nightmare
+        Nightmare,
+        Hope
     }
 }

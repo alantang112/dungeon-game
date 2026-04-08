@@ -21,6 +21,7 @@ export const TileType = {
   Elfling: "Elfling",
   Nightmare: "Nightmare",
   NightmareBoss: "Nightmare-Boss",
+  Hope: "Hope"
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];

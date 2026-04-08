@@ -42,8 +42,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.GamePhase = GamePhase.EnergyDiceAssignment;
                 gameState.AddGameMessage(string.Format(GameMessages.DiceRolled, gameState.EnergyDice.Dice[0], gameState.EnergyDice.Dice[1], gameState.EnergyDice.Dice[2]));
 
-                gameState.EnergyDiceSnapshot = gameState.EnergyDice.DeepClone();
-                gameState.WorldSnapshot = gameState.World.DeepClone();
+                gameState.SaveTurnSnapshot();
 
                 return gameState;
             }
