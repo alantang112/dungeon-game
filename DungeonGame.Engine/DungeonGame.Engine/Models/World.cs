@@ -90,7 +90,7 @@ namespace DungeonGame.Engine.Models
                 };
 
                 var walkableSquares = GeometryUtility.PlotValuesByFloodSearch(HeroPosition, testWalls, FloodSearchHelpers.WalkValueFunction, 
-                        FloodSearchHelpers.FloodUntilAllSquaresWalked, FloodSearchHelpers.ReturnAllPositions);
+                        FloodSearchHelpers.FloodUntilAllSquaresWalked, FloodSearchHelpers.ReturnAllValidPositions);
 
                 var expectedEmptySquares = (GameConstants.LevelSize + 2) * (GameConstants.LevelSize + 2) // level squares including border
                                     - Walls.Count() // walls and borders

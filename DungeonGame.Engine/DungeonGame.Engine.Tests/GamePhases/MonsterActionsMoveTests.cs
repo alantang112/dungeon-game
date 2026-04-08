@@ -399,6 +399,7 @@ public class MonsterActionsMoveTests
     [TestCase(2,2, "2,3|3,3|4,3|4,4", "1,2", MonsterType.Fiendling, 1,4, 1,3)]
     [TestCase(1,1, "2,3|3,3|4,3|4,4", "1,2|1,3", MonsterType.Fiendling, 2,4, 3,5)]
     [TestCase(1,1, "2,3|3,3|4,3|4,4", "1,2|1,3", MonsterType.Fiendling, 3,5, 5,5)]
+    [TestCase(2,5, "2,4|3,4|4,5", "1,4", MonsterType.Skeleton, 4,3, 3,3)]
     public void GivenMonstersInTheWay_ThenConsiderThatPathAsNotWalkable(int heroX, int heroY, string walls, string stationaryMonsters, MonsterType monsterType, int monsterX, int monsterY, int expectedMonsterX, int expectedMonsterY)
     {
         var initialGameState = _sut.GetCurrentState();
