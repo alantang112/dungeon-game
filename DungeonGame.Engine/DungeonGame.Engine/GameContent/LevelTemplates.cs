@@ -108,7 +108,7 @@ namespace DungeonGame.Engine.GameContent
             {
                 LevelNumber = 11,
                 HeroPosition = new Position(3, 1),
-                WallPositions = new Position[] { new Position(3, 3), new Position(1, 4), new Position(4, 1) },
+                WallPositions = new Position[] { new Position(3, 3), new Position(1, 4) },
                 RandomWallsCountMin = 0,
                 RandomWallsCountMax = 0,
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Direwolf, new Position(1, 5)), (MonsterType.Direwolf, new Position(5, 5)) }

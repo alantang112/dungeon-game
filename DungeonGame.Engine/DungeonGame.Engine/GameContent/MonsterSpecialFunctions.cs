@@ -122,13 +122,13 @@ namespace DungeonGame.Engine.GameContent
             if (direwolf.Monster.Type != MonsterType.Direwolf)
                 return;
 
-            var neighbouringDirewolfCount = gameState.World.Monsters
+            var neighbouringMonsterCount = gameState.World.Monsters
                 .Where(mp => mp.Monster.Id != direwolf.Monster.Id)
                 .Where(mp => mp.Monster.Health > 0)
                 .Count(mp => GeometryUtility.CalculateDistanceBetween(direwolf.Position, mp.Position) <= (GameConstants.MovementPointsOrthogonal * 2));
 
-            direwolf.Monster.Phase = neighbouringDirewolfCount <= 0 ? 1 : (neighbouringDirewolfCount == 1 ? 2 : 3);
-            direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
+            direwolf.Monster.Phase = neighbouringMonsterCount <= 0 ? 1 : (neighbouringMonsterCount == 1 ? 2 : 3);
+            direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringMonsterCount * GameConstants.DirewolfBonusAttack));
         }
 
         private static void RecalculateReaperPhase(MonsterPosition reaper)
