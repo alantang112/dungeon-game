@@ -249,7 +249,6 @@ namespace DungeonGame.Engine.GameContent
                 case 2:
                 case 4:
                 case 6:
-                    nightmare.Health = 1;
                     nightmare.SetStat(SkillType.Defence, 99);
                     gameState.World.InitializeWallBorder();
                     nightmare.Phase *= -1;

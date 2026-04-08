@@ -108,7 +108,7 @@ namespace DungeonGame.Engine.GameContent
                     monster.Traits = new MonsterTrait[] { MonsterTrait.FleeFromHero };
                     break;
                 case MonsterType.Nightmare:
-                    monster.Health = 1;
+                    monster.Health = 4;
                     monster.MaxHealth = monster.Health;
                     monster.Phase = 1;
                     monster.SetStat(SkillType.Movement, 2);
