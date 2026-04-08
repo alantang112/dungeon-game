@@ -1,6 +1,6 @@
 import type { SkillType } from "../models/GameEngineModels";
 
-export const UIVersion: string = '1.5.1';
+export const UIVersion: string = '1.6.0';
 
 export const DebugMode: boolean = false; 
 
@@ -64,3 +64,6 @@ export const levelNameColor = (levelNumber: number): string => {
 }
 
 export const damageAnimationDelayMs: number = 180;
+
+export const nightmareLevelnumber: number = 16;
+export const borderWallCount: number = LevelSize * 4 + 4;

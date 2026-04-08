@@ -21,12 +21,7 @@ namespace DungeonGame.Engine.Models
         public void InitializeLevel(int levelNumber, bool initRandomWalls = true)
         {
             // init border
-            Walls = new HashSet<Position>();
-
-            if (!Borders.Any())
-                Borders = GenerateBorders();
-
-            Walls.UnionWith(Borders);
+            InitializeWallBorder();
 
             // init level
             var template = LevelTemplates.Levels.Single(x => x.LevelNumber == levelNumber);
@@ -72,7 +67,13 @@ namespace DungeonGame.Engine.Models
             return borders;
         }
 
-        private void InitializeRandomWalls(int numberOfRandomWalls, bool enforceWallIslands)
+        /// <summary>
+        /// Creates random walls within the level. Should be run after hero and monsters are spawned.
+        /// </summary>
+        /// <param name="numberOfRandomWalls"></param>
+        /// <param name="enforceWallIslands"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void InitializeRandomWalls(int numberOfRandomWalls, bool enforceWallIslands)
         {
             var addedWallsCount = 0;
 
@@ -147,6 +148,45 @@ namespace DungeonGame.Engine.Models
                 result.Add(monsterPosition.Position);
             }
 
+            return result;
+        }
+
+        public void InitializeWallBorder()
+        {
+            Walls = new HashSet<Position>();
+
+            if (!Borders.Any())
+                Borders = GenerateBorders();
+
+            Walls.UnionWith(Borders); 
+        }
+
+        public List<Position> FindSpawnPositions(int numberOfPositionsRequired)
+        {
+            var walkDistanceFromHeroMap = GeometryUtility.PlotValuesByFloodSearch(
+                HeroPosition,
+                Walls.ToList(),
+                FloodSearchHelpers.WalkValueFunction,
+                FloodSearchHelpers.FloodUntilAllSquaresWalked,
+                FloodSearchHelpers.ReturnAllValidPositions
+            );
+
+            foreach(var monsterPosition in Monsters)
+            {
+                if (walkDistanceFromHeroMap.ContainsKey(monsterPosition.Position))
+                    walkDistanceFromHeroMap.Remove(monsterPosition.Position);
+            }
+
+            var numberOfPositions = walkDistanceFromHeroMap.Count();
+
+            var result = walkDistanceFromHeroMap
+                    .OrderByDescending(x => x.Value)
+                    .Take(Math.Min(numberOfPositionsRequired * 2, numberOfPositions))
+                    .Select(x => x.Key)
+                    .OrderBy(_ => Guid.NewGuid())
+                    .Take(numberOfPositionsRequired)
+                    .ToList();
+            
             return result;
         }
     }

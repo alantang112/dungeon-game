@@ -62,6 +62,9 @@ namespace DungeonGame.Engine.GameContent
                         }
                     }
                     break;
+                case MonsterType.Nightmare:
+                    TransformNightmarePostDamage(monster, gameState);
+                    break;
             }
         }
 
@@ -96,23 +99,35 @@ namespace DungeonGame.Engine.GameContent
 
         public static void TurnStartMonsterFunctions(GameState gameState)
         {
-            foreach(var monsterPosition in gameState.World.Monsters)
+            var monsterIds = gameState.World.Monsters.Select(x => x.Monster.Id).ToList();
+
+            foreach(var monsterId in monsterIds)
             {
-                if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                var monsterPosition = gameState.World.Monsters.FirstOrDefault(x => x.Monster.Id == monsterId);
+
+                if (monsterPosition != null)
                 {
-                    TransformReaper(monsterPosition);
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
-                {
-                    TransformOathbound(monsterPosition);
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Elfling)
-                {
-                    monsterPosition.Monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
-                    monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
-                    continue;
+                    if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                    {
+                        TransformReaper(monsterPosition);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
+                    {
+                        TransformOathbound(monsterPosition);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Elfling)
+                    {
+                        monsterPosition.Monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
+                        monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Nightmare)
+                    {
+                        TransformNightmareTurnStart(monsterPosition, gameState);
+                        continue;
+                    }
                 }
             }
         }
@@ -122,13 +137,13 @@ namespace DungeonGame.Engine.GameContent
             if (direwolf.Monster.Type != MonsterType.Direwolf)
                 return;
 
-            var neighbouringDirewolfCount = gameState.World.Monsters
+            var neighbouringMonsterCount = gameState.World.Monsters
                 .Where(mp => mp.Monster.Id != direwolf.Monster.Id)
                 .Where(mp => mp.Monster.Health > 0)
                 .Count(mp => GeometryUtility.CalculateDistanceBetween(direwolf.Position, mp.Position) <= (GameConstants.MovementPointsOrthogonal * 2));
 
-            direwolf.Monster.Phase = neighbouringDirewolfCount <= 0 ? 1 : (neighbouringDirewolfCount == 1 ? 2 : 3);
-            direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringDirewolfCount * GameConstants.DirewolfBonusAttack));
+            direwolf.Monster.Phase = neighbouringMonsterCount <= 0 ? 1 : (neighbouringMonsterCount == 1 ? 2 : 3);
+            direwolf.Monster.SetStat(SkillType.Attack, GameConstants.DirewolfBaseAttack + (neighbouringMonsterCount * GameConstants.DirewolfBonusAttack));
         }
 
         private static void RecalculateReaperPhase(MonsterPosition reaper)
@@ -175,6 +190,80 @@ namespace DungeonGame.Engine.GameContent
                 oathbound.Monster.Phase = 1;
                 oathbound.Monster.SetStat(SkillType.Movement, GameConstants.OathboundPhase1Movement);
                 oathbound.Monster.SetStat(SkillType.Attack, GameConstants.OathboundPhase1Attack);
+            }
+        }
+
+        private static void TransformNightmareTurnStart(MonsterPosition monsterPosition, GameState gameState)
+        {
+            switch (monsterPosition.Monster.Phase)
+            {
+                // Wave monsters defeated
+                case 1:
+                case 3:
+                case 5:
+                    if (!gameState.World.Monsters.Any(mp => mp.Monster.Id != monsterPosition.Monster.Id))
+                    {
+                        monsterPosition.Monster.SetStat(SkillType.Defence, 1);
+                        monsterPosition.Monster.Phase += 1;
+                    }
+                    break;
+                // Spawn next wave
+                case -2:
+                case -4:
+                    MonsterType[] waveMonsters = monsterPosition.Monster.Phase == -2 
+                        ? new MonsterType[] { MonsterType.Colossus, MonsterType.Fiendling, MonsterType.Direwolf }
+                        : new MonsterType[] { MonsterType.Reaper, MonsterType.Oathbound, MonsterType.Elfling };
+
+                    var spawnPositions = gameState.World.FindSpawnPositions(waveMonsters.Length);
+                    foreach(var (monsterType, index) in waveMonsters.Select((v, i) => (v, i)))
+                    {
+                        gameState.World.Monsters.Add(new MonsterPosition()
+                        {
+                            Monster = MonsterSpawner.Spawn(monsterType),
+                            Position = spawnPositions[index]
+                        });
+                    }
+
+                    gameState.World.InitializeRandomWalls(GameConstants.NightmareNumberOfRandomWalls, true);
+                    monsterPosition.Monster.Phase = (monsterPosition.Monster.Phase * -1) + 1;
+                    break;
+                // Transform to Boss mode
+                case -6:
+                    monsterPosition.Monster.Health = 6;
+                    monsterPosition.Monster.MaxHealth = monsterPosition.Monster.Health;
+                    monsterPosition.Monster.SetStat(SkillType.Movement, 4);
+                    monsterPosition.Monster.SetStat(SkillType.Attack, 8);
+                    monsterPosition.Monster.SetStat(SkillType.Defence, 8);
+                    monsterPosition.Monster.SetStat(SkillType.AttackRange, 6);
+                    monsterPosition.Monster.IsBossType = true;
+                    monsterPosition.Monster.BossDiceType = DiceType.D4;
+                    
+                    gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
+                    monsterPosition.Monster.Phase = 7;
+                    break;
+                // Boss damaged, recreate level walls
+                case -7:
+                    gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
+                    monsterPosition.Monster.Phase = 7;
+                    break;
+            }
+        }
+
+        private static void TransformNightmarePostDamage(Monster nightmare, GameState gameState)
+        {
+            switch (nightmare.Phase)
+            {
+                case 2:
+                case 4:
+                case 6:
+                    nightmare.SetStat(SkillType.Defence, 99);
+                    gameState.World.InitializeWallBorder();
+                    nightmare.Phase *= -1;
+                    break;
+                case 7:
+                    gameState.World.InitializeWallBorder();
+                    nightmare.Phase *= -1;
+                    break;
             }
         }
     }

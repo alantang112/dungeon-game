@@ -7,4 +7,6 @@ export class TileData {
     name?: string;
     isMonster!: boolean;
     monsterId?: string;
+    shouldPulse?: boolean;
+    customBgColor?: string;
 }

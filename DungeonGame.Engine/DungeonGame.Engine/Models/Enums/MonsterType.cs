@@ -11,6 +11,7 @@ namespace DungeonGame.Engine.Models.Enums
         Direwolf,
         Reaper,
         Oathbound,
-        Elfling
+        Elfling,
+        Nightmare
     }
 }

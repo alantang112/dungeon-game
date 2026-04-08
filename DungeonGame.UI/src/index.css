@@ -96,3 +96,16 @@
   animation-delay: var(--attack-animation-delay);
   animation-fill-mode: backwards;
 }
+
+.pulse-hue {
+  animation: hue-pulse 6s ease-in-out infinite;
+}
+
+@keyframes hue-pulse {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(60deg);
+  }
+}

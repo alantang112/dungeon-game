@@ -3,6 +3,7 @@ export const TileType = {
   Hero: "Hero",
   HeroRIP: "Hero-RIP",
   Wall: "Wall",
+  NightmareWall: "Nightmare-Wall",
   Spider: "Spider",
   Skeleton: "Skeleton",
   Minotaur: "Minotaur",
@@ -17,7 +18,9 @@ export const TileType = {
   Reaper2: "Reaper-2",
   Oathbound: "Oathbound",
   Oathbound2: "Oathbound-2",
-  Elfling: "Elfling"
+  Elfling: "Elfling",
+  Nightmare: "Nightmare",
+  NightmareBoss: "Nightmare-Boss",
 } as const;
 
 export type TileType = typeof TileType[keyof typeof TileType];

@@ -17,9 +17,12 @@ interface TileProps {
     isAttacking?: boolean;
     attackId?: string;
     angleToTarget?: number;
+    pulse?: boolean;
+    customBgColor?: string;
 }
 
-export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, isMonster, isAttacking, attackId, angleToTarget }: TileProps) => {
+export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, 
+    isMonster, isAttacking, attackId, angleToTarget, pulse, customBgColor }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (name.length > 0) ? (tileType + name) : undefined;
@@ -106,11 +109,12 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
     }, [ghostTileType, tileType]);
 
     return (
-        <div className={"flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
+        <div className={"flex items-center justify-center border border-slate-700 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
             + (isAnimatingDamage ? 'animate-damage ' : '')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#fa6b6b] ' : '')
-            + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')}
+            + ((heroCanWalk || heroCanAttack) ? 'cursor-pointer ' : '')
+            + (customBgColor ? customBgColor : 'bg-slate-800 ')}
             >
             {
                 health !== undefined &&
@@ -140,7 +144,8 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCan
                     alt={`Tile ${x}-${y}`}
                     className={'w-full h-full object-contain p-1 z-10 ' 
                         + (isAttacking ? 'animate-bump ': '')
-                        + (shouldFlip ? '-scale-x-100 ' : 'scale-x-100')}
+                        + (shouldFlip ? '-scale-x-100 ' : 'scale-x-100 ')
+                        + (pulse ? 'pulse-hue ' : '')}
                     style={tileStyle}
                 />
             )}
