@@ -99,28 +99,35 @@ namespace DungeonGame.Engine.GameContent
 
         public static void TurnStartMonsterFunctions(GameState gameState)
         {
-            foreach(var monsterPosition in gameState.World.Monsters)
+            var monsterIds = gameState.World.Monsters.Select(x => x.Monster.Id).ToList();
+
+            foreach(var monsterId in monsterIds)
             {
-                if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                var monsterPosition = gameState.World.Monsters.FirstOrDefault(x => x.Monster.Id == monsterId);
+
+                if (monsterPosition != null)
                 {
-                    TransformReaper(monsterPosition);
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
-                {
-                    TransformOathbound(monsterPosition);
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Elfling)
-                {
-                    monsterPosition.Monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
-                    monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Nightmare)
-                {
-                    TransformNightmareTurnStart(monsterPosition, gameState);
-                    continue;
+                    if (monsterPosition.Monster.Type == MonsterType.Reaper)
+                    {
+                        TransformReaper(monsterPosition);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
+                    {
+                        TransformOathbound(monsterPosition);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Elfling)
+                    {
+                        monsterPosition.Monster.SetStat(SkillType.Defence, GameConstants.ElflingBaseDefence);
+                        monsterPosition.Monster.SetStat(SkillType.Movement, GameConstants.ElflingBaseMovement);
+                        continue;
+                    }
+                    else if (monsterPosition.Monster.Type == MonsterType.Nightmare)
+                    {
+                        TransformNightmareTurnStart(monsterPosition, gameState);
+                        continue;
+                    }
                 }
             }
         }
@@ -190,7 +197,7 @@ namespace DungeonGame.Engine.GameContent
         {
             switch (monsterPosition.Monster.Phase)
             {
-                // Wave monsters defeated -> nightmare damaged
+                // Wave monsters defeated
                 case 1:
                 case 3:
                 case 5:
@@ -220,7 +227,7 @@ namespace DungeonGame.Engine.GameContent
                     gameState.World.InitializeRandomWalls(GameConstants.NightmareNumberOfRandomWalls, true);
                     monsterPosition.Monster.Phase = (monsterPosition.Monster.Phase * -1) + 1;
                     break;
-                // Final wave defeated, transform to Boss mode
+                // Transform to Boss mode
                 case -6:
                     monsterPosition.Monster.Health = 6;
                     monsterPosition.Monster.MaxHealth = monsterPosition.Monster.Health;

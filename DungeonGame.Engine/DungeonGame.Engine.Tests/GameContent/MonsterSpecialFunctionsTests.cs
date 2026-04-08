@@ -2,7 +2,7 @@ using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models;
 using DungeonGame.Engine.Models.Enums;
 
-namespace DungeonGame.Engine.Tests.GameTemplates;
+namespace DungeonGame.Engine.Tests.GameContent;
 
 public class MonsterSpecialFunctionsTests
 {
@@ -159,5 +159,118 @@ public class MonsterSpecialFunctionsTests
         MonsterSpecialFunctions.PostMonstersAttackFunction(gameState);
 
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+    }
+
+    private GameState SetupNightmareLevel()
+    {
+        var gameState = new GameState
+        {
+            Hero = new Engine.Models.Entities.Hero()
+            {
+                Health = 6,
+                Stats = new Dictionary<SkillType, int>()
+                {
+                    { SkillType.Movement, 2 },
+                    { SkillType.Attack, 5 },
+                    { SkillType.Defence, 5 },
+                    { SkillType.AttackRange, 3 }
+                }
+            }
+        };
+        gameState.World.InitializeLevel(GameConstants.NightmareLevelNumber);
+        while (gameState.World.Monsters.Count > 1)
+        {
+            gameState.World.Monsters.RemoveAt(1);
+        }
+
+        return gameState;
+    }
+
+    [TestCase(1, 2)]
+    [TestCase(3, 4)]
+    [TestCase(5, 6)]
+    public void NightmareTurnStart_WaveDefeated(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+        
+        MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Stats[SkillType.Defence], Is.EqualTo(1));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareNumberOfRandomWalls));
+    }
+
+    [TestCase(-2, 3)]
+    [TestCase(-4, 5)]
+    public void NightmareTurnStart_SpawnNextWave(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.InitializeWallBorder();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+
+        MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
+
+        Assert.That(gameState.World.Monsters.Count, Is.EqualTo(4));
+        Assert.That(gameState.World.Monsters[1].Monster.Type, Is.EqualTo(phase == -2 ? MonsterType.Colossus : MonsterType.Reaper));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareNumberOfRandomWalls));
+    }
+
+    [TestCase(-6, 7)]
+    public void NightmareTurnStart_TransformToBoss(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.InitializeWallBorder();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+
+        MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Health, Is.EqualTo(6));
+        Assert.That(gameState.World.Monsters[0].Monster.MaxHealth, Is.EqualTo(6));
+        Assert.That(gameState.World.Monsters[0].Monster.IsBossType, Is.True);
+        Assert.That(gameState.World.Monsters[0].Monster.BossDiceType, Is.EqualTo(DiceType.D4));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Monsters[0].Monster.Stats.Sum(x => x.Value), Is.LessThan(40));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareBossNumberOfRandomWalls));
+    }
+
+    [TestCase(-7, 7)]
+    public void NightmareTurnStart_RecreateWalls(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.InitializeWallBorder();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+
+        MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareBossNumberOfRandomWalls));
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+    }
+
+    [TestCase(2, -2)]
+    [TestCase(4, -4)]
+    [TestCase(6, -6)]
+    public void NightmarePostDamage_WavePhase(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+
+        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[0].Monster, gameState);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(0));
+        Assert.That(gameState.World.Monsters[0].Monster.Stats[SkillType.Defence], Is.EqualTo(99));
+    }
+
+    [TestCase(7, -7)]
+    public void NightmarePostDamage_BossPhase(int phase, int expectedPhase)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.Monsters[0].Monster.Phase = phase;
+
+        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[0].Monster, gameState);
+
+        Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(0));
     }
 }
