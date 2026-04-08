@@ -559,6 +559,10 @@ public class HeroActionTests
 
         initialGameState.WorldSnapshot = worldSnapshot;
         
+        var heroSnapshot = initialGameState.Hero.DeepClone();
+        heroSnapshot.Health = 10;
+        initialGameState.HeroSnapshot = heroSnapshot;
+
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
         var newGameState = _sut.ProcessInput(new InputEvent()
@@ -572,6 +576,7 @@ public class HeroActionTests
         Assert.That(newGameState.World.HeroActionPoints[SkillType.Defence], Is.EqualTo(12));
         Assert.That(newGameState.World.Monsters.Count(), Is.EqualTo(2));
         Assert.That(newGameState.World.Monsters.All(mp => mp.Monster.Health == 3), Is.True);
+        Assert.That(newGameState.Hero.Health, Is.EqualTo(10));
     }
     #endregion
 
@@ -628,6 +633,45 @@ public class HeroActionTests
         var newStatSum = newGameState.World.Monsters[0].Monster.Stats.Sum(kv => kv.Value);
 
         Assert.That(newStatSum, Is.EqualTo(expectedLevelUpStat ? (initialStatSum + 1) : initialStatSum));
+    }
+
+    [Test]
+    public void NightmarePostDamage_BossDefeated_GoToGameEnd()
+    {
+        var gameState = _sut.GetCurrentState();
+        gameState.LevelNumber = GameConstants.NightmareLevelNumber;
+        gameState.World.Monsters.Clear();
+        gameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Nightmare),
+            Position = new Engine.Models.Geometry.Position(3, 5)
+        });
+        gameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Hope),
+            Position = new Engine.Models.Geometry.Position(4, 5)
+        });
+        gameState.World.HeroPosition = new Position(2, 5);
+
+        gameState.World.Monsters[0].Monster.Phase = 7;
+        gameState.World.Monsters[0].Monster.Health = 1;
+        gameState.World.Monsters[0].Monster.Stats[SkillType.Defence] = 1;
+
+        _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(gameState, SerializationUtility.JsonSerializerOptions));
+
+        var inputEventParameters = new HeroActionAttackEventParameters()
+        {
+            X = gameState.World.Monsters[0].Position.X,
+            Y = gameState.World.Monsters[0].Position.Y
+        };
+
+        var newGameState = _sut.ProcessInput(new InputEvent()
+        {
+            EventType = InputEventType.HeroActionAttack,
+            EventParameters = inputEventParameters
+        });
+
+        Assert.That(newGameState.GamePhase, Is.EqualTo(GamePhase.GameEnd));
     }
     #endregion
 }

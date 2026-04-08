@@ -247,8 +247,10 @@ public class MonsterSpecialFunctionsTests
         gameState.World.InitializeWallBorder();
         gameState.World.Monsters[0].Monster.Phase = phase;
         gameState.World.Monsters[0].Monster.Health = health;
+        gameState.World.Monsters[0].Monster.MaxHealth = 6;
 
         MonsterSpecialFunctions.TurnStartMonsterFunctions(gameState);
+
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareBossNumberOfRandomWalls));
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
         Assert.That(gameState.World.Monsters.Count, Is.EqualTo(expectedSpawnHope ? 2 : 1));
@@ -283,22 +285,5 @@ public class MonsterSpecialFunctionsTests
 
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(0));
-    }
-
-    [Test]
-    public void NightmarePostDamage_BossDefeated_GoToGameEnd()
-    {
-        var gameState = SetupNightmareLevel();
-        gameState.World.Monsters.Add(new MonsterPosition()
-        {
-            Monster = MonsterSpawner.Spawn(MonsterType.Hope),
-            Position = new Engine.Models.Geometry.Position(3, 5)
-        });
-        gameState.World.Monsters[0].Monster.Phase = 7;
-        gameState.World.Monsters[0].Monster.Health = 0;
-
-        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[0].Monster, gameState);
-
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.GameEnd));
     }
 }
