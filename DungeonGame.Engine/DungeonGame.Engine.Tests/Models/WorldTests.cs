@@ -17,6 +17,14 @@ public class WorldTests
     [TestCase(6)]
     [TestCase(7)]
     [TestCase(8)]
+    [TestCase(9)]
+    [TestCase(10)]
+    [TestCase(11)]
+    [TestCase(12)]
+    [TestCase(13)]
+    [TestCase(14)]
+    [TestCase(15)]
+    [TestCase(16)]
     public void CanInitializeLevel(int levelNumber)
     {
         var world = new World();
