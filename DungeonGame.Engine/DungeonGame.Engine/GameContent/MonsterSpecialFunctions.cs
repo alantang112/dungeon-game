@@ -281,6 +281,11 @@ namespace DungeonGame.Engine.GameContent
                 case 7:
                     gameState.World.InitializeWallBorder();
                     nightmare.Phase *= -1;
+
+                    if (nightmare.Health <= 0)
+                    {
+                        gameState.World.Monsters.RemoveAll(x => x.Monster.Type != MonsterType.Nightmare);
+                    }
                     break;
             }
         }

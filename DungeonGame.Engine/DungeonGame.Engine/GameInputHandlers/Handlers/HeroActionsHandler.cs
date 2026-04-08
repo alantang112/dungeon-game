@@ -127,8 +127,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                     
                     if (!gameState.World.Monsters.Any())
                     {
-                        gameState.GamePhase = GamePhase.LevelEnd;
-                        gameState.AddGameMessage(GameMessages.AllMonstersDefeated);
+                        if (gameState.LevelNumber == GameConstants.NightmareLevelNumber)
+                        {
+                            gameState.GamePhase = GamePhase.GameEnd;
+                        }
+                        else
+                        {
+                            gameState.GamePhase = GamePhase.LevelEnd;
+                            gameState.AddGameMessage(GameMessages.AllMonstersDefeated);
+                        }
                     }
                 }
                 

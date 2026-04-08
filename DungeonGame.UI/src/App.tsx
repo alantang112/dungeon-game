@@ -498,9 +498,10 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   }
   else if (state.GamePhase == "GameEnd")
   {
+    const gameOverText: string = state.Hero!.Health! <= 0 ? 'Game over' : 'Thanks for playing';
     availableButtons.push(
       {
-        textNode: <span>{`   Game over   `}</span>,
+        textNode: <span>{`   ${gameOverText}   `}</span>,
       }
     )
   }
