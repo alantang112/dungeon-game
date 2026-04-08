@@ -93,6 +93,7 @@ function App() {
           attackId={isAttacking ? String(Date.now()) : undefined}
           angleToTarget={angleToTarget}
           isMonster={tileData.isMonster}
+          pulseDarken={tileData.shouldPulseDarken}
           />
         </div>
       );
@@ -388,7 +389,13 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
       };
 
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) 
-      return { tileType: "Wall", isMonster: false };
+    {
+      return { 
+        tileType: state.LevelNumber === 16 ? "Nightmare-Wall" : "Wall", 
+        shouldPulseDarken: state.LevelNumber === 16,
+        isMonster: false };
+    }
+      
 
     const monsterPosition = state?.World?.Monsters?.find((m: MonsterPosition) => m.Position.X === x && m.Position.Y === y);
     if (monsterPosition) {

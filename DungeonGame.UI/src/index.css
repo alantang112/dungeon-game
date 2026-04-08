@@ -96,3 +96,16 @@
   animation-delay: var(--attack-animation-delay);
   animation-fill-mode: backwards;
 }
+
+.pulse-darken {
+  animation: darken-pulse 4s ease-in-out infinite;
+}
+
+@keyframes darken-pulse {
+  0%, 100% {
+    filter: brightness(0.8);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}

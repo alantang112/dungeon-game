@@ -3,6 +3,7 @@ export const TileType = {
   Hero: "Hero",
   HeroRIP: "Hero-RIP",
   Wall: "Wall",
+  NightmareWall: "Nightmare-Wall",
   Spider: "Spider",
   Skeleton: "Skeleton",
   Minotaur: "Minotaur",

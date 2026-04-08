@@ -7,4 +7,5 @@ export class TileData {
     name?: string;
     isMonster!: boolean;
     monsterId?: string;
+    shouldPulseDarken?: boolean;
 }
