@@ -117,6 +117,7 @@ namespace DungeonGame.Engine.GameContent
                     monster.SetStat(SkillType.AttackRange, 2);
                     break;
                 case MonsterType.Hope:
+                    monster.Name = ""; // don't have name
                     monster.Health = 1;
                     monster.MaxHealth = monster.Health;
                     monster.SetStat(SkillType.Movement, 2);

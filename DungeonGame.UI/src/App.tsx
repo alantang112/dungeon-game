@@ -85,6 +85,7 @@ function App() {
           ghostTileType={ghostTileType}
           tileType={tileData.tileType}
           name={tileData.name ?? ''}
+          monsterId={tileData.monsterId}
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}

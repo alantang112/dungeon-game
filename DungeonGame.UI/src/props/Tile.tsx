@@ -9,6 +9,7 @@ interface TileProps {
     ghostTileType?: TileType;
     tileType: TileType;
     name: string;
+    monsterId?: string;
     heroCanWalk: boolean;
     heroCanAttack: boolean;
     health?: number;
@@ -21,11 +22,11 @@ interface TileProps {
     danger?: boolean;
 }
 
-export const Tile = ({ x, y, ghostTileType, tileType, name, heroCanWalk, heroCanAttack, health, maxHealth, 
+export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWalk, heroCanAttack, health, maxHealth, 
     isMonster, isAttacking, attackId, angleToTarget, pulse, danger }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
-    const identity = (name.length > 0) ? (tileType + name) : undefined;
+    const identity = (isMonster || tileType === "Hero") ? (tileType + (isMonster? monsterId : '')) : undefined;
     const prevIdentityRef = useRef<string | undefined>(identity);
     const prevHealthRef = useRef<number | undefined>(health);
 
