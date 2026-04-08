@@ -65,6 +65,12 @@ namespace DungeonGame.Engine.GameContent
                 case MonsterType.Nightmare:
                     TransformNightmarePostDamage(monster, gameState);
                     break;
+                case MonsterType.Hope:
+                    if (gameState.Hero.Health < GameConstants.HeroMaxHealth)
+                    {
+                        gameState.Hero.Health++;
+                    }
+                    break;
             }
         }
 

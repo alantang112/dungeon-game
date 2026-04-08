@@ -286,4 +286,23 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
         Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(0));
     }
+
+    [TestCase(6, 6)]
+    [TestCase(5, 6)]
+    [TestCase(1, 2)]
+    public void HopePostDamage_HeroHeal(int health, int expectedHealth)
+    {
+        var gameState = SetupNightmareLevel();
+        gameState.World.Monsters.Add(new MonsterPosition()
+        {
+            Monster = MonsterSpawner.Spawn(MonsterType.Hope),
+            Position = new Engine.Models.Geometry.Position(2,1)
+        });
+
+        gameState.Hero.Health = health;
+
+        MonsterSpecialFunctions.PostDamageFunction(gameState.World.Monsters[1].Monster, gameState);
+
+        Assert.That(gameState.Hero.Health, Is.EqualTo(expectedHealth));
+    }
 }
