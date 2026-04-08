@@ -256,7 +256,7 @@ namespace DungeonGame.Engine.GameContent
                         if (!gameState.World.Monsters.Any(x => x.Monster.Type == MonsterType.Hope))
                         {
                             const int numberOfPositionsToChooseFrom = 
-                                ((GameConstants.LevelSize * 2) // number of tiles
+                                ((GameConstants.LevelSize * GameConstants.LevelSize) // number of tiles
                                     - 1 // minus hero
                                     - 1 // minus boss
                                     - GameConstants.NightmareBossNumberOfRandomWalls // minus walls
