@@ -69,6 +69,7 @@ namespace DungeonGame.Engine.GameContent
                     if (gameState.Hero.Health < GameConstants.HeroMaxHealth)
                     {
                         gameState.Hero.Health++;
+                        gameState.ViewData.HeroWasHealed = true;
                     }
                     break;
             }
@@ -243,6 +244,7 @@ namespace DungeonGame.Engine.GameContent
                     monsterPosition.Monster.SetStat(SkillType.AttackRange, 6);
                     monsterPosition.Monster.IsBossType = true;
                     monsterPosition.Monster.BossDiceType = DiceType.D4;
+                    monsterPosition.Monster.BossDice.Clear();
                     
                     gameState.World.InitializeRandomWalls(GameConstants.NightmareBossNumberOfRandomWalls, false);
                     monsterPosition.Monster.Phase = 7;
@@ -285,8 +287,11 @@ namespace DungeonGame.Engine.GameContent
                     nightmare.Phase *= -1;
                     break;
                 case 7:
-                    gameState.World.InitializeWallBorder();
-                    nightmare.Phase *= -1;
+                    if (nightmare.Health > 0)
+                    {
+                        gameState.World.InitializeWallBorder();
+                        nightmare.Phase *= -1;
+                    }
                     break;
             }
         }

@@ -20,10 +20,11 @@ interface TileProps {
     angleToTarget?: number;
     pulse?: boolean;
     danger?: boolean;
+    displayHeal?: boolean;
 }
 
 export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWalk, heroCanAttack, health, maxHealth, 
-    isMonster, isAttacking, attackId, angleToTarget, pulse, danger }: TileProps) => {
+    isMonster, isAttacking, attackId, angleToTarget, pulse, danger, displayHeal }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (isMonster || tileType === "Hero") ? (tileType + (isMonster? monsterId : '')) : undefined;
@@ -114,6 +115,7 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWa
 
     return (
         <div className={"flex items-center justify-center border border-slate-700 text-slate-500 text-xs w-full h-16 sm:h-22 aspect-square relative "
+            + (displayHeal ? 'animate-healed ' : '')
             + (isAnimatingDamage ? 'animate-damage ' : '')
             + (heroCanWalk ? 'border-2 border-transparent shadow-[inset_0_0_0_2px_#bababa] ' : '')
             + (heroCanAttack ? `border-2 border-transparent ${attackRingColor} ` : '')

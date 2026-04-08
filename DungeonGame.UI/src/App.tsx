@@ -13,7 +13,7 @@ import { Dice } from './props/Dice';
 import { ShufflingDice } from './props/ShufflingDice';
 import { useState, type ReactNode } from "react";
 import type { TileData } from './models/TileData';
-import type { TileType } from './models/TileType';
+import { TileType } from './models/TileType';
 import { AssetPreloader } from './props/AssetPreloader';
 import { HowToPlayModal } from './props/HowToPlayModal';
 import { StartTitle } from './props/StartTitle';
@@ -51,6 +51,7 @@ function App() {
 
       var angleToTarget: number | undefined = undefined;
       var isAttacking: boolean = false;
+      var displayHeal: boolean = false;
 
       var ghostTileType: TileType | undefined = undefined;
 
@@ -69,6 +70,10 @@ function App() {
         {
           angleToTarget = getAngleToTarget(state.World!.HeroPosition, state.ViewData?.MonsterAttackedByHero.Position);
           isAttacking = true;
+        }
+        if (state.ViewData?.HeroWasHealed)
+        {
+          displayHeal = true;
         }
       }
       else if (tileData.isMonster)
@@ -96,6 +101,7 @@ function App() {
           isMonster={tileData.isMonster}
           pulse={tileData.shouldPulse}
           danger={tileData.danger}
+          displayHeal={displayHeal}
           />
         </div>
       );
@@ -388,10 +394,18 @@ const getTileData = (state: GameState, x: number, y: number) : TileData => {
 
     if (state?.World?.Walls?.some((w: Position) => w.X === x && w.Y === y)) 
     {
-      return { 
-        tileType: state.LevelNumber === 16 ? "Nightmare-Wall" : "Wall", 
-        shouldPulse: state.LevelNumber === 16,
-        isMonster: false };
+      const wallTile: TileData = {
+        tileType: "Wall",
+        isMonster: false
+      };
+
+      if (state.LevelNumber === 16)
+      {
+        wallTile.tileType = "Nightmare-Wall";
+        wallTile.shouldPulse = true;
+      }
+
+      return wallTile;
     }
       
 
