@@ -357,21 +357,9 @@ const getTileType = (monster: Monster) : TileType => {
   }
   else if (monster.Type === "Nightmare")
   {
-    if (monster.Phase === 1 || monster.Phase === 3 || monster.Phase === 5)
-    {
-      return "Nightmare";
-    }
-    else if (monster.Phase === 2 || monster.Phase === -2 || monster.Phase === 4 || monster.Phase === -4 || monster.Phase === 6 || monster.Phase === -6)
-    {
-      return "Nightmare-Damaged";
-    }
-    else if (monster.Phase === 7)
+    if (monster.Phase === 7 || monster.Phase === -7)
     {
       return "Nightmare-Boss";
-    }
-    else if (monster.Phase === -7)
-    {
-      return "Nightmare-Boss-Damaged";
     }
   }
 

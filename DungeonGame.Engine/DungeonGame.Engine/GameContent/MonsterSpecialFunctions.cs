@@ -62,6 +62,9 @@ namespace DungeonGame.Engine.GameContent
                         }
                     }
                     break;
+                case MonsterType.Nightmare:
+                    TransformNightmarePostDamage(monster, gameState);
+                    break;
             }
         }
 
@@ -89,11 +92,6 @@ namespace DungeonGame.Engine.GameContent
                 else if (monsterPosition.Monster.Type == MonsterType.Oathbound)
                 {
                     monsterPosition.Monster.Phase *= -1;
-                    continue;
-                }
-                else if (monsterPosition.Monster.Type == MonsterType.Nightmare)
-                {
-                    TransformNightmarePostDamage(monsterPosition, gameState);
                     continue;
                 }
             }
@@ -244,21 +242,21 @@ namespace DungeonGame.Engine.GameContent
             }
         }
 
-        private static void TransformNightmarePostDamage(MonsterPosition monsterPosition, GameState gameState)
+        private static void TransformNightmarePostDamage(Monster nightmare, GameState gameState)
         {
-            switch (monsterPosition.Monster.Phase)
+            switch (nightmare.Phase)
             {
                 case 2:
                 case 4:
                 case 6:
-                    monsterPosition.Monster.Health = 1;
-                    monsterPosition.Monster.SetStat(SkillType.Defence, 99);
+                    nightmare.Health = 1;
+                    nightmare.SetStat(SkillType.Defence, 99);
                     gameState.World.InitializeWallBorder();
-                    monsterPosition.Monster.Phase *= -1;
+                    nightmare.Phase *= -1;
                     break;
                 case 7:
                     gameState.World.InitializeWallBorder();
-                    monsterPosition.Monster.Phase *= -1;
+                    nightmare.Phase *= -1;
                     break;
             }
         }
