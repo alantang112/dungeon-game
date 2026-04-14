@@ -14,14 +14,34 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
     useEffect(() => {
         const dialog = dialogRef.current;
         if (!dialog) return;
-
+        
         if (isOpen) {
-            // blocks background interaction
-            dialog.showModal();
-            // Reset to the first page when the modal opens
-            setCurrentPageIndex(0); 
+            if (!dialog.open) {
+                 // blocks background interaction
+                dialog.showModal();
+                // Reset to the first page when the modal opens
+                setCurrentPageIndex(0); 
+                // LOCK: Prevent background scrolling
+                document.body.style.overflow = 'hidden';
+                // Prevent elastic bounce on some iOS versions
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
         } else {
-            dialog.close();
+            if (dialog.open) {
+                dialog.close();
+                // UNLOCK: Restore scrolling
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+        }
+
+        // Cleanup function to ensure scroll is restored if component unmounts
+        return () => {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
         }
     }, [isOpen]);
 
@@ -67,17 +87,18 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
         <dialog
             ref={dialogRef}
             // Tailwind styling for the modal container itself
-            className="fixed inset-0 m-auto
-            w-[90%] max-w-2xl max-h-[90vh]
-            rounded-lg border border-slate-700 bg-slate-900 p-0 shadow-2xl focus:outline-none
+            className="
+            w-[92%] max-w-2xl max-h-[90dvh] m-auto
+            rounded-lg border border-slate-700 bg-slate-900 p-0 shadow-2xl 
+            focus:outline-none overflow-hidden
             backdrop:bg-black/70 backdrop:backdrop-blur-sm
             "
         >
             {/* Inner Content Wrapper (for padding and structure) */}
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-[90dvh]">
                 
                 {/* --- HEADER --- */}
-                <div className="flex items-center justify-between border-b border-slate-700 p-6">
+                <div className="flex-none flex items-center justify-between border-b border-slate-700 p-5">
                     <h2 className="text-2xl font-extrabold text-white tracking-tight">
                         How to Play
                     </h2>
@@ -95,8 +116,8 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
                 </div>
 
                 {/* --- PAGE CONTENT --- (Scrollable) */}
-                <div className="flex-1 p-6 overflow-y-auto">
-                    <h1 className="text-3xl font-black text-orange-400 mb-6">
+                <div className="flex-1 p-6 overflow-y-auto outline-none touch-pan-y overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+                    <h1 className="text-2xl font-black text-orange-400 mb-4">
                         {currentPage.title}
                     </h1>
                     
@@ -104,7 +125,7 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
                 </div>
 
                 {/* --- FOOTER (Navigation) --- */}
-                <div className="flex items-center justify-between border-t border-slate-700 p-6 bg-slate-950 rounded-b-lg">
+                <div className="flex-none flex items-center justify-between border-t border-slate-700 p-5 bg-slate-950">
                     {/* Previous Button (Left Arrow) */}
                     <button
                         onClick={navigatePrev}
