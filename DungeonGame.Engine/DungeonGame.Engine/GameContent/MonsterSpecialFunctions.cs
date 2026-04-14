@@ -231,7 +231,8 @@ namespace DungeonGame.Engine.GameContent
                         });
                     }
 
-                    gameState.World.InitializeRandomWalls(GameConstants.NightmareNumberOfRandomWalls, true);
+                    var numberOfRandomWalls = monsterPosition.Monster.Phase == -2 ? GameConstants.NightmareNumberOfRandomWallsWave2 : GameConstants.NightmareNumberOfRandomWallsWave3;
+                    gameState.World.InitializeRandomWalls(numberOfRandomWalls, true);
                     monsterPosition.Monster.Phase = (monsterPosition.Monster.Phase * -1) + 1;
                     break;
                 // Transform to Boss mode

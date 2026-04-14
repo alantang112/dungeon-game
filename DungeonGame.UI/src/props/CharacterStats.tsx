@@ -1,5 +1,5 @@
 import { type SkillType } from '../models/GameEngineModels'; 
-import { statColor, statText, colorEnergy } from '../constants/gameConstants';
+import { statColor, statText, colorEnergy, HeroMaxLives } from '../constants/gameConstants';
 import { ShufflingDice } from './ShufflingDice';
 
 interface CharacterStatsProps {
@@ -9,9 +9,10 @@ interface CharacterStatsProps {
     displayEnergy: boolean,
     isEnemy: boolean,
     displayBossDiceRoll: boolean,
+    lives?: number
 }
 
-export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, displayBossDiceRoll }: CharacterStatsProps) => {
+export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, displayBossDiceRoll, lives }: CharacterStatsProps) => {
   stats ??= {
     "Movement": 1,
     "Attack": 1,
@@ -33,10 +34,23 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, di
 
   return (
     <div className={`${containerBg} p-2 mx-2 mb-2 rounded font-mono text-sm text-slate-200 flex gap-5 justify-between`}>
-      <div className="flex items-start">
-        <div className={`font-bold text-lg ml-3 mb-auto mx-auto ${headerColor}`}>
+      <div className="flex flex-col items-start">
+        <div className={`font-bold text-lg ml-3 mb-2 mx-auto ${headerColor}`}>
           {name}
         </div>
+        {
+        lives && 
+        <div className="flex flex-row gap-2 ml-3 mb-auto mx-auto w-full">
+          {[...Array(HeroMaxLives)].map((_, i) => (
+            <div
+              key={i}
+              className={`h-[6px] w-[6px] rounded-full transition-colors duration-500 shadow-sm ${
+                i < lives ? 'bg-yellow-600' : 'bg-gray-600'
+              }`}
+            />
+          ))}
+        </div>
+        }
       </div>
 
       <div className={`grid grid-cols-4 ${isEnemy ? 'bg-red-900/30' : 'bg-slate-700'} border border-slate-700 rounded overflow-hidden mr-2 w-[220px] shrink-0`}>

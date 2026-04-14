@@ -1,10 +1,11 @@
 import type { SkillType } from "../models/GameEngineModels";
 
-export const UIVersion: string = '2.0.1';
+export const UIVersion: string = '2.1.0';
 
 export const DebugMode: boolean = false; 
 
 export const HeroMaxHealth: number = 6;
+export const HeroMaxLives: number = 3;
 export const LevelSize: number = 5;
 export const diceShuffleSpeed: number = 30;
 

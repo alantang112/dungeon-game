@@ -119,10 +119,10 @@ namespace DungeonGame.Engine.GameContent
                 LevelNumber = 12,
                 HeroPosition = new Position(4, 4),
                 WallPositions = new Position[] { new Position(3, 3), new Position(2, 3), },
-                RandomWallsCountMin = 3,
-                RandomWallsCountMax = 3,
+                RandomWallsCountMin = 2,
+                RandomWallsCountMax = 2,
                 EnforceWallIslands = true,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(1, 1)), (MonsterType.Colossus, new Position(5, 1)), (MonsterType.Colossus, new Position(1, 4)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Colossus, new Position(1, 1)), (MonsterType.Colossus, new Position(5, 1)), (MonsterType.Colossus, new Position(1, 2)) }
             },
             new Level()
             {
@@ -151,8 +151,8 @@ namespace DungeonGame.Engine.GameContent
             {
                 LevelNumber = GameConstants.NightmareLevelNumber,
                 HeroPosition = new Position(1, 1),
-                RandomWallsCountMin = GameConstants.NightmareNumberOfRandomWalls,
-                RandomWallsCountMax = GameConstants.NightmareNumberOfRandomWalls,
+                RandomWallsCountMin = GameConstants.NightmareNumberOfRandomWallsWave1,
+                RandomWallsCountMax = GameConstants.NightmareNumberOfRandomWallsWave1,
                 EnforceWallIslands = true,
                 WallPositions = new Position[0],
                 MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Nightmare, new Position(5, 5)), (MonsterType.Minotaur, new Position(4, 5)),

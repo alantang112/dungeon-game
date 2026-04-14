@@ -35,7 +35,10 @@ namespace DungeonGame.Engine
         public const int ElflingBaseMovement = 5;
         public const int ElflingBonusMovement = 5;
         public const int NightmareLevelNumber = 16;
-        public const int NightmareNumberOfRandomWalls = 4;
+        public const int NightmareNumberOfRandomWallsWave1 = 4;
+
+        public const int NightmareNumberOfRandomWallsWave2 = 4;
+        public const int NightmareNumberOfRandomWallsWave3 = 2;
         public const int NightmareBossNumberOfRandomWalls = 6;
     }
 }

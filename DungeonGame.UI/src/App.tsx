@@ -246,6 +246,7 @@ function App() {
                       displayEnergy={true}
                       isEnemy={false}
                       displayBossDiceRoll={false}
+                      lives={(state.LevelRetriesAvailable ?? 0) + ((state.Hero?.Health ?? 0) > 0 ? 1 : 0)}
                     />
                   </div>
                   {/* Monster stats */}

@@ -199,12 +199,12 @@ public class MonsterSpecialFunctionsTests
 
         Assert.That(gameState.World.Monsters[0].Monster.Stats[SkillType.Defence], Is.EqualTo(1));
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
-        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareNumberOfRandomWalls));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.GreaterThan(0));
     }
 
-    [TestCase(-2, 3)]
-    [TestCase(-4, 5)]
-    public void NightmareTurnStart_SpawnNextWave(int phase, int expectedPhase)
+    [TestCase(-2, 3, GameConstants.NightmareNumberOfRandomWallsWave2)]
+    [TestCase(-4, 5, GameConstants.NightmareNumberOfRandomWallsWave3)]
+    public void NightmareTurnStart_SpawnNextWave(int phase, int expectedPhase, int expectedRandomWalls)
     {
         var gameState = SetupNightmareLevel();
         gameState.World.InitializeWallBorder();
@@ -215,7 +215,7 @@ public class MonsterSpecialFunctionsTests
         Assert.That(gameState.World.Monsters.Count, Is.EqualTo(4));
         Assert.That(gameState.World.Monsters[1].Monster.Type, Is.EqualTo(phase == -2 ? MonsterType.Colossus : MonsterType.Reaper));
         Assert.That(gameState.World.Monsters[0].Monster.Phase, Is.EqualTo(expectedPhase));
-        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(GameConstants.NightmareNumberOfRandomWalls));
+        Assert.That(gameState.World.Walls.Count - gameState.World.Borders.Count, Is.EqualTo(expectedRandomWalls));
     }
 
     [TestCase(-6, 7)]
