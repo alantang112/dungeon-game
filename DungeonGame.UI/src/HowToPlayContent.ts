@@ -106,7 +106,8 @@ export const howToPlayPages: HelpPage[] = [
         items: [
             { type: 'text', content: "The level ends when you have defeated all monsters." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}levelend-1.png` },
-            { type: 'text', content: "As a reward, upgrade a base stat by 1 or replenish your health to full before proceeding to the next level." },
+            { type: 'text', content: "As a reward, upgrade a base stat by 1 or replenish your health to full at the start of the next level." },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}levelend-2.png` },
             { type: 'text', content: "Happy dungeoning." },
         ]
     }
