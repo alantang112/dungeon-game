@@ -524,11 +524,18 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
     {
       const retryAvailable: boolean = (state.LevelRetriesAvailable !== undefined && state.LevelRetriesAvailable > 0) ?? false;
 
-      availableButtons.push({
-        textNode: <span className="">Retry level? ({`${state.LevelRetriesAvailable} remaining`})</span>,
-        gameEventOnClick: retryAvailable ? GameActions.RetryLevel() : undefined,
-        disabled: !retryAvailable
-      });
+      if (retryAvailable)
+      {
+        availableButtons.push({
+          textNode: <span>Retry level? ({`${state.LevelRetriesAvailable} remaining`})</span>,
+          gameEventOnClick: GameActions.RetryLevel()
+        });
+      }
+      else {
+        availableButtons.push({
+          textNode: <span>{`   Game over   `}</span>,
+        });
+      }
     }
     else {
       const livesRemaining: number = (state.LevelRetriesAvailable ?? 0) + 1;
