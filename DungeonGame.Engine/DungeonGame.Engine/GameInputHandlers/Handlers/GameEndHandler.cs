@@ -12,7 +12,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
-            if (inputEvent.EventType == InputEventType.RetryLevel)
+            if (inputEvent.EventType == InputEventType.RetryLevel) // TODO unit test
             {
                 if (gameState.LevelRetriesAvailable <= 0)
                     return gameState;
@@ -20,11 +20,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 gameState.LoadLevelSnapshot();
                 gameState.LevelRetriesAvailable--;
 
-                gameState.GamePhase = GamePhase.EnergyDicePreRoll;
-                gameState.ScheduledEvents.Add(new InputEvent()
-                {
-                    EventType = InputEventType.EnergyDiceSetup
-                });
+                gameState.PostInitializeLevel();
 
                 return gameState;
             }
