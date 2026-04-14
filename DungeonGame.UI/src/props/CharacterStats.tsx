@@ -39,7 +39,7 @@ export const CharacterStats = ({ name, stats, energy, displayEnergy, isEnemy, di
           {name}
         </div>
         {
-        lives && 
+        !isEnemy && 
         <div className="flex flex-row gap-2 ml-3 mb-auto mx-auto w-full">
           {[...Array(HeroMaxLives)].map((_, i) => (
             <div
