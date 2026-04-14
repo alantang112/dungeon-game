@@ -111,6 +111,9 @@ namespace DungeonGame.Engine.Models
 
         public void PostInitializeLevel()
         {
+            World.HeroActionPoints.Clear();
+            EnergyDice.ResetAssignment();
+
             GamePhase = GamePhase.UpgradeHero;
 
             ScheduledEvents.Add(new InputEvent()
