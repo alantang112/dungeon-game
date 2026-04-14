@@ -515,11 +515,13 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
 
     if (playerLost)
     {
-      availableButtons.push(
-      {
-        textNode: <span>{`   Game over   `}</span>,
-      }
-    )
+      const retryAvailable: boolean = (state.LevelRetriesAvailable !== undefined && state.LevelRetriesAvailable > 0) ?? false;
+
+      availableButtons.push({
+        textNode: <span className="">Retry level? ({`${state.LevelRetriesAvailable} remaining`})</span>,
+        gameEventOnClick: retryAvailable ? GameActions.RetryLevel() : undefined,
+        disabled: !retryAvailable
+      });
     }
     else {
       const livesRemaining: number = (state.LevelRetriesAvailable ?? 0) + 1;
@@ -576,19 +578,6 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
       textNode: <><span className='text-green-300'>Replenish Health</span></>,
       gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
     });
-  }
-  else if (state.GamePhase == "GameEnd")
-  {
-    if (state.Hero!.Health! <= 0)
-    {
-      const retryAvailable: boolean = (state.LevelRetriesAvailable !== undefined && state.LevelRetriesAvailable > 0) ?? false;
-
-      availableButtons.push({
-        textNode: <>Retry level (`${state.LevelRetriesAvailable} remaining`)</>,
-        gameEventOnClick: retryAvailable ? GameActions.RetryLevel() : undefined,
-        disabled: !retryAvailable
-      });
-    }
   }
 
   return availableButtons;
