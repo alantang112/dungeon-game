@@ -37,6 +37,7 @@ public class WorldTests
         gameState.InitializeLevel(levelNumber);
 
         Assert.That(world.RerollsAvailable, Is.EqualTo(1));
+        Assert.That(world.UpgradePointsAvailable, Is.EqualTo(levelNumber == 1 ? 0 : 1));
     }
 
     private static HashSet<Position> ParsePositionsString(string s)

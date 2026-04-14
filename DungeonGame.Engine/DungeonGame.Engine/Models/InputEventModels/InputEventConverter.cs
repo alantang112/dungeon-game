@@ -30,7 +30,7 @@ namespace DungeonGame.Engine.Models.InputEventModels
                 InputEventType.EnergyDiceAssign => paramsProp.Deserialize<EnergyDiceAssignEventParameters>(options),
                 InputEventType.HeroActionMove => paramsProp.Deserialize<HeroActionMoveEventParameters>(options),
                 InputEventType.HeroActionAttack => paramsProp.Deserialize<HeroActionAttackEventParameters>(options),
-                InputEventType.NextLevel => paramsProp.Deserialize<NextLevelEventParameters>(options),
+                InputEventType.UpgradeHero => paramsProp.Deserialize<UpgradeHeroEventParameters>(options),
                 // Add other mappings here...
                 _ => null
             };

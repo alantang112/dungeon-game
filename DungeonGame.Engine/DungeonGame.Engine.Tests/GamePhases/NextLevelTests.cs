@@ -40,89 +40,16 @@ public class NextLevelTests
     }
 
     [Test]
-    public void GivenNextLevel_AndNoParameterProvided_ThenThrow()
-    {
-        Assert.Throws<ArgumentNullException>(() => _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.NextLevel,
-            EventParameters = null
-        }));
-    }
-
-    [Test]
-    public void GivenNextLevel_AndNoSkillTypeOrReplenishHealth_ThenReturnGameMessage()
+    public void GivenNextLevel_WhenNextLevel_ThenContinue()
     {
         var gameState = _sut.ProcessInput(new InputEvent()
         {
-            EventType = InputEventType.NextLevel,
-            EventParameters = new NextLevelEventParameters()
-            {
-                SkillType = null,
-                ReplenishHealth = false
-            }
+            EventType = InputEventType.NextLevel
         });
 
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.LevelUpError));
-    }
-
-    [Test]
-    public void GivenNextLevel_AndSkillTypeAndReplenishHealth_ThenReturnGameMessage()
-    {
-        var gameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.NextLevel,
-            EventParameters = new NextLevelEventParameters()
-            {
-                SkillType = SkillType.Movement,
-                ReplenishHealth = true
-            }
-        });
-
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.LevelEnd));
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.LevelUpError));
-    }
-
-    [TestCase(SkillType.Movement, false)]
-    [TestCase(SkillType.Attack, false)]
-    [TestCase(SkillType.Defence, false)]
-    [TestCase(SkillType.AttackRange, false)]
-    [TestCase(null, true)]
-    public void GivenNextLevel_AndSkillTypeOrReplenishHealth_ThenProceed(SkillType? skillType, bool replenishHealth)
-    {
-        var initialGameState = _sut.GetCurrentState(); 
-
-        var gameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.NextLevel,
-            EventParameters = new NextLevelEventParameters()
-            {
-                SkillType = skillType,
-                ReplenishHealth = replenishHealth
-            }
-        });
-
-        if (skillType.HasValue)
-        {
-            Assert.That(gameState.Hero.Stats[skillType.Value], Is.EqualTo(initialGameState.Hero.Stats[skillType.Value] + 1));
-            Assert.That(gameState.Hero.Health, Is.EqualTo(8));
-        }
-        else if (replenishHealth)
-        {
-            Assert.That(gameState.Hero.Health, Is.EqualTo(GameConstants.HeroMaxHealth));
-        }
-        else
-        {
-            throw new NotSupportedException("Invalid test case");
-        }
-            
-        foreach(SkillType otherSkill in Enum.GetValues<SkillType>().Where(x => x != skillType))
-        {
-            Assert.That(gameState.Hero.Stats[otherSkill], Is.EqualTo(initialGameState.Hero.Stats[otherSkill]));
-        }
-
+        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.UpgradeHero));
         Assert.That(gameState.LevelNumber, Is.EqualTo(2));
+        Assert.That(gameState.World.UpgradePointsAvailable, Is.EqualTo(1));
         Assert.That(gameState.World.Monsters.Count, Is.GreaterThan(0));
-        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 }
