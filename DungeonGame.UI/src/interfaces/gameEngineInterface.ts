@@ -115,6 +115,14 @@ const NextLevelReplenishHealthEvent = () : GameInputEvent => {
     return model;
 }
 
+const RetryLevel = () : GameInputEvent => {
+    const model: GameInputEvent = {
+        EventType: "RetryLevel",
+    };
+
+    return model;
+}
+
 const interfaceActions = { 
     NewGameEvent, 
     RollDiceEvent, 
@@ -128,6 +136,7 @@ const interfaceActions = {
     MonsterActionEndEvent,
     NextLevelUpgradeSkillEvent,
     NextLevelReplenishHealthEvent,
+    RetryLevel
  }
 
  export default interfaceActions;

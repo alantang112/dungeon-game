@@ -552,6 +552,32 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
       gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
     });
   }
+  else if (state.GamePhase == "GameEnd")
+  {
+    const playerLost: boolean = state.Hero!.Health! <= 0;
+
+    if (playerLost)
+    {
+      const retryAvailable: boolean = (state.LevelRetriesAvailable !== undefined && state.LevelRetriesAvailable > 0) ?? false;
+
+      availableButtons.push({
+        textNode: <>Retry level (`${state.LevelRetriesAvailable} remaining`)</>,
+        gameEventOnClick: retryAvailable ? GameActions.RetryLevel() : undefined,
+        disabled: !retryAvailable
+      });
+    }
+    else {
+      const livesRemaining: number = (state.LevelRetriesAvailable ?? 0) + 1;
+      const healthRemaining: number = state.Hero?.Health ?? 0;
+      const hopeRemaining: number = state.World?.Monsters?.filter(m => m.Monster.Type === "Hope").length ?? 0;
+      const score: number = livesRemaining + healthRemaining + hopeRemaining;
+
+      availableButtons.push({
+        textNode: <>Lives remaining: {livesRemaining}<br/>Health remaining: {healthRemaining}<br/>Hope: {hopeRemaining}<br/><b>Final score</b>: {score}/10</>
+      });
+    }
+    
+  }
 
   return availableButtons;
 }

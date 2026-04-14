@@ -21,6 +21,7 @@ export type GameInputEventType =
     | "MonsterActionsEnd"
     | "NextLevel"
     | "GameEnd"
+    | "RetryLevel"
 ;
 
 export type SkillType =
@@ -110,6 +111,7 @@ export class GameState {
     GameMessage?: string;
     GameMessageLog?: string[];
     ViewData?: ViewData;
+    LevelRetriesAvailable?: number;
 }
 
 export class GameInputEventParameters {

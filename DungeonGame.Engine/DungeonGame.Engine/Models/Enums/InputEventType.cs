@@ -27,5 +27,7 @@ namespace DungeonGame.Engine.Models.Enums
         NextLevel,
 
         // Game actions - GameEnd
+        RetryLevel,
+        BackToStart // TODO
     }
 }

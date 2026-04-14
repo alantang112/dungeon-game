@@ -26,7 +26,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             gameState.LevelNumber = 1;
             gameState.World = new World();
-            gameState.World.InitializeLevel(gameState.LevelNumber!.Value);
+            gameState.InitializeLevel(gameState.LevelNumber!.Value);
 
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
 

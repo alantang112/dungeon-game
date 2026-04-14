@@ -48,7 +48,7 @@ public class HeroActionTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
+        initialGameState.InitializeLevel(1, initRandomWalls: false);
 
         var initialGameStateJson = JsonSerializer.Serialize(initialGameState, SerializationUtility.JsonSerializerOptions);
 
@@ -557,11 +557,13 @@ public class HeroActionTests
         worldSnapshot.HeroActionPoints[SkillType.Attack] = 11;
         worldSnapshot.HeroActionPoints[SkillType.Defence] = 12;
 
-        initialGameState.WorldSnapshot = worldSnapshot;
+        initialGameState.TurnSnapshot = new TurnSnapshot();
+
+        initialGameState.TurnSnapshot.World = worldSnapshot;
         
         var heroSnapshot = initialGameState.Hero.DeepClone();
         heroSnapshot.Health = 10;
-        initialGameState.HeroSnapshot = heroSnapshot;
+        initialGameState.TurnSnapshot.Hero = heroSnapshot;
 
         _sut.LoadGameStateSnapshot(JsonSerializer.Serialize(initialGameState));
 
