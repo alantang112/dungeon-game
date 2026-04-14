@@ -29,9 +29,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.LevelNumber = 1;
             gameState.World = new World();
             gameState.InitializeLevel(gameState.LevelNumber!.Value);
-
-            gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
-
             gameState.PostInitializeLevel();
 
             return gameState;

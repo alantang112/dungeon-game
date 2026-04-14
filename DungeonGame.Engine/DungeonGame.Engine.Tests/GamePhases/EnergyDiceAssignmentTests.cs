@@ -101,38 +101,8 @@ public class EnergyDiceAssignmentTests
         Assert.That(gameState3.World.HeroActionPoints.Count(), Is.EqualTo(3));
     }
 
-    [TestCase(0)]
-    [TestCase(1)]
-    [TestCase(2)]
-    public void GivenDiceAssigned_WhenAssignDiceToAlreadyAssignedSkill_ThenReturnInvalid(int index)
-    {
-        var gameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.EnergyDiceAssign,
-            EventParameters = new EnergyDiceAssignEventParameters()
-            {
-                DiceIndex = index,
-                SkillType = SkillType.Movement
-            }
-        });
-
-        Assert.That(gameState.GameMessage, Is.Not.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
-
-        var newGameState = _sut.ProcessInput(new InputEvent()
-        {
-            EventType = InputEventType.EnergyDiceAssign,
-            EventParameters = new EnergyDiceAssignEventParameters()
-            {
-                DiceIndex = index,
-                SkillType = SkillType.Movement
-            }
-        });
-
-        Assert.That(newGameState.GameMessage, Is.EqualTo(GameMessages.SkillAlreadyAssignedEnergyDice));
-    }
-
     [TestCase(SkillType.AttackRange)]
-    public void WhenAssignDiceToInvalidSkill_ThenReturnInvalid(SkillType skillType)
+    public void WhenAssignDiceToInvalidSkill_ThenDoNotAssign(SkillType skillType)
     {
         var gameState = _sut.ProcessInput(new InputEvent()
         {
@@ -144,7 +114,7 @@ public class EnergyDiceAssignmentTests
             }
         });
 
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.InvalidSkillForEnergyDiceAssignment));
+        Assert.That(gameState.EnergyDice.AssignedSkills[0], Is.Null);
     }
 
     [Test]

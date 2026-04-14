@@ -15,29 +15,13 @@ namespace DungeonGame.Engine.Models
         public Hero Hero { get; set; } = new Hero();
         public World World { get; set; } = new World();
         public int? LevelNumber { get; set; }
-        public string? GameMessage { get; set; }
         public List<InputEvent> ScheduledEvents { get; set;} = new List<InputEvent>();
-        public List<string> GameMessageLog { get; set; } = new List<string>();
         public ViewData ViewData { get; set; } = new ViewData();
         public int LevelRetriesAvailable { get; set; }
 
         // snapshots
         public TurnSnapshot? TurnSnapshot { get; set; }
         public LevelSnapshot? LevelSnapshot { get; set; }
-
-        public void AddGameMessage(string message)
-        {
-            GameMessage = message;
-            GameMessageLog.Add(message);
-
-            if (GameMessageLog.Count > GameConstants.GameMessageLogLimit)
-                GameMessageLog.RemoveAt(0);
-        }
-
-        public void ClearGameMessage()
-        {
-            GameMessage = null;
-        }
 
         public void LoadTurnSnapshot()
         {

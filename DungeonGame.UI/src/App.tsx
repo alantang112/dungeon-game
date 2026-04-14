@@ -1,7 +1,6 @@
 import { useGameEngine } from './hooks/useGameEngine';
 import { MonsterPosition, Position, GameState, type SkillType, EnergyDice, Monster } from './models/GameEngineModels'
 import { Tile } from './props/Tile';
-import { GameLog } from './props/GameLog';
 import { CharacterStats } from './props/CharacterStats';
 import GameActions from './interfaces/gameEngineInterface';
 import { HeroMaxHealth, LevelSize, statColor, statText, getMonsterPathColor, DebugMode, levelNameColor, UIVersion, nightmareLevelnumber, borderWallCount } from './constants/gameConstants';
@@ -226,13 +225,13 @@ function App() {
           onClose={() => setIsHelpOpen(false)}
       />
       
-      <div className="relative flex flex-col items-center flex-start gap-2 sm:justify-between h-screen bg-slate-900 px-4 sm:max-w-400 mx-auto">
+      <div className="relative flex flex-col items-center flex-start gap-2 h-screen bg-slate-900 px-4 pb-5 sm:max-w-400 mx-auto">
         {/* Game Title (GamePhase == Start) */}
         {(!state.GamePhase || state.GamePhase === "Start") && <div className="w-full pt-20 m-auto"><StartTitle /></div>}
         {/* Stats (GamePhase after Start) */}
         {
           state.GamePhase && state.GamePhase !== "Start" 
-            && <div className="flex-auto">
+            && <div className="flex-auto sm:flex-none">
                 <div className="sm:max-h-2/10 sm:grid sm:p-5 font-mono grid sm:grid-cols-1 lg:grid-cols-12 w-full mt-2">
                   {/* Hero stats */}
                   <div 
@@ -256,93 +255,92 @@ function App() {
                 </div>
               </div>
         }
-        
-        
-        {/* Game grid */}
-        <div className={`relative inline-block border-2 border-slate-600 p-1 ${displayAltGridColors ? 'bg-violet-800' : 'bg-slate-700 '} transition-colors`}>
-          <div className={`${displayAltGridColors ? 'text-mist-200 ' : levelNameColor(state.LevelNumber ?? 1)} transition-colors p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}</div>
-          <div className="relative">
-            {/* The Grid */}
-            <div 
-              className="grid gap-1 aspect-square"
-              style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`, display: 'grid' }}
-            >
-              {gridRows}
+
+        <div className="w-full sm:my-auto flex flex-col items-center">
+          {/* Game grid */}
+          <div className={`inline-block border-2 border-slate-600 p-1 ${displayAltGridColors ? 'bg-violet-800' : 'bg-slate-700 '} transition-colors`}>
+            <div className={`${displayAltGridColors ? 'text-mist-200 ' : levelNameColor(state.LevelNumber ?? 1)} transition-colors p-1`}>{state.LevelNumber && `Level ${state.LevelNumber}`}
             </div>
+            <div className="relative">
+              {/* The Grid */}
+              <div 
+                className="grid gap-1 aspect-square"
+                style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`, display: 'grid' }}
+              >
+                {gridRows}
+              </div>
 
-            {/* The Overlay Layer */}
-            <svg 
-              className="absolute inset-0 pointer-events-none" 
-              viewBox={`0 0 ${gridSize} ${gridSize}`}
-              preserveAspectRatio="none"
-              style={{ zIndex: 20 }}
-            >
-              <defs>
-                <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
-                  <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fillOpacity="0.3" />
-                </marker>
-              </defs>
+              {/* The Overlay Layer */}
+              <svg 
+                className="absolute inset-0 pointer-events-none" 
+                viewBox={`0 0 ${gridSize} ${gridSize}`}
+                preserveAspectRatio="none"
+                style={{ zIndex: 20 }}
+              >
+                <defs>
+                  <marker id="arrowhead" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
+                    <polygon points="0 0, 4 2, 0 4" fill="context-stroke" fillOpacity="0.3" />
+                  </marker>
+                </defs>
 
-              {monsterPaths.map((path, i) => {
-                return (
-                <line
-                  key={i}
-                  x1={path.startX - 0.5} 
-                  y1={gridSize - path.startY + 0.5}
-                  x2={path.endX - 0.5}
-                  y2={gridSize - path.endY + 0.5}
-                  stroke={getMonsterPathColor(path.setNumber)}
-                  strokeWidth="0.05"
-                  strokeOpacity="0.3"
-                  markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
-                  pathLength="1"
-                  strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
-                />
-              );
-              } )}
-            </svg>
+                {monsterPaths.map((path, i) => {
+                  return (
+                  <line
+                    key={i}
+                    x1={path.startX - 0.5} 
+                    y1={gridSize - path.startY + 0.5}
+                    x2={path.endX - 0.5}
+                    y2={gridSize - path.endY + 0.5}
+                    stroke={getMonsterPathColor(path.setNumber)}
+                    strokeWidth="0.05"
+                    strokeOpacity="0.3"
+                    markerEnd={path.hasArrowHead ? "url(#arrowhead)" : ""}
+                    pathLength="1"
+                    strokeDasharray={`${path.hasArrowHead ? "0.95" : "1"} 1`}
+                  />
+                );
+                } )}
+              </svg>
+            </div>
           </div>
-        </div>
-        {/* Dice and Buttons */}
-        <div className="flex flex-col gap-5 justify-evenly h-[200px] mt-3 mb-1">
-          <div className="flex gap-3 items-center justify-center">
-            {
-              state.GamePhase == "EnergyDicePreRoll" 
-                && <>
-                    <ShufflingDice diceType="D6" />
-                    <ShufflingDice diceType="D6" />
-                    <ShufflingDice diceType="D6" />
-                  </>
-            }
-            {
-              state.GamePhase == "EnergyDiceAssignment" 
-                && <>
-                    {state.EnergyDice!.Dice!.map((diceNumber, index) => {
-                          return (
-                            <div key={`dice-to-assign-${index}`}>
-                              <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
-                            </div>
-                          )
-                        })}
+          
+          {/* Dice and Buttons */}
+          <div className="flex flex-col gap-5 justify-evenly h-[200px] mt-3">
+            <div className="flex gap-3 items-center justify-center">
+              {
+                state.GamePhase == "EnergyDicePreRoll" 
+                  && <>
+                      <ShufflingDice diceType="D6" />
+                      <ShufflingDice diceType="D6" />
+                      <ShufflingDice diceType="D6" />
                     </>
-            }
-          </div>
-          <div className="flex gap-6 items-center justify-center">
+              }
+              {
+                state.GamePhase == "EnergyDiceAssignment" 
+                  && <>
+                      {state.EnergyDice!.Dice!.map((diceNumber, index) => {
+                            return (
+                              <div key={`dice-to-assign-${index}`}>
+                                <Dice number={diceNumber} active={currentDiceToAssignIndex == index} disabled={currentDiceToAssignIndex > index} />
+                              </div>
+                            )
+                          })}
+                      </>
+              }
+            </div>
+            <div className="flex gap-6 items-center justify-center">
+                <ButtonsRow
+                  buttons={GetAvailableButtons(state)}
+                  eventDispatcher={dispatch}
+                />
+            </div>
+            <div className="flex gap-6 items-center justify-center">
               <ButtonsRow
-                buttons={GetAvailableButtons(state)}
+                buttons={availableButtonsRow2}
                 eventDispatcher={dispatch}
-              />
+                />
+            </div>
           </div>
-          <div className="flex gap-6 mb-4 items-center justify-center">
-            <ButtonsRow
-              buttons={availableButtonsRow2}
-              eventDispatcher={dispatch}
-              />
-          </div>
-        </div>  
-        {/* Game Log */}
-        <div className="hidden sm:block w-full">
-            <GameLog messages={state.GameMessageLog ?? []}/>
         </div>
         {
           state.GamePhase === "Start" && <span className='fixed bottom-1 left-1 text-mist-400 text-sm font-mono'>V{UIVersion}</span>

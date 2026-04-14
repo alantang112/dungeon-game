@@ -110,8 +110,6 @@ export class GameState {
     Hero?: Hero;
     World?: World;
     LevelNumber?: number;
-    GameMessage?: string;
-    GameMessageLog?: string[];
     ViewData?: ViewData;
     LevelRetriesAvailable?: number;
 }

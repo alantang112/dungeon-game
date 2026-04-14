@@ -84,9 +84,7 @@ namespace DungeonGame.Engine.Models
 
             foreach(var checkPosition in GeometryUtility.GetNeighbouringPositions(HeroPosition))
             {
-                var (caWalk, _) = HeroActionsHandler.HeroCanWalkTo(this, checkPosition);
-
-                if (caWalk)
+                if (HeroActionsHandler.HeroCanWalkTo(this, checkPosition))
                     result.Add(checkPosition);
             }
             

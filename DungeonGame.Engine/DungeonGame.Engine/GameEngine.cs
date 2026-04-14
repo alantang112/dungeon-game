@@ -63,7 +63,6 @@ namespace DungeonGame.Engine
                 throw new NotSupportedException($"Input Event Type not allowed: {inputEvent.EventType}");
 
             // clean-up
-            CurrentState.ClearGameMessage();
             CurrentState.ViewData = new ViewData();
             CurrentState.ScheduledEvents.Clear();
 

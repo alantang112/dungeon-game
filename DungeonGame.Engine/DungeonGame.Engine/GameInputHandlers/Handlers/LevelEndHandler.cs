@@ -14,9 +14,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             gameState.LevelNumber++;
             gameState.InitializeLevel(gameState.LevelNumber!.Value);
-
-            gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
-
             gameState.PostInitializeLevel();
 
             return gameState;

@@ -23,18 +23,15 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
                 if (!ValidSkillTypeForEnergyDiceAssignment.Contains(parameters.SkillType))
                 {
-                    gameState.AddGameMessage(GameMessages.InvalidSkillForEnergyDiceAssignment);
                     return gameState;
                 }
 
                 if (gameState.EnergyDice.AssignedSkills[parameters.DiceIndex] != null)
                 {
-                    gameState.AddGameMessage(GameMessages.SkillAlreadyAssignedEnergyDice);
                     return gameState;
                 }
 
                 gameState.EnergyDice.AssignDice(parameters.DiceIndex, parameters.SkillType);
-                gameState.AddGameMessage(string.Format(GameMessages.DiceAssignedToSkill, parameters.DiceIndex + 1, parameters.SkillType));
 
                 // if all dice assigned, proceed to HeroActions
                 if (gameState.EnergyDice.AssignedSkills.All(x => x != null))
@@ -47,14 +44,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             else if (inputEvent.EventType == InputEventType.EnergyDiceResetAssignment)
             {
                 gameState.EnergyDice.ResetAssignment();
-                gameState.AddGameMessage(string.Format(GameMessages.HeroReset, gameState.Hero.Name, gameState.Hero.isMaleName ? "his" : "her"));
                 return gameState;
             }
             else if (inputEvent.EventType == InputEventType.EnergyDiceReroll)
             {
                 if (gameState.World.RerollsAvailable <= 0)
                 {
-                    gameState.AddGameMessage(GameMessages.NoRerollsAvailable);
                     return gameState;
                 }
 

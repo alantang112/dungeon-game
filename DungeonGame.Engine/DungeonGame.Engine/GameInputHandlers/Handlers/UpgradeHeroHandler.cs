@@ -34,19 +34,16 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 if ((upgradeHeroParameters.SkillType.HasValue && upgradeHeroParameters.ReplenishHealth)
                     || (!upgradeHeroParameters.SkillType.HasValue && !upgradeHeroParameters.ReplenishHealth))
                 {
-                    gameState.AddGameMessage(GameMessages.LevelUpError);
                     return gameState;
                 }
 
                 if (upgradeHeroParameters.ReplenishHealth)
                 {
                     gameState.Hero.Health = GameConstants.HeroMaxHealth;
-                    gameState.AddGameMessage(string.Format(GameMessages.LevelUpReplenishHealth, gameState.Hero.Name));
                 }    
                 else
                 {
                     gameState.Hero.Stats[upgradeHeroParameters.SkillType!.Value]++;
-                    gameState.AddGameMessage(string.Format(GameMessages.LevelUpSkill, gameState.Hero.Name, upgradeHeroParameters.SkillType!.Value));
                 }
 
                 gameState.World.UpgradePointsAvailable--;

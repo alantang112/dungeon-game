@@ -66,7 +66,6 @@ public class UpgradeHeroTests
         });
 
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.UpgradeHero));
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.LevelUpError));
     }
 
     [Test]
@@ -83,7 +82,6 @@ public class UpgradeHeroTests
         });
 
         Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.UpgradeHero));
-        Assert.That(gameState.GameMessage, Is.EqualTo(GameMessages.LevelUpError));
     }
 
     [TestCase(SkillType.Movement, false)]

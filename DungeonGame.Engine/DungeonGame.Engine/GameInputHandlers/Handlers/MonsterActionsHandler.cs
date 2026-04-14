@@ -77,16 +77,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
 
                 gameState.Hero.Health -= damageDealt;
-                gameState.AddGameMessage(string.Format(GameMessages.MonstersAttack, gameState.Hero.Name, totalMonsterAttack, gameState.World.HeroActionPoints[SkillType.Defence], damageDealt));
                 if (gameState.Hero.Health <= 0)
                 {
                     gameState.GamePhase = GamePhase.GameEnd;
-                    gameState.AddGameMessage(string.Format(GameMessages.HeroDefeated, gameState.Hero.Name, gameState.Hero.Birthday, DateTime.Today));
                 }
-            }
-            else
-            {
-                gameState.AddGameMessage(string.Format(GameMessages.MonsterAttackAvoided, gameState.Hero.Name));
             }
 
             return gameState;
@@ -124,8 +118,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             var monsterOriginalPosition = monsterPosition.Position;
             
-            var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
-
             var wallsAndHero = new List<Position>(gameState.World.Walls)
             {
                 gameState.World.HeroPosition
@@ -146,7 +138,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             if (!filteredMonsterWalkMap.Any())
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
 
@@ -173,7 +164,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             if (idealPosition.Position == monsterOriginalPosition)
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
 
@@ -191,7 +181,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             {
                 monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
                 monsterPosition.Position = idealPositionInMovementRange;
-                gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                 return;
             }
         }
@@ -200,11 +189,8 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
         {
             var monsterOriginalPosition = monsterPosition.Position;
             
-            var monsterDoesNotMoveMessage = string.Format(GameMessages.MonsterStays, monsterPosition.Monster.Type, monsterPosition.Monster.Name);
-
             if (monsterPosition.Monster.GetStat(SkillType.Movement) < GameConstants.MovementPointsOrthogonal)
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
                 
@@ -217,7 +203,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             // If monster already at max attack range from hero and in line of sight of hero, continue
             if (currentlyHasLineOfSight && currentDistanceFromHero == monsterPosition.Monster.GetStat(SkillType.AttackRange))
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
 
@@ -239,7 +224,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             if (!filteredMonsterWalkMap.Any())
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
 
@@ -277,7 +261,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
             if (idealPosition.Position == monsterOriginalPosition)
             {
-                gameState.AddGameMessage(monsterDoesNotMoveMessage);
                 return;
             }
 
@@ -294,7 +277,6 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             {
                 monsterPosition.LastMovementPath = GeometryUtility.FindWalkPath(monsterWalkMap, monsterPosition.Position, idealPositionInMovementRange);
                 monsterPosition.Position = idealPositionInMovementRange;
-                gameState.AddGameMessage(string.Format(GameMessages.MonsterMoves, monsterPosition.Monster.Type, monsterPosition.Position.X, monsterPosition.Position.Y, monsterPosition.Monster.Name));
                 return;
             }
         }
