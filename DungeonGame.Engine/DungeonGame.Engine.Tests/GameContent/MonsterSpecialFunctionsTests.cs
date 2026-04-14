@@ -49,7 +49,7 @@ public class MonsterSpecialFunctionsTests
     {
         var gameState = new GameState();
 
-        gameState.World.InitializeLevel(-1);
+        gameState.InitializeLevel(-1);
 
         gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
         {
@@ -77,7 +77,7 @@ public class MonsterSpecialFunctionsTests
     {
         var gameState = new GameState();
 
-        gameState.World.InitializeLevel(-1);
+        gameState.InitializeLevel(-1);
 
         gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
         {
@@ -111,7 +111,7 @@ public class MonsterSpecialFunctionsTests
     {
         var gameState = new GameState();
 
-        gameState.World.InitializeLevel(-1);
+        gameState.InitializeLevel(-1);
 
         gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
         {
@@ -140,7 +140,7 @@ public class MonsterSpecialFunctionsTests
     {
         var gameState = new GameState();
 
-        gameState.World.InitializeLevel(-1);
+        gameState.InitializeLevel(-1);
 
         gameState.World.Monsters.Add(new Engine.Models.Entities.MonsterPosition()
         {
@@ -178,7 +178,7 @@ public class MonsterSpecialFunctionsTests
                 }
             }
         };
-        gameState.World.InitializeLevel(GameConstants.NightmareLevelNumber);
+        gameState.InitializeLevel(GameConstants.NightmareLevelNumber);
         while (gameState.World.Monsters.Count > 1)
         {
             gameState.World.Monsters.RemoveAt(1);

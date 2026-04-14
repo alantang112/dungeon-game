@@ -41,7 +41,7 @@ public class MonsterActionsAttackTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
+        initialGameState.InitializeLevel(1, initRandomWalls: false);
 
         initialGameState.World.Monsters.ForEach(m => {
             m.Monster.Stats[SkillType.Movement] = 0;

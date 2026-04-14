@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DungeonGame.Engine.GameInputHandlers.Handlers;
-using DungeonGame.Engine.GameContent;
 using DungeonGame.Engine.Models.Entities;
 using DungeonGame.Engine.Models.Enums;
 using DungeonGame.Engine.Models.Geometry;
@@ -18,39 +17,6 @@ namespace DungeonGame.Engine.Models
         public HashSet<Position> Borders { get; set; } = new HashSet<Position>();
         public HashSet<Position> Walls { get; set; } = new HashSet<Position>();
         public List<MonsterPosition> Monsters { get; set; } = new List<MonsterPosition>();
-        public void InitializeLevel(int levelNumber, bool initRandomWalls = true)
-        {
-            // init border
-            InitializeWallBorder();
-
-            // init level
-            var template = LevelTemplates.Levels.Single(x => x.LevelNumber == levelNumber);
-            HeroPosition = template.HeroPosition;
-
-            Walls.UnionWith(template.WallPositions);
-
-            // init monsters
-            Monsters = new List<MonsterPosition>();
-            foreach(var monster in template.MonsterPositions)
-            {
-                var monsterType = monster.Item1;
-                var monsterPosition = monster.Item2;
-                
-                Monsters.Add(new MonsterPosition() {
-                    Monster = MonsterSpawner.Spawn(monsterType), 
-                    Position = monsterPosition
-                });
-            }
-
-            // init random walls
-            if (initRandomWalls)
-            {
-                var numberOfRandomWalls = RandomUtility.RandomInt(template.RandomWallsCountMin, template.RandomWallsCountMax);
-                InitializeRandomWalls(numberOfRandomWalls, template.EnforceWallIslands);
-            }
-
-            RerollsAvailable = 1;
-        }
 
         private static HashSet<Position> GenerateBorders()
         {

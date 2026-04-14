@@ -29,7 +29,12 @@ public class WorldTests
     {
         var world = new World();
 
-        world.InitializeLevel(levelNumber);
+        var gameState = new GameState()
+        {
+            World = world
+        };
+
+        gameState.InitializeLevel(levelNumber);
 
         Assert.That(world.RerollsAvailable, Is.EqualTo(1));
     }
@@ -76,7 +81,7 @@ public class WorldTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
+        initialGameState.InitializeLevel(1, initRandomWalls: false);
         initialGameState.World.HeroPosition = new Engine.Models.Geometry.Position(heroX, heroY);
 
         initialGameState.World.HeroActionPoints = new Dictionary<SkillType, int>()
@@ -132,7 +137,7 @@ public class WorldTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
+        initialGameState.InitializeLevel(1, initRandomWalls: false);
         initialGameState.World.HeroPosition = new Engine.Models.Geometry.Position(heroX, heroY);
 
         initialGameState.World.HeroActionPoints = new Dictionary<SkillType, int>()

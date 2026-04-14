@@ -7,4 +7,5 @@ export interface AvailableButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   smaller?: boolean;
+  squareButton?: boolean;
 }

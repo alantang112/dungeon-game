@@ -35,7 +35,8 @@ namespace DungeonGame.Engine
                 .SetNext(new EnergyDiceAssignmentHandler())
                 .SetNext(new HeroActionsHandler())
                 .SetNext(new MonsterActionsHandler())
-                .SetNext(new LevelEndHandler());
+                .SetNext(new LevelEndHandler())
+                .SetNext(new GameEndHandler());
 
             return firstHandler;
         }

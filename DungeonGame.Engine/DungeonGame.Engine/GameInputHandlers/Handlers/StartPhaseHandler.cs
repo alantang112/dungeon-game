@@ -24,9 +24,11 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.Hero.Health = GameConstants.HeroMaxHealth;
             gameState.Hero.Birthday = DateTime.Today;
 
+            gameState.LevelRetriesAvailable = 2;
+
             gameState.LevelNumber = 1;
             gameState.World = new World();
-            gameState.World.InitializeLevel(gameState.LevelNumber!.Value);
+            gameState.InitializeLevel(gameState.LevelNumber!.Value);
 
             gameState.GamePhase = GamePhase.EnergyDicePreRoll;
 

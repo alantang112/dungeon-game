@@ -48,7 +48,7 @@ public class MonsterActionsMoveTests
             }
         };
 
-        initialGameState.World.InitializeLevel(1, initRandomWalls: false);
+        initialGameState.InitializeLevel(1, initRandomWalls: false);
 
         initialGameState.World.Monsters.RemoveAt(1);
 
@@ -229,7 +229,7 @@ public class MonsterActionsMoveTests
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.InitializeLevel(-1);
+        initialGameState.InitializeLevel(-1);
 
         initialGameState.World.HeroPosition = new Position(4, 4);
         initialGameState.World.Monsters.Add(new MonsterPosition()
@@ -260,7 +260,7 @@ public class MonsterActionsMoveTests
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.InitializeLevel(-1);
+        initialGameState.InitializeLevel(-1);
 
         initialGameState.World.HeroPosition = new Position(1, 2);
         initialGameState.World.Monsters.Add(new MonsterPosition()
@@ -296,7 +296,7 @@ public class MonsterActionsMoveTests
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.InitializeLevel(-1);
+        initialGameState.InitializeLevel(-1);
 
         initialGameState.World.HeroPosition = new Position(1, 3);
         initialGameState.World.Monsters.Add(new MonsterPosition()
@@ -404,7 +404,7 @@ public class MonsterActionsMoveTests
     {
         var initialGameState = _sut.GetCurrentState();
 
-        initialGameState.World.InitializeLevel(-1);
+        initialGameState.InitializeLevel(-1);
 
         initialGameState.World.HeroPosition = new Position(heroX, heroY);
 
