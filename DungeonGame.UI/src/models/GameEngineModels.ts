@@ -5,6 +5,7 @@ export type GamePhase =
     | "HeroActions" 
     | "MonsterActions" 
     | "LevelEnd" 
+    | "UpgradeHero"
     | "GameEnd"
 ;
 
@@ -20,6 +21,7 @@ export type GameInputEventType =
     | "HeroActionEnd"    
     | "MonsterActionsEnd"
     | "NextLevel"
+    | "UpgradeHero"
     | "GameEnd"
     | "RetryLevel"
 ;

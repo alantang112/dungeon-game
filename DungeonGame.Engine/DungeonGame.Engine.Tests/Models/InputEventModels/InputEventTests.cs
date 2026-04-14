@@ -92,10 +92,10 @@ public class InputEventTests
     }
 
     [Test]
-    public void CanDeserializeNextLevelAssignmentEvent()
+    public void CanDeserializeUpgradeHeroEvent()
     {
         var json = @"{
-            ""EventType"": ""NextLevel"",
+            ""EventType"": ""UpgradeHero"",
             ""EventParameters"": {
                 ""SkillType"": ""Attack"",
                 ""ReplenishHealth"": false
@@ -104,10 +104,10 @@ public class InputEventTests
 
         var parsed = JsonSerializer.Deserialize<InputEvent>(json, SerializationUtility.JsonSerializerOptions);
 
-        Assert.That(parsed.EventType, Is.EqualTo(InputEventType.NextLevel));
+        Assert.That(parsed.EventType, Is.EqualTo(InputEventType.UpgradeHero));
         Assert.That(parsed.EventParameters, Is.Not.Null);
 
-        var parsedEventParameters = parsed.EventParameters as NextLevelEventParameters;
+        var parsedEventParameters = parsed.EventParameters as UpgradeHeroEventParameters;
         Assert.That(parsedEventParameters.SkillType, Is.EqualTo(SkillType.Attack));
         Assert.That(parsedEventParameters.ReplenishHealth, Is.False);
     }

@@ -12,38 +12,12 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
 
         public override GameState TransformGameState(GameState gameState, InputEvent inputEvent)
         {
-            var nextLevelParameters = inputEvent.EventParameters as NextLevelEventParameters;
-            if (nextLevelParameters == null)
-                throw new ArgumentNullException("NextLevelEventParameters required for NextLevel input");
-
-            if ((nextLevelParameters.SkillType.HasValue && nextLevelParameters.ReplenishHealth)
-                || (!nextLevelParameters.SkillType.HasValue && !nextLevelParameters.ReplenishHealth))
-            {
-                gameState.AddGameMessage(GameMessages.LevelUpError);
-                return gameState;
-            }
-
-            if (nextLevelParameters.ReplenishHealth)
-            {
-                gameState.Hero.Health = GameConstants.HeroMaxHealth;
-                gameState.AddGameMessage(string.Format(GameMessages.LevelUpReplenishHealth, gameState.Hero.Name));
-            }    
-            else
-            {
-                gameState.Hero.Stats[nextLevelParameters.SkillType!.Value]++;
-                gameState.AddGameMessage(string.Format(GameMessages.LevelUpSkill, gameState.Hero.Name, nextLevelParameters.SkillType!.Value));
-            }
-
             gameState.LevelNumber++;
             gameState.InitializeLevel(gameState.LevelNumber!.Value);
-            gameState.GamePhase = GamePhase.EnergyDicePreRoll;
-
-            gameState.ScheduledEvents.Add(new InputEvent()
-            {
-                EventType = InputEventType.EnergyDiceSetup
-            });
 
             gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
+
+            gameState.PostInitializeLevel();
 
             return gameState;
         }

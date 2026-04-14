@@ -12,5 +12,6 @@ namespace DungeonGame.Engine.Models
         public int RandomWallsCountMax { get; set; } = 0;
         public bool EnforceWallIslands { get; set; } = false;
         public (MonsterType, Position)[] MonsterPositions { get; set; }
+        public int UpgradePoints { get; set; } = 1;
     }
 }

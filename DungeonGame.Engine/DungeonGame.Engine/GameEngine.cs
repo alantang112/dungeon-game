@@ -18,7 +18,7 @@ namespace DungeonGame.Engine
 
         internal IGameInputHandler _gameInputHandler;
 
-        private InputEventType[] InternalInputEventTypes = new InputEventType[] { InputEventType.EnergyDiceSetup, InputEventType.MonstersMove, InputEventType.MonstersAttack };
+        private InputEventType[] InternalInputEventTypes = new InputEventType[] { InputEventType.EnergyDiceSetup, InputEventType.MonstersMove, InputEventType.MonstersAttack, InputEventType.UpgradeHeroSetup };
 
         public GameEngine()
         {
@@ -36,7 +36,9 @@ namespace DungeonGame.Engine
                 .SetNext(new HeroActionsHandler())
                 .SetNext(new MonsterActionsHandler())
                 .SetNext(new LevelEndHandler())
-                .SetNext(new GameEndHandler());
+                .SetNext(new GameEndHandler())
+                .SetNext(new UpgradeHeroHandler())
+                ;
 
             return firstHandler;
         }

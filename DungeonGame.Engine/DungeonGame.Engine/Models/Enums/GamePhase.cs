@@ -6,6 +6,7 @@ namespace DungeonGame.Engine.Models.Enums
         Start,
 
         // Game
+        UpgradeHero,
         EnergyDicePreRoll,
         EnergyDiceAssignment,
         HeroActions,

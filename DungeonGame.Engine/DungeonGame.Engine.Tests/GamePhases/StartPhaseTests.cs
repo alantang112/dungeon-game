@@ -41,6 +41,8 @@ public class StartPhaseTests
         Assert.That(gameState.Hero.Health, Is.EqualTo(GameConstants.HeroMaxHealth));
 
         Assert.That(gameState.World.HeroActionPoints, Is.Empty);
+
+        Assert.That(gameState.GamePhase, Is.EqualTo(GamePhase.EnergyDicePreRoll));
     }
 
     [Test]

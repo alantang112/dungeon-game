@@ -104,8 +104,19 @@ namespace DungeonGame.Engine.Models
             }
 
             World.RerollsAvailable = 1;
+            World.UpgradePointsAvailable = template.UpgradePoints;
 
             SaveLevelSnapshot();
+        }
+
+        public void PostInitializeLevel()
+        {
+            GamePhase = GamePhase.UpgradeHero;
+
+            ScheduledEvents.Add(new InputEvent()
+            {
+                EventType = InputEventType.UpgradeHeroSetup
+            });
         }
     }
 }

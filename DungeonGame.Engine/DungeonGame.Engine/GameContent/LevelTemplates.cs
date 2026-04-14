@@ -16,7 +16,8 @@ namespace DungeonGame.Engine.GameContent
                 WallPositions = new Position[] { new Position(2, 2), new Position(4, 2), new Position(4, 4) }, 
                 RandomWallsCountMin = 2,
                 RandomWallsCountMax = 2,
-                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Spider, new Position(5, 4)), (MonsterType.Spider, new Position(4, 5)) }
+                MonsterPositions = new (MonsterType, Position)[] { (MonsterType.Spider, new Position(5, 4)), (MonsterType.Spider, new Position(4, 5)) },
+                UpgradePoints = 0
             },
             new Level()
             {
@@ -165,7 +166,8 @@ namespace DungeonGame.Engine.GameContent
                 WallPositions = Array.Empty<Position>(), 
                 RandomWallsCountMin = 0,
                 RandomWallsCountMax = 0,
-                MonsterPositions = Array.Empty<(MonsterType, Position)>()
+                MonsterPositions = Array.Empty<(MonsterType, Position)>(),
+                UpgradePoints = 0,
             },
         };
     }

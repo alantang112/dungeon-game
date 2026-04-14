@@ -30,14 +30,10 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
             gameState.World = new World();
             gameState.InitializeLevel(gameState.LevelNumber!.Value);
 
-            gameState.GamePhase = GamePhase.EnergyDicePreRoll;
-
-            gameState.ScheduledEvents.Add(new InputEvent()
-            {
-                EventType = InputEventType.EnergyDiceSetup
-            });
-
             gameState.AddGameMessage(string.Format(GameMessages.YouHaveEnteredLevel, gameState.Hero.Name, gameState.LevelNumber));
+
+            gameState.PostInitializeLevel();
+
             return gameState;
         }
     }  

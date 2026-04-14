@@ -497,16 +497,23 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   else if (state.GamePhase == "LevelEnd")
   {
     availableButtons.push({
+      textNode: <>Next level</>,
+      gameEventOnClick: GameActions.NextLevelEvent()
+    });
+  }
+  else if (state.GamePhase == "UpgradeHero")
+  {
+    availableButtons.push({
       textNode: <>+1 <span className={`${statColor["Movement"]}`}>{statText["Movement"]}</span></>,
-      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Movement")
+      gameEventOnClick: GameActions.UpgradeHeroSkillEvent("Movement")
     });
     availableButtons.push({
       textNode: <>+1 <span className={`${statColor["Attack"]}`}>{statText["Attack"]}</span></>,
-      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Attack")
+      gameEventOnClick: GameActions.UpgradeHeroSkillEvent("Attack")
     });
     availableButtons.push({
       textNode: <>+1 <span className={`${statColor["Defence"]}`}>{statText["Defence"]}</span></>,
-      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("Defence")
+      gameEventOnClick: GameActions.UpgradeHeroSkillEvent("Defence")
     });
   }
   else if (state.GamePhase == "GameEnd")
@@ -568,15 +575,15 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
       smaller: true
     })
   } 
-  else if (state.GamePhase == "LevelEnd")
+  else if (state.GamePhase == "UpgradeHero")
   {
     availableButtons.push({
       textNode: <>+1 <span className={`${statColor["AttackRange"]}`}>{statText["AttackRange"]}</span></>,
-      gameEventOnClick: GameActions.NextLevelUpgradeSkillEvent("AttackRange")
+      gameEventOnClick: GameActions.UpgradeHeroSkillEvent("AttackRange")
     });
     availableButtons.push({
       textNode: <><span className='text-green-300'>Replenish Health</span></>,
-      gameEventOnClick: GameActions.NextLevelReplenishHealthEvent()
+      gameEventOnClick: GameActions.ReplenishHealthEvent()
     });
   }
 
