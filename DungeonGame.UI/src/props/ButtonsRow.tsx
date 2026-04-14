@@ -28,8 +28,8 @@ export const ButtonsRow = ({ buttons, eventDispatcher }: ButtonsRowProps) => {
             px-3 ${button.smaller === true ? 'py-3 ' : 'py-4 '}
             text-sm sm:text-base
             text-white bg-indigo-600
-            font-bold tracking-wide
-            rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.4)] 
+            font-bold tracking-wide 
+            ${button.squareButton ? '' : ' rounded-full '} shadow-[0_10px_20px_rgba(0,0,0,0.4)] 
             transform transition-all active:scale-95
             border border-indigo-400/30 
         ` + (button.disabled === true ? 'opacity-60 ' : 'hover:bg-indigo-500  ')}

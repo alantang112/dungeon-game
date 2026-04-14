@@ -511,12 +511,37 @@ const GetAvailableButtons = (state: GameState) : AvailableButton[] => {
   }
   else if (state.GamePhase == "GameEnd")
   {
-    const gameOverText: string = state.Hero!.Health! <= 0 ? 'Game over' : 'Thanks for playing';
-    availableButtons.push(
+    const playerLost: boolean = state.Hero!.Health! <= 0;
+
+    if (playerLost)
+    {
+      availableButtons.push(
       {
-        textNode: <span>{`   ${gameOverText}   `}</span>,
+        textNode: <span>{`   Game over   `}</span>,
       }
     )
+    }
+    else {
+      const livesRemaining: number = (state.LevelRetriesAvailable ?? 0) + 1;
+      const healthRemaining: number = state.Hero?.Health ?? 0;
+      const hopeRemaining: number = state.World?.Monsters?.filter(m => m.Monster.Type === "Hope").length ?? 0;
+      const score: number = livesRemaining + healthRemaining + hopeRemaining;
+
+      availableButtons.push({
+        textNode: <><span className="text-green-300">{`    Thanks for playing!    `}</span>
+        <br/>
+        <br/>
+        Lives remaining: {livesRemaining}
+        <br/>
+        Health remaining: {healthRemaining}
+        <br/>
+        Hope bonus: {hopeRemaining}
+        <br/>
+        <br/>
+        <span className="text-yellow-300">Final score: {score}/10</span></>,
+        squareButton: true
+      });
+    }
   }
 
   return availableButtons;
@@ -554,9 +579,7 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
   }
   else if (state.GamePhase == "GameEnd")
   {
-    const playerLost: boolean = state.Hero!.Health! <= 0;
-
-    if (playerLost)
+    if (state.Hero!.Health! <= 0)
     {
       const retryAvailable: boolean = (state.LevelRetriesAvailable !== undefined && state.LevelRetriesAvailable > 0) ?? false;
 
@@ -566,17 +589,6 @@ const GetAvailableButtonsRow2 = (state: GameState) : AvailableButton[] => {
         disabled: !retryAvailable
       });
     }
-    else {
-      const livesRemaining: number = (state.LevelRetriesAvailable ?? 0) + 1;
-      const healthRemaining: number = state.Hero?.Health ?? 0;
-      const hopeRemaining: number = state.World?.Monsters?.filter(m => m.Monster.Type === "Hope").length ?? 0;
-      const score: number = livesRemaining + healthRemaining + hopeRemaining;
-
-      availableButtons.push({
-        textNode: <>Lives remaining: {livesRemaining}<br/>Health remaining: {healthRemaining}<br/>Hope: {hopeRemaining}<br/><b>Final score</b>: {score}/10</>
-      });
-    }
-    
   }
 
   return availableButtons;
