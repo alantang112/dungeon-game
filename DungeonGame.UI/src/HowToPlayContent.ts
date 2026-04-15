@@ -32,7 +32,7 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}energydice-1.png`},
             { type: 'text', content: "Energy points = Base stat + Energy dice."},
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}stats-1.png`},
-            { type: 'text', content: 'You are allowed one re-roll once per level.' },
+            { type: 'text', content: 'You are allowed one re-roll per level.' },
         ]
     },
     {

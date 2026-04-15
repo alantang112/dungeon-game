@@ -64,6 +64,14 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
         };
     }, []);
 
+    useEffect(() => {
+        // We target the div with the scroll classes inside our dialog
+        const scrollContainer = dialogRef.current?.querySelector('.overflow-y-auto');
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'instant' });
+        }
+    }, [currentPageIndex]);
+
     // 3. Pagination Logic
     const currentPage = howToPlayPages[currentPageIndex];
     const isFirstPage = currentPageIndex === 0;
@@ -72,14 +80,12 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
     const navigateNext = () => {
         if (!isLastPage) {
             setCurrentPageIndex(prev => prev + 1);
-            dialogRef.current?.scrollTo(0, 0);
         }
     };
 
     const navigatePrev = () => {
         if (!isFirstPage) {
             setCurrentPageIndex(prev => prev - 1);
-            dialogRef.current?.scrollTo(0, 0);
         }
     };
 
