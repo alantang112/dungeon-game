@@ -32,6 +32,7 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}energydice-1.png`},
             { type: 'text', content: "Energy points = Base stat + Energy dice."},
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}stats-1.png`},
+            { type: 'text', content: 'You are allowed one re-roll once per level.' },
         ]
     },
     {
@@ -108,6 +109,16 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}levelend-1-v2.png` },
             { type: 'text', content: "At the start of the next level, you can permanently increase a base stat by 1 or replenish your health to full." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}levelend-2.png` },
+        ]
+    },
+    {
+        id: 9,
+        title: "Game end",
+        items: [
+            { type: 'text', content: "If your health would drop to zero, the game ends for you." },
+            { type: 'text', content: "You start every game with three lives which allows you to reattempt the current level and also reselect which upgrade to take, if there was one. Lives are represented by the orange pips." },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}gamend-1.png` },
+            { type: 'text', content: "The final level is level 16." },
             { type: 'text', content: "Happy dungeoning." },
         ]
     }
