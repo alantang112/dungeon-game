@@ -97,11 +97,11 @@ export const howToPlayPages: HelpPage[] = [
         id: 8,
         title: "Monster movement II",
         items: [
-            { type: 'text', content: "Monsters can walk through but not end on other monster's tile." },
+            { type: 'heading', content: "Monsters can walk through but not end on other monster's tile." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monstermove-2.png` },
-            { type: 'text', content: "In the above example, Monty ended bottom-right of the hero. Ty is able to move through Monty to end right of the hero." },
+            { type: 'text', content: "In the above example, Monty ended bottom-right of the hero. Ty is able to move through Monty to end at the tile right of the hero." },
             { type: 'separator' },
-            { type: 'text', content: "Monsters cannot walk through you." },
+            { type: 'heading', content: "Monsters cannot walk through you." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monstermove-3.png` },
             { type: 'text', content: "In the above example, Monty is trapped since it cannot go through you and cannot hop diagonally past you. Note that in the reversed situation, you can hop diagonally out past it." },
         ]
@@ -113,6 +113,7 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'text', content: "After all monsters have moved, monsters that can reach you with their attack range and that has line of sight of you, attack." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monsterattack-1.png` },
             { type: 'text', content: "Damage taken = (sum of attacking monster's attack stat) / (your defence energy), rounded down." },
+            { type: 'text', content: "In the above example, both spiders have range and line of sight of you." },
         ]
     },
     {
