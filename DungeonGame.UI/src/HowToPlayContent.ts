@@ -31,6 +31,7 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'text', content: "Each round, you roll 3 dice and assign them to Movement, Attack or Defence (one die per stat)." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}energydice-1.png`},
             { type: 'text', content: "Energy points = Base stat + Energy dice."},
+            { type: 'text', content: "Energy is used to move and attack. When monsters attack, it is compared against your defence energy."},
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}stats-1.png`},
             { type: 'text', content: 'You are allowed one re-roll per level.' },
         ]
@@ -87,7 +88,7 @@ export const howToPlayPages: HelpPage[] = [
             { type: 'text', content: "You don't need to know how monsters behave to play the game but it is required to master the game." },
             { type: 'text', content: "Monsters move one at a time, in order of distance from you, starting with the closest." },
             { type: 'text', content: "They will move towards the tile at their maximum range from you with line of sight. If there are no tiles in range and in line of sight, they will move as close as possible to you." },
-            { type: 'text', content: "If there are multiple options, they will prioritise the closest, then if still tied the leftmost tile, then the bottommost tile." },
+            { type: 'text', content: "If there are multiple options, they will prioritise the closest, then if still tied, they will choose the leftmost tile, then the bottommost tile." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monstermove-1.png` },
             { type: 'text', content: "In the above example, Ty moves to be at range 3 because Spiders have 3 attack range, while Ruby moves to be at range 3 top-right of the hero since it requires the least movement compared to top-left of the hero." }
         ]
@@ -115,10 +116,10 @@ export const howToPlayPages: HelpPage[] = [
         id: 9,
         title: "Game end",
         items: [
-            { type: 'text', content: "If your health would drop to zero, the game ends for you." },
-            { type: 'text', content: "You start every game with three lives which allows you to reattempt the current level and also reselect which upgrade to take, if there was one. Lives are represented by the orange pips." },
+            { type: 'text', content: "If your health drops to zero, the game ends for you." },
+            { type: 'text', content: "You start every game with three lives which allows you to reattempt the current level if you failed to complete it. Lives are represented by the orange pips." },
             { type: 'image', content: `${assetPath}${howToPlayAssetsPath}gamend-1.png` },
-            { type: 'text', content: "The final level is level 16." },
+            { type: 'text', content: "The final level of the dungeon is 16." },
             { type: 'text', content: "Happy dungeoning." },
         ]
     }
