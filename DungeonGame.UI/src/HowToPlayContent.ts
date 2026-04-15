@@ -60,7 +60,7 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 4,
+        id: 5,
         title: "Hero combat II",
         items: [
             { type: 'heading', content: "Line of sight" },
@@ -71,7 +71,7 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 5,
+        id: 6,
         title: "Hero combat III",
         items: [
             { type: 'heading', content: "Line of sight continued" },
@@ -82,7 +82,7 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 6,
+        id: 7,
         title: "Monster movement",
         items: [
             { type: 'text', content: "You don't need to know how monsters behave to play the game but it is required to master the game." },
@@ -94,7 +94,20 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 7,
+        id: 8,
+        title: "Monster movement II",
+        items: [
+            { type: 'text', content: "Monsters can walk through but not end on other monster's tile." },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monstermove-2.png` },
+            { type: 'text', content: "In the above example, Monty ended bottom-right of the hero. Ty is able to move through Monty to end right of the hero." },
+            { type: 'separator' },
+            { type: 'text', content: "Monsters cannot walk through you." },
+            { type: 'image', content: `${assetPath}${howToPlayAssetsPath}monstermove-3.png` },
+            { type: 'text', content: "In the above example, Monty is trapped since it cannot go through you and cannot hop diagonally past you. Note that in the reversed situation, you can hop diagonally out past it." },
+        ]
+    },
+    {
+        id: 9,
         title: "Monster combat",
         items: [
             { type: 'text', content: "After all monsters have moved, monsters that can reach you with their attack range and that has line of sight of you, attack." },
@@ -103,7 +116,7 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 8,
+        id: 10,
         title: "Level end",
         items: [
             { type: 'text', content: "The level ends when you have defeated all monsters." },
@@ -113,7 +126,7 @@ export const howToPlayPages: HelpPage[] = [
         ]
     },
     {
-        id: 9,
+        id: 11,
         title: "Game end",
         items: [
             { type: 'text', content: "If your health drops to zero, the game ends for you." },
