@@ -120,3 +120,16 @@
     filter: hue-rotate(60deg);
   }
 }
+
+.animate-hp-damage {
+  animation: damage-pulse 2s ease-in-out infinite;
+}
+
+@keyframes damage-pulse {
+  0%, 100% {
+    background-color: oklch(50.5% 0.213 27.518); /* red-700 */
+  }
+  50% {
+    background-color: oklch(70.4% 0.191 22.216); /* red-400 */
+  }
+}

@@ -97,6 +97,7 @@ export class MonsterPosition {
 }
 
 export class ViewData {
+    HeroWasDamaged?: number;
     HeroWasHealed?: boolean;
     HeroCanWalkPositions?: Position[];
     HeroCanAttackPositions?: Position[];

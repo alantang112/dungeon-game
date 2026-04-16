@@ -7,6 +7,7 @@ namespace DungeonGame.Engine.Models
 {
     public class ViewData
     {
+        public int HeroWasDamaged { get; set; }
         public bool HeroWasHealed { get; set; }
         public List<Position> HeroCanWalkPositions { get; set; } = new List<Position>();
         public List<Position> HeroCanAttackPositions { get; set; } = new List<Position>();

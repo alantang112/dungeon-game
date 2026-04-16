@@ -48,6 +48,7 @@ function App() {
     for (let x = 1; x <= gridSize; x++) {
       const tileData = getTileData(state, x, y);
 
+      var isHero: boolean = false;
       var angleToTarget: number | undefined = undefined;
       var isAttacking: boolean = false;
       var displayHeal: boolean = false;
@@ -65,6 +66,7 @@ function App() {
 
       if (tileData.tileType == "Hero")
       {
+        isHero = true;
         if (state.ViewData?.MonsterAttackedByHero?.Monster?.Id)
         {
           angleToTarget = getAngleToTarget(state.World!.HeroPosition, state.ViewData?.MonsterAttackedByHero.Position);
@@ -93,6 +95,7 @@ function App() {
           heroCanWalk={state.ViewData?.HeroCanWalkPositions?.some(p => p.X == x && p.Y == y) ?? false}
           heroCanAttack={state.ViewData?.HeroCanAttackPositions?.some(p => p.X == x && p.Y == y) ?? false}
           health={tileData.health}
+          healthLost={isHero ? state.ViewData?.HeroWasDamaged : undefined}
           maxHealth={tileData.maxHealth}
           isAttacking={isAttacking}
           attackId={isAttacking ? String(Date.now()) : undefined}

@@ -77,6 +77,7 @@ namespace DungeonGame.Engine.GameInputHandlers.Handlers
                 var damageDealt = (int) Math.Floor((double)totalMonsterAttack / gameState.World.HeroActionPoints[SkillType.Defence]);
 
                 gameState.Hero.Health -= damageDealt;
+                gameState.ViewData.HeroWasDamaged = damageDealt;
                 if (gameState.Hero.Health <= 0)
                 {
                     gameState.GamePhase = GamePhase.GameEnd;

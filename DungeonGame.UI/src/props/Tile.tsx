@@ -13,6 +13,7 @@ interface TileProps {
     heroCanWalk: boolean;
     heroCanAttack: boolean;
     health?: number;
+    healthLost?: number;
     maxHealth?: number;
     isMonster: boolean;
     isAttacking?: boolean;
@@ -23,8 +24,8 @@ interface TileProps {
     displayHeal?: boolean;
 }
 
-export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWalk, heroCanAttack, health, maxHealth, 
-    isMonster, isAttacking, attackId, angleToTarget, pulse, danger, displayHeal }: TileProps) => {
+export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWalk, heroCanAttack, health, healthLost,
+    maxHealth, isMonster, isAttacking, attackId, angleToTarget, pulse, danger, displayHeal }: TileProps) => {
     // Damage display logic
     const [isAnimatingDamage, setIsAnimatingDamage] = useState(false);
     const identity = (isMonster || tileType === "Hero") ? (tileType + (isMonster? monsterId : '')) : undefined;
@@ -131,9 +132,9 @@ export const Tile = ({ x, y, ghostTileType, tileType, name, monsterId, heroCanWa
                         {[...Array(maxHealth)].map((_, i) => (
                             <div
                             key={i}
-                            className={`h-[4px] flex-1 transition-colors duration-500 border-x-1 border-slate-700 ${
+                            className={`h-[4px] flex-1 transition-all duration-500 border-x-1 border-slate-700 ${
                                 i < health! ? ' bg-green-500 ' : ' bg-red-700 '
-                            }`}
+                            } ${(healthLost && i >= health && i < health + (healthLost ?? 0)) ? ' animate-hp-damage ' : ''}`}
                             />
                         ))}
                         </div>
