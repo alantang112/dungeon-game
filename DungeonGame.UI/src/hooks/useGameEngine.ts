@@ -71,7 +71,7 @@ export function useGameEngine() {
 }
 
 const LogGameEvents = (state: GameState, newState: GameState): void => {
-    if (newState.GamePhase === "GameEnd")
+    if (newState.GamePhase === "GameEnd" && state.GamePhase !== "GameEnd")
     {
         // game won
         if (newState.Hero!.Health! > 0)
