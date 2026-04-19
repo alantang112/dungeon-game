@@ -95,20 +95,13 @@ const LogGameEvents = (state: GameState, newState: GameState): void => {
         {
             gtag('event', 'game_lost', { 
                 'level_number': newState.LevelNumber, 
+                'lives': newState.LevelRetriesAvailable!,
                 'stat_movement': newState.Hero!.Stats!["Movement"], 
                 'stat_attack': newState.Hero!.Stats!["Attack"], 
                 'stat_defence': newState.Hero!.Stats!["Defence"],
                 'stat_range': newState.Hero!.Stats!["AttackRange"] 
             });
         }
-    }
-    // life lost
-    else if ((newState.LevelRetriesAvailable ?? 0) < (state?.LevelRetriesAvailable ?? 0))
-    {
-        gtag('event', 'life_lost', { 
-            'level_number': newState.LevelNumber, 
-            'lives': newState.LevelRetriesAvailable! + 1 
-        });
     }
     // next level
     else if (((newState.LevelNumber ?? 0)) > (state.LevelNumber ?? 0))
